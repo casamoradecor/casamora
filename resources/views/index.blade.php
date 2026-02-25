@@ -102,7 +102,7 @@
           <button class="hotspot-dot"></button>
           <span class="hotspot-label">O Sofá Bromley</span>
           <div class="hotspot-popover">
-            <img src="{{ asset('assets/sofa.jpg') }}" alt="Sofá Bromley">
+            <img src="{{ asset('assets/EMABALAGEM 2 LOGO RGB.png') }}" alt="Sofá Bromley">
             <div class="popover-info">
               <h4>O Sofá Bromley</h4>
               <a href="#">VER MAIS</a>
