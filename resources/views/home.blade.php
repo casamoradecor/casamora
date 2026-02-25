@@ -23,34 +23,24 @@
         <button class="carrossel-btn btn-next" id="btnNext"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div class="carrossel-track" id="carrosselTrack">
-          <div class="produto-card">
-            <img src="{{ asset('assets/vasomora.png') }}" alt="Produto 1">
-            <h3 class="produto-titulo">Vaso Cerâmica</h3>
-            <p class="produto-preco">R$ 149,90</p>
-            <button class="btn-comprar" data-nome="Vaso Cerâmica" data-preco="149.90" data-imagem="{{ asset('assets/vasomora.png') }}">
+    @foreach($produtos as $produto)
+        <div class="produto-card">
+            <img src="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}" alt="{{ $produto->nome }}">
+            
+            <h3 class="produto-titulo">{{ $produto->nome }}</h3>
+            
+            <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
+            
+            <button class="btn-comprar" 
+                data-id="{{ $produto->id }}"
+                data-nome="{{ $produto->nome }}" 
+                data-preco="{{ $produto->preco }}" 
+                data-imagem="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}">
               ADICIONAR AO CARRINHO
             </button>
-          </div>
-
-          <div class="produto-card">
-            <img src="{{ asset('assets/vasomora.png') }}" alt="Produto 2">
-            <h3 class="produto-titulo">Luminária Mesa</h3>
-            <p class="produto-preco">R$ 299,00</p>
-            <button class="btn-comprar" data-nome="Luminária Mesa" data-preco="299.00" data-imagem="{{ asset('assets/vasomora.png') }}">
-              ADICIONAR AO CARRINHO
-            </button>
-          </div>
-
-          <div class="produto-card">
-            <img src="{{ asset('assets/vasomora.png') }}" alt="Produto 3">
-            <h3 class="produto-titulo">Bandeja Madeira</h3>
-            <p class="produto-preco">R$ 89,90</p>
-            <button class="btn-comprar" data-nome="Bandeja Madeira" data-preco="89.90" data-imagem="{{ asset('assets/bandejamedeira.png') }}">
-              ADICIONAR AO CARRINHO
-            </button>
-          </div>
         </div>
-      </div>
+    @endforeach
+</div>
     </section>
     
     <section class="categorias-secao">
