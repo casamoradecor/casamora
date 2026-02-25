@@ -1,0 +1,464 @@
+/* HERO SECTION */
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; 
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-logo {
+  position: absolute; 
+  display: block;
+  margin: 0 auto;
+  width: 100%; 
+  max-width: 1000px;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero-sub {
+  margin-top: 350px;
+  color: var(--color-sub);
+  font-weight: 400;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  z-index: 11;
+  text-align: center;
+}
+
+/* SEÇÃO DESTAQUE E CARROSSEL */
+.destaque-produtos {
+  display: flex;
+  align-items: center; 
+  gap: 100px;
+  padding: 250px 5%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.destaque-imagem {
+  width: auto; 
+  flex-shrink: 0; 
+}
+
+.destaque-imagem img {
+  width: auto; 
+  max-width: 300px;
+  height: 550px; 
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+}
+
+.destaque-carrossel {
+  flex: 1; 
+  min-width: 0; 
+  padding-left: 20px;
+  position: relative; 
+}
+
+.carrossel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+
+.carrossel-track::-webkit-scrollbar { display: none; }
+
+.produto-card {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  cursor: pointer;
+  padding-bottom: 20px;
+}
+
+.produto-card img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  transition: opacity 0.3s ease;
+}
+
+.produto-card:hover img {
+  opacity: 0.8;
+}
+
+.produto-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.produto-titulo {
+  color: var(--color-sub);
+  font-family: var(--font-base);
+  font-weight: 400;  
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.produto-preco {
+  color: var(--color-brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.btn-comprar {
+  width: 100%;
+  padding: 12px 0;
+  background-color: transparent;
+  color: var(--color-brand);
+  border: 1px solid var(--color-brand);
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.btn-comprar:hover {
+  background-color: var(--color-brand);
+  color: #fff;
+}
+
+.carrossel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-brand);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.carrossel-btn:hover {
+  opacity: 1;
+}
+
+.btn-prev { left: 5px; }
+.btn-next { right: 5px; }
+
+@media (max-width: 900px) {
+  .destaque-produtos {
+    flex-direction: column;
+  }
+  .destaque-imagem, 
+  .destaque-carrossel {
+    width: 100%;
+  }
+  .carrossel-btn {
+    display: none;
+  }
+}
+
+/* SEÇÃO CATEGORIAS */
+.categorias-secao {
+  padding: 80px 5%;
+  background-color: #F0F0F0;
+}
+
+.categorias-titulo {
+  font-family: var(--font-title);
+  color: var(--color-brand);
+  font-size: 2rem;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.categorias-container {
+  position: relative;
+  width: 100%;
+}
+
+.categorias-track {
+  display: flex;
+  gap: 40px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 20px;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+
+.categorias-track::-webkit-scrollbar { display: none; }
+
+.categoria-card {
+  position: relative;
+  flex: 0 0 532px;
+  height: 300px;  
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.categoria-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+
+.categoria-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.categoria-card:hover img {
+  transform: scale(1.05);
+}
+
+.categoria-card:hover .categoria-overlay {
+  background: rgba(0,0,0,0.4);
+}
+
+.categoria-overlay span {
+  color: #fff;
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.categorias-container .carrossel-btn {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .categorias-titulo {
+    font-size: 1.5rem;
+  }
+  .categoria-card {
+    flex: 0 0 350px;
+    height: 200px;
+  }
+  .categorias-track {
+    gap: 20px;
+  }
+}
+
+/* SEÇÃO FOTO INTERATIVA */
+.shoppable-secao {
+  padding: 80px 5%;
+  background-color: #F0F0F0;
+}
+
+.shoppable-container {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+}
+
+.shoppable-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.shoppable-main-img {
+  width: 100%;
+  height: 80vh;
+  object-fit: cover;
+  display: block;
+}
+
+.shoppable-info {
+  position: absolute;
+  bottom: 50px;
+  left: 50px;  
+  color: #fff;
+  max-width: 400px;
+  z-index: 5;
+}
+
+.shoppable-info h2 {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.shoppable-info p {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.shop-room-btn {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.hotspot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.hotspot-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid #fff;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hotspot-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.hotspot.ativo .hotspot-dot::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.hotspot-label {
+  color: #fff;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
+.hotspot-popover {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2b2b2b;
+  color: #fff;
+  display: none;
+  width: 260px;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  gap: 15px;
+}
+
+.hotspot.ativo .hotspot-popover {
+  display: flex; 
+}
+
+.hotspot-popover img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.popover-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 5px 0;
+}
+
+.popover-info h4 {
+  font-family: var(--font-base);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.popover-info a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 2px;
+  align-self: flex-start;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+}
+
+.popover-info a:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .shoppable-info {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+  .hotspot-label {
+    display: none;
+  }
+  .hotspot-popover {
+    width: 220px;
+  }
+}

@@ -1,0 +1,30 @@
+/* Variáveis do Sistema */
+:root {
+  --font-base: 'Poppins', sans-serif;
+  --font-title: 'Playfair Display', serif;
+  --color-text: #2b2b2b;
+  --color-brand: #3b1f15;
+  --color-sub: #4b2b22;
+}
+
+/* Reset Mínimo */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+html, body {
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Base: Texto normal Poppins */
+body {
+  font-family: var(--font-base);
+  font-weight: 400; 
+  color: var(--color-text);
+  overflow-x: hidden;
+  background-color: #F0F0F0;
+}

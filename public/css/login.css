@@ -1,0 +1,157 @@
+/* =========================================
+   PÁGINA DE LOGIN (Estilo ROWEAM Reference)
+   ========================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+.login-page {
+  padding-top: 120px; /* Espaço para o header não cobrir o conteúdo */
+  padding-bottom: 80px;
+  background-color: #F0F0F0; /* Mesma cor de fundo do seu site */
+  display: flex;
+  justify-content: center;
+}
+
+.login-split {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  gap: 60px; /* Distância entre a imagem e o formulário */
+  align-items: stretch;
+}
+
+/* --- IMAGEM ESQUERDA --- */
+.login-image {
+  flex: 1.2; /* Ocupa um pouco mais de espaço que o formulário */
+}
+
+.login-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- CONTEÚDO DIREITA --- */
+.login-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.login-content h2 {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  color: var(--color-brand);
+  margin-bottom: 40px;
+  text-transform: none; /* Mantém "Account" e não "ACCOUNT" */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Campos de digitação com linha inferior */
+.input-group {
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-family: var(--font-base);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-brand);
+  margin-bottom: 8px;
+  text-transform: none;
+}
+
+.input-group input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--color-brand);
+  background: transparent;
+  padding: 5px 0 10px;
+  font-family: var(--font-base);
+  font-size: 1rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-bottom-width 0.2s;
+}
+
+.input-group input:focus {
+  border-bottom-width: 2px;
+}
+
+/* Botões Idênticos à Referência */
+.btn-primary, .btn-secondary {
+  width: 100%;
+  padding: 15px 0;
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-brand);
+  color: #fff;
+  border: 1px solid var(--color-brand);
+  margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+  opacity: 0.8;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-brand);
+  border: 1px solid var(--color-brand);
+  margin-bottom: 25px;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-brand);
+  color: #fff;
+}
+
+/* Link Esqueci a Senha */
+.forgot-link {
+  font-family: var(--font-base);
+  font-size: 0.8rem;
+  color: var(--color-brand);
+  text-decoration: underline;
+  font-weight: 700;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+/* Responsivo para Celulares */
+@media (max-width: 900px) {
+  .login-split {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .login-image {
+    flex: none;
+    height: 350px;
+  }
+  
+  .login-image img {
+    min-height: auto;
+  }
+}
