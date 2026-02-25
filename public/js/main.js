@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         // 2º Clique: Executa a busca (ação real)
         if (inputBusca.value.trim() !== '') {
-          alert('Buscando por: ' + inputBusca.value); // Troque depois pela lógica real
+          alert('Buscando por: ' + inputBusca.value);
         }
       }
     });
