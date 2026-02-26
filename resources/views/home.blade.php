@@ -25,20 +25,18 @@
         <div class="carrossel-track" id="carrosselTrack">
     @foreach($produtos as $produto)
         <div class="produto-card">
-            <img src="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}" alt="{{ $produto->nome }}">
-            
-            <h3 class="produto-titulo">{{ $produto->nome }}</h3>
-            
-            <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
-            
-            <button class="btn-comprar" 
-                data-id="{{ $produto->id }}"
-                data-nome="{{ $produto->nome }}" 
-                data-preco="{{ $produto->preco }}" 
-                data-imagem="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}">
-              ADICIONAR AO CARRINHO
-            </button>
-        </div>
+    <img src="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}" alt="{{ $produto->nome }}">
+    <h3 class="produto-titulo">{{ $produto->nome }}</h3>
+    <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
+    
+    <button class="btn-comprar" 
+          data-id="{{ $produto->id }}"
+          data-nome="{{ $produto->nome }}" 
+          data-preco="{{ $produto->preco }}" 
+          data-imagem="{{ $produto->imagem ? Storage::url($produto->imagem) : asset('assets/vasomora.png') }}">
+        ADICIONAR AO CARRINHO
+    </button>
+</div>
     @endforeach
 </div>
     </section>
