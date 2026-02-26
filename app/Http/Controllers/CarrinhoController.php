@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produto;
+use App\Models\Pedido;
+use App\Models\PedidoItem;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CarrinhoController extends Controller
 {
-    // Novo método: Retorna os dados atuais do carrinho para o JS
+    /**
+     * Retorna os dados atuais do carrinho para o JS (Sidebar)
+     */
     public function listar()
     {
         $carrinho = session()->get('carrinho', []);
@@ -17,7 +23,9 @@ class CarrinhoController extends Controller
         ]);
     }
 
-    // Método adicionar ajustado
+    /**
+     * Adiciona um item ao carrinho via AJAX
+     */
     public function adicionar(Request $request)
     {
         $produto = Produto::findOrFail($request->produto_id);
@@ -37,35 +45,40 @@ class CarrinhoController extends Controller
 
         session()->put('carrinho', $carrinho);
         
-        // Agora devolvemos o carrinho atualizado
         return response()->json([
             'success' => true,
             'itens' => $carrinho,
             'total' => $this->calcularTotal($carrinho)
         ]);
     }
-    public function diminuir(Request $request)
-{
-    $carrinho = session()->get('carrinho', []);
-    $id = $request->produto_id;
 
-    if(isset($carrinho[$id])) {
-        if($carrinho[$id]['quantidade'] > 1) {
-            $carrinho[$id]['quantidade']--;
-        } else {
-            unset($carrinho[$id]); // Remove se for o último
+    /**
+     * Diminui a quantidade ou remove o item do carrinho
+     */
+    public function diminuir(Request $request)
+    {
+        $carrinho = session()->get('carrinho', []);
+        $id = $request->produto_id;
+
+        if(isset($carrinho[$id])) {
+            if($carrinho[$id]['quantidade'] > 1) {
+                $carrinho[$id]['quantidade']--;
+            } else {
+                unset($carrinho[$id]);
+            }
+            session()->put('carrinho', $carrinho);
         }
-        session()->put('carrinho', $carrinho);
+
+        return response()->json([
+            'success' => true,
+            'itens' => $carrinho,
+            'total' => $this->calcularTotal($carrinho)
+        ]);
     }
 
-    return response()->json([
-        'success' => true,
-        'itens' => $carrinho,
-        'total' => $this->calcularTotal($carrinho)
-    ]);
-}
-
-    // Função auxiliar para somar tudo
+    /**
+     * Função auxiliar para calcular o valor total da sessão
+     */
     private function calcularTotal($carrinho)
     {
         $total = 0;
@@ -74,17 +87,85 @@ class CarrinhoController extends Controller
         }
         return $total;
     }
+
+    /**
+     * Exibe a tela de Checkout (na pasta pedidos)
+     */
     public function checkout()
-{
-    $carrinho = session()->get('carrinho', []);
-    
-    // Se o carrinho estiver vazio, manda de volta pra home
-    if(empty($carrinho)) {
-        return redirect()->route('home');
+    {
+        $carrinho = session()->get('carrinho', []);
+        
+        if(empty($carrinho)) {
+            return redirect()->route('home');
+        }
+
+        $total = $this->calcularTotal($carrinho);
+        
+        return view('pedidos.checkout', compact('carrinho', 'total'));
     }
 
-    $total = $this->calcularTotal($carrinho);
-    
-    return view('checkout', compact('carrinho', 'total'));
-}
+    /**
+     * Processa a finalização do pedido e salva no banco de dados
+     */
+    public function finalizarPedido(Request $request)
+    {
+        $carrinho = session()->get('carrinho', []);
+
+        if (empty($carrinho)) {
+            return redirect()->route('home')->with('erro', 'Seu carrinho está vazio.');
+        }
+
+        // 1. Validação dos novos campos individuais de endereço
+        $request->validate([
+            'cep' => 'required',
+            'rua' => 'required',
+            'numero' => 'required',
+            'bairro' => 'required',
+            'cidade' => 'required',
+            'estado' => 'required',
+        ]);
+
+        // 2. Montagem da string de endereço completo para salvar na coluna 'endereco'
+        $enderecoConcatenado = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
+        
+        if ($request->complemento) {
+            $enderecoConcatenado .= " ({$request->complemento})";
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // 3. Criar o Pedido (Cabeçalho)
+            $pedido = Pedido::create([
+                'user_id' => Auth::id(),
+                'total' => collect($carrinho)->sum(fn($item) => $item['preco'] * $item['quantidade']),
+                'status' => 'pendente',
+                'nome_entrega' => Auth::user()->name,
+                'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
+                'cep' => preg_replace('/\D/', '', $request->cep),
+                'endereco' => $enderecoConcatenado, 
+            ]);
+
+            // 4. Criar os Itens do Pedido (Relacionamento)
+            foreach ($carrinho as $id => $detalhes) {
+                PedidoItem::create([
+                    'pedido_id' => $pedido->id,
+                    'produto_id' => $id,
+                    'quantidade' => $detalhes['quantidade'],
+                    'preco_unitario' => $detalhes['preco'],
+                ]);
+            }
+
+            DB::commit();
+
+            // 5. Limpar a sessão do carrinho após o sucesso
+            session()->forget('carrinho');
+
+            return redirect()->route('pedido.sucesso', $pedido->id);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('erro', 'Falha ao processar pedido: ' . $e->getMessage());
+        }
+    }
 }

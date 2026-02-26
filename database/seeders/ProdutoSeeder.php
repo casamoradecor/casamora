@@ -3,45 +3,48 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Categoria;
 use App\Models\Produto;
+use Illuminate\Support\Facades\DB;
 
 class ProdutoSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Criar Categorias
-        $catVasos = Categoria::create(['nome' => 'Vasos', 'status' => 'ativa']);
-        $catIluminacao = Categoria::create(['nome' => 'Iluminação', 'status' => 'ativa']);
-        $catUtensilios = Categoria::create(['nome' => 'Utensílios', 'status' => 'ativa']);
-
-        // 2. Criar Produtos
-        Produto::create([
-            'categoria_id' => $catVasos->id,
-            'nome' => 'Vaso Cerâmica',
-            'preco' => 149.90,
-            'estoque' => 10,
-            'codigo_referencia' => 'VASO-CER-01',
-            'status' => 'ativo'
-            // Não enviamos imagem aqui para ele usar a imagem padrão (vasomora.png) configurada no seu Blade
+        // 1. Cria uma categoria padrão caso não exista
+        // Se você tiver um Model 'Categoria', pode usar Categoria::firstOrCreate...
+        // Aqui vamos direto na tabela para garantir:
+        $categoriaId = DB::table('categorias')->insertGetId([
+            'nome' => 'Coleção Principal',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        Produto::create([
-            'categoria_id' => $catIluminacao->id,
-            'nome' => 'Luminária Mesa',
-            'preco' => 299.00,
-            'estoque' => 5,
-            'codigo_referencia' => 'LUM-MESA-01',
-            'status' => 'ativo'
-        ]);
+        $produtos = [
+            [
+                'nome' => 'Vaso Morá Minimalist',
+                'preco' => 189.90,
+                'descricao' => 'Vaso de cerâmica artesanal com acabamento fosco.',
+                'imagem' => 'assets/vasomora.png',
+                'categoria_id' => $categoriaId // Adicionado
+            ],
+            [
+                'nome' => 'Vaso Eclipse Black',
+                'preco' => 245.00,
+                'descricao' => 'Design moderno em preto profundo para ambientes luxuosos.',
+                'imagem' => 'assets/vasomora.png',
+                'categoria_id' => $categoriaId // Adicionado
+            ],
+            [
+                'nome' => 'Centro de Mesa Organic',
+                'preco' => 320.00,
+                'descricao' => 'Peça exclusiva com formas orgânicas inspiradas na natureza.',
+                'imagem' => 'assets/vasomora.png',
+                'categoria_id' => $categoriaId // Adicionado
+            ]
+        ];
 
-        Produto::create([
-            'categoria_id' => $catUtensilios->id,
-            'nome' => 'Bandeja Madeira',
-            'preco' => 89.90,
-            'estoque' => 15,
-            'codigo_referencia' => 'BAND-MAD-01',
-            'status' => 'ativo'
-        ]);
+        foreach ($produtos as $p) {
+            Produto::create($p);
+        }
     }
 }

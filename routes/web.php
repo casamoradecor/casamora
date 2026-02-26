@@ -1,25 +1,88 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\ProdutoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarrinhoController;
 
+/*
+|--------------------------------------------------------------------------
+| HOME & PÁGINAS PÚBLICAS
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::prefix('admin')->group(function () {
+
+/*
+|--------------------------------------------------------------------------
+| CARRINHO DE COMPRAS (Sessão & API)
+|--------------------------------------------------------------------------
+*/
+Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.index');
+Route::get('/carrinho/listar', [CarrinhoController::class, 'listar'])->name('carrinho.listar');
+Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+Route::post('/carrinho/diminuir', [CarrinhoController::class, 'diminuir'])->name('carrinho.diminuir');
+
+
+/*
+|--------------------------------------------------------------------------
+| FLUXO DE CHECKOUT E FINALIZAÇÃO (Requer Login)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    // Tela de fechamento
+    Route::get('/checkout', [CarrinhoController::class, 'checkout'])->name('checkout');
+    
+    // Processamento do pedido no banco
+    Route::post('/finalizar-pedido', [CarrinhoController::class, 'finalizarPedido'])->name('pedido.finalizar');
+    
+    // Tela de sucesso (após salvar no banco)
+    Route::get('/pedido-sucesso/{id}', function($id) {
+        return view('pedidos.sucesso', ['pedidoId' => $id]);
+    })->name('pedido.sucesso');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD & HISTÓRICO DO CLIENTE (Minha Conta)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    // Painel principal (Resumo)
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // Lista de todos os pedidos do cliente
+    Route::get('/meus-pedidos', function () {
+        $pedidos = Auth::user()->pedidos()->orderBy('created_at', 'desc')->get();
+        return view('pedidos.index', compact('pedidos'));
+    })->name('pedidos.index');
+
+    // Detalhes de um pedido específico
+    Route::get('/meus-pedidos/{id}', function ($id) {
+        $pedido = Auth::user()->pedidos()->with('itens.produto')->findOrFail($id);
+        return view('pedidos.show', compact('pedido'));
+    })->name('pedidos.show');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| PAINEL ADMINISTRATIVO (Gestão da Loja)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('produtos', ProdutoController::class);
 });
 
-Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.index');
-Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
-Route::get('/carrinho/listar', [CarrinhoController::class, 'listar'])->name('carrinho.listar');
-Route::post('/carrinho/diminuir', [CarrinhoController::class, 'diminuir'])->name('carrinho.diminuir');
-Route::get('/checkout', [CarrinhoController::class, 'checkout'])->name('checkout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-
+/*
+|--------------------------------------------------------------------------
+| AUTENTICAÇÃO (Laravel Breeze/Jetstream)
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';
