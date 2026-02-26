@@ -1,0 +1,169 @@
+/* =========================================
+    ESTILO ESPECÍFICO - EDITAR PERFIL
+   ========================================= */
+
+/* Forçar Header Sólido nesta página */
+header, .scrolled {
+    background-color: #fff !important;
+    border-bottom: 1px solid #ddd;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: center; /* Centraliza o bloco nav + content */
+    padding: 150px 10% 80px;
+    gap: 50px;
+    min-height: 60vh;
+    background-color: var(--color-bg, #F0F0F0);
+}
+
+/* Sidebar - Mantida conforme sua solicitação */
+.dashboard-nav {
+    flex: 1;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 250px; /* Evita que a sidebar cresça demais */
+}
+
+.dashboard-nav a {
+    text-decoration: none;
+    color: var(--color-brand, #4B3621);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+    text-transform: uppercase;
+}
+
+.dashboard-nav a:hover {
+    opacity: 0.6;
+}
+
+/* Conteúdo Principal Centralizado */
+.dashboard-content {
+    flex: 3;
+    max-width: 600px; /* Largura ideal para leitura vertical */
+}
+
+.dashboard-content h2 {
+    font-family: var(--font-title, 'Playfair Display', serif);
+    font-size: 2rem;
+    color: var(--color-brand, #4B3621);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* Formulário e Grupos */
+.form-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.input-perfil {
+    padding: 12px 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.input-perfil:focus {
+    border-bottom-color: #4B3621;
+}
+
+/* Lógica do Checkbox e Senha */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4B3621;
+}
+
+.password-grid {
+    display: none; /* JS mudará para grid */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* Botão Único Marrom */
+* Formulário e Inputs */
+.form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.form-group label { font-size: 0.7rem; font-weight: 700; color: #888; text-transform: uppercase; }
+.input-perfil { padding: 12px 0; border: none; border-bottom: 1px solid #ddd; outline: none; background: transparent; font-size: 1rem; }
+.input-perfil:focus { border-bottom-color: #4B3621; }
+
+/* Mensagem de Erro */
+.error-msg { color: #d32f2f; font-size: 0.7rem; font-weight: bold; margin-top: 5px; }
+
+/* Grade de Senha */
+.password-grid {
+    display: none; /* Controlado via JS */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.full-width { grid-column: span 2; }
+
+.btn-salvar {
+    background-color: #4B3621;
+    color: white;
+    padding: 18px 45px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+.btn-salvar:hover {
+    background-color: #5D4037;
+}
+
+.btn-logout {
+    margin-top: 40px;
+    background: none;
+    border: none;
+    color: #cc0000;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-align: left;
+}

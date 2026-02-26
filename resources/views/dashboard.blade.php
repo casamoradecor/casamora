@@ -11,10 +11,11 @@
 @section('content')
 <main class="dashboard-container">
     <aside class="dashboard-nav">
-        <a href="{{ route('dashboard') }}">RESUMO</a>
-        <a href="#">MEUS PEDIDOS</a>
-        <a href="#">ENDEREÇOS</a>
-        <a href="#">EDITAR PERFIL</a>
+        <a href="{{ route('dashboard') }}" style="text-decoration: underline;">RESUMO</a>
+        
+        <a href="{{ route('pedidos.index') }}">MEUS PEDIDOS</a>
+        
+        <a href="#">ENDEREÇOS</a> <a href="{{ route('perfil.edit') }}">EDITAR PERFIL</a>
         
         <form method="POST" action="{{ route('logout') }}">
             @csrf
@@ -35,12 +36,13 @@
                 <p>{{ Auth::user()->name }}</p>
                 <p>{{ Auth::user()->email }}</p>
                 <p>CPF: {{ Auth::user()->cpf ?? 'Não informado' }}</p>
+                <a href="{{ route('perfil.edit') }}" style="color: #4B3621; font-size: 0.75rem; margin-top: 15px; display: block; font-weight: 700; text-transform: uppercase;">Editar Dados</a>
             </div>
 
             <div class="info-card">
                 <h3>PEDIDO RECENTE</h3>
                 <p>Você ainda não realizou nenhum pedido.</p>
-                <a href="{{ route('home') }}" style="color: var(--color-brand); font-size: 0.75rem; margin-top: 15px; display: block; font-weight: 700;">VER PRODUTOS</a>
+                <a href="{{ route('home') }}" style="color: #4B3621; font-size: 0.75rem; margin-top: 15px; display: block; font-weight: 700; text-transform: uppercase;">VER PRODUTOS</a>
             </div>
         </div>
     </section>

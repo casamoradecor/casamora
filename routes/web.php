@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\ProdutoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\PerfilController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $pedido = Auth::user()->pedidos()->with('itens.produto')->findOrFail($id);
         return view('pedidos.show', compact('pedido'));
     })->name('pedidos.show');
+
+    // --- ROTAS DE PERFIL (Movi para dentro do grupo auth) ---
+    Route::get('/perfil', [PerfilController::class, 'edit'])->name('perfil.edit');
+    Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
+    
+    // A ROTA QUE ESTAVA FALTANDO AQUI:
+    Route::put('/perfil/senha', [PerfilController::class, 'updatePassword'])->name('perfil.password.update');
 });
 
 
