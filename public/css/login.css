@@ -1,11 +1,18 @@
 /* =========================================
    PÁGINA DE LOGIN (Estilo ROWEAM Reference)
    ========================================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Removido o text-transform: uppercase daqui */
+}
+
+/* Aplique o uppercase apenas onde é fixo */
+.btn-primary, 
+.btn-secondary, 
+.forgot-link, 
+.login-form label {
   text-transform: uppercase;
 }
 .login-page {

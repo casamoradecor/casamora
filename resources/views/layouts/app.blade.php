@@ -43,7 +43,9 @@
           </button>
         </div>
 
-        <a href="/login" class="icon" aria-label="conta"><i class="fa-regular fa-user"></i></a>
+        <a href="{{ Auth::check() ? route('dashboard') : route('login') }}" class="icon" aria-label="conta">
+            <i class="fa-regular fa-user"></i>
+        </a>
         <button class="icon" id="btnCarrinho" aria-label="carrinho"><i class="fa-solid fa-cart-shopping"></i></button>
       </div>
     </div>

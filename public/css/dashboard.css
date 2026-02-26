@@ -1,0 +1,107 @@
+/* =========================================
+   PÁGINA DE DASHBOARD (MINHA CONTA)
+   ========================================= */
+
+.dashboard-container {
+    display: flex;
+    padding: 150px 10% 80px;
+    gap: 50px;
+    min-height: 60vh; /* Ajustado para preencher a tela */
+    background-color: var(--color-bg, #F0F0F0);
+}
+
+.dashboard-nav {
+    flex: 1;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-nav a {
+    text-decoration: none;
+    color: var(--color-brand);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+    text-transform: uppercase;
+}
+
+.dashboard-nav a:hover {
+    opacity: 0.6;
+}
+
+.dashboard-content {
+    flex: 3;
+}
+
+.dashboard-content h2 {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    color: var(--color-brand);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.info-card {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.info-card h3 {
+    font-size: 0.75rem;
+    margin-bottom: 20px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.info-card p {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 5px;
+}
+
+.btn-logout {
+    margin-top: 40px;
+    background: none;
+    border: none;
+    color: #cc0000;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.btn-logout:hover {
+    text-decoration: underline;
+}
+
+/* Ajuste Responsivo */
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column;
+        padding-top: 120px;
+    }
+    .dashboard-nav {
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
