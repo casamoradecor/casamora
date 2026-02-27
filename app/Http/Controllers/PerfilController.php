@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -13,60 +14,68 @@ class PerfilController extends Controller
         $user = Auth::user();
         return view('perfil.edit', compact('user'));
     }
-    public function updatePassword(Request $request)
-{
-    $request->validate([
-        'current_password' => ['required', 'current_password'], // Valida se a senha atual está correta
-        'password' => ['required', 'confirmed', Password::defaults()], // 'confirmed' exige o campo password_confirmation
-    ], [
-        'current_password.current_password' => 'A senha atual está incorreta.',
-        'password.confirmed' => 'A confirmação da nova senha não confere.'
-    ]);
 
-    $user = Auth::user();
-    $user->update([
-        'password' => Hash::make($request->password),
-    ]);
-
-    return redirect()->back()->with('sucesso_senha', 'Senha alterada com sucesso!');
-}
+    /**
+     * Atualiza o perfil completo do usuário em uma única ação
+     */
     public function update(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // 1. Regras básicas para o perfil
-    $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'cpf' => 'required|string',
-    ];
+        // 1. Regras de validação básicas e CPF matemático
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'cpf' => ['required', 'string', function ($attribute, $value, $fail) {
+                $cpf = preg_replace('/\D/', '', $value);
+                // Verifica se tem 11 dígitos ou se é uma sequência repetida (ex: 111.111...)
+                if (strlen($cpf) != 11 || preg_match('/(\d)\1{10}/', $cpf)) {
+                    return $fail('O CPF informado é inválido.');
+                }
+                // Algoritmo oficial de dígitos verificadores
+                for ($t = 9; $t < 11; $t++) {
+                    for ($d = 0, $c = 0; $c < $t; $c++) {
+                        $d += $cpf[$c] * (($t + 1) - $c);
+                    }
+                    $d = ((10 * $d) % 11) % 10;
+                    if ($cpf[$c] != $d) {
+                        return $fail('O CPF informado é inválido.');
+                    }
+                }
+            }],
+        ];
 
-    // 2. Se o checkbox 'alterar_senha' estiver marcado, aplicamos validações rígidas
-    if ($request->has('alterar_senha')) {
-        $rules['current_password'] = ['required', 'current_password']; // Valida se a senha atual está certa
-        $rules['password'] = ['required', 'confirmed', 'min:8']; // 'confirmed' checa o campo password_confirmation
+        // 2. Adiciona regras de senha apenas se o checkbox estiver marcado
+        if ($request->has('alterar_senha')) {
+            $rules['current_password'] = ['required', 'current_password'];
+            $rules['password'] = [
+                'required', 
+                'confirmed', 
+                Password::min(8)->numbers()->symbols() // 8 caracteres, números e símbolos
+            ];
+        }
+
+        // 3. Executa a validação com mensagens em português
+        $request->validate($rules, [
+            'email.unique' => 'Este e-mail já está sendo utilizado por outra conta.',
+            'email.email' => 'Insira um endereço de e-mail válido.',
+            'current_password.current_password' => 'Sua senha atual está incorreta.',
+            'password.confirmed' => 'As senhas novas não coincidem.',
+            'password.min' => 'A nova senha deve ter no mínimo 8 caracteres.',
+        ]);
+
+        // 4. Salva as alterações de dados pessoais
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->cpf = preg_replace('/\D/', '', $request->cpf);
+
+        // 5. Salva a nova senha se solicitado
+        if ($request->has('alterar_senha')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('sucesso', 'Perfil atualizado com sucesso!');
     }
-
-    // 3. Executa a validação com mensagens em português
-    $request->validate($rules, [
-        'current_password.current_password' => 'Sua senha atual está incorreta.',
-        'password.confirmed' => 'As senhas novas não coincidem.',
-        'password.min' => 'A nova senha deve ter no mínimo 8 caracteres.',
-        'email.unique' => 'Este e-mail já está sendo utilizado.',
-    ]);
-
-    // 4. Salva os dados básicos
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->cpf = preg_replace('/\D/', '', $request->cpf);
-
-    // 5. Se o checkbox estava marcado, atualiza a senha de fato
-    if ($request->has('alterar_senha')) {
-        $user->password = \Hash::make($request->password);
-    }
-
-    $user->save();
-
-    return redirect()->back()->with('sucesso', 'Perfil atualizado com sucesso!');
-}
 }

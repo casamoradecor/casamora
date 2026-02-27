@@ -137,6 +137,62 @@ header, .scrolled {
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
+/* Container para alinhar o ícone dentro do input */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper .input-perfil {
+    padding-right: 40px; /* Espaço para o ícone não cobrir o texto */
+}
+
+/* Estilo do botão do olhinho */
+.toggle-password {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    background: none;
+    border: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+
+.toggle-password:hover {
+    color: #4B3621; /* Cor da Casa MORÁ */
+}
+.password-requirements {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    font-size: 0.75rem;
+}
+
+.password-requirements li {
+    margin-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.password-requirements li.invalid {
+    color: #cc0000; /* Vermelho para pendente */
+}
+
+.password-requirements li.invalid::before {
+    content: "○ ";
+}
+
+.password-requirements li.valid {
+    color: #2e7d32; /* Verde para ok */
+}
+
+.password-requirements li.valid::before {
+    content: "● ";
+}
 
 .full-width { grid-column: span 2; }
 

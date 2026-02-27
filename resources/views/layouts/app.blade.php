@@ -118,5 +118,6 @@
 
   <script src="{{ asset('js/main.js') }}"></script>
   <script src="{{ asset('js/carrinho.js') }}"></script>
+  @stack('js')
 </body>
 </html>
