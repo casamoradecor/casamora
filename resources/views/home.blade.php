@@ -59,17 +59,17 @@
               <div class="categorias-track">
                   <a href="#" class="categoria-card">
                       <img src="{{ asset('assets/vasomora.png') }}" alt="vasos">
-                      <div class="categoria-overlay"><span>vasos</span></div>
+                      <div class="categoria-overlay"></div>
                   </a>
 
                   <a href="#" class="categoria-card">
                       <img src="{{ asset('assets/vasomora.png') }}" alt="utensílios">
-                      <div class="categoria-overlay"><span>utensílios</span></div>
+                      <div class="categoria-overlay"></div>
                   </a>
 
                   <a href="#" class="categoria-card">
                       <img src="{{ asset('assets/vasomora.png') }}" alt="decorações">
-                      <div class="categoria-overlay"><span>decorações</span></div>
+                      <div class="categoria-overlay"></div>
                   </a>
               </div>
           </div>
