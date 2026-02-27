@@ -48,10 +48,10 @@
             <h3>Total da Compra: R$ {{ number_format($total, 2, ',', '.') }}</h3>
             
             <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
-                <a href="{{ route('home') }}" style="padding: 10px 20px; text-decoration: none; color: #333; border: 1px solid #333;">
+                <a href="{{ route('home') }}" style="padding: 10px 20px; text-decoration: none; color: #4b2b22; border: 1px solid #4b2b22;">
                     Continuar Comprando
                 </a>
-                <a href="#" style="padding: 10px 20px; text-decoration: none; color: #fff; background-color: #333;">
+                <a href="#" style="padding: 10px 20px; text-decoration: none; color: #fff; background-color: #4b2b22;">
                     Finalizar Compra
                 </a>
             </div>
@@ -59,7 +59,7 @@
     @else
         <div style="margin-top: 30px; text-align: center;">
             <p>Seu carrinho está vazio.</p>
-            <a href="{{ route('home') }}" style="display: inline-block; margin-top: 15px; padding: 10px 20px; text-decoration: none; color: #fff; background-color: #333;">
+            <a href="{{ route('home') }}" style="display: inline-block; margin-top: 15px; padding: 10px 20px; text-decoration: none; color: #fff; background-color: #4b2b22;">
                 Voltar para a loja
             </a>
         </div>

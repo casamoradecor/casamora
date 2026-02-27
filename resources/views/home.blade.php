@@ -35,17 +35,17 @@
       @endphp
 
       <div class="produto-card">
-          <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">
-          
-          <h3 class="produto-titulo">{{ $produto->nome }}</h3>
-          
-          <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
+          <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">          
+          <div class="produto-info">
+              <h3 class="produto-titulo">{{ $produto->nome }}</h3>
+              <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
+          </div>
           
           <button class="btn-comprar" 
                   data-id="{{ $produto->id }}"
                   data-nome="{{ $produto->nome }}" 
                   data-preco="{{ $produto->preco }}" 
-                  data-imagem="{{ $urlFinal }}"> ADICIONAR AO CARRINHO
+                  data-imagem="{{ $urlFinal }}"> adicionar ao carrinho
           </button>
       </div>
   @endforeach
@@ -53,26 +53,26 @@
       </section>
       
       <section class="categorias-secao">
-        <h2 class="categorias-titulo">Compre por Categoria</h2>
+          <h2 class="categorias-titulo">compre por categoria</h2>
 
-        <div class="categorias-container">
-          <div class="categorias-track" id="categoriasTrack">
-            <a href="#" class="categoria-card">
-              <img src="{{ asset('assets/vasomora.png') }}" alt="Vasos">
-              <div class="categoria-overlay"><span>VASOS</span></div>
-            </a>
+          <div class="categorias-container">
+              <div class="categorias-track">
+                  <a href="#" class="categoria-card">
+                      <img src="{{ asset('assets/vasomora.png') }}" alt="vasos">
+                      <div class="categoria-overlay"><span>vasos</span></div>
+                  </a>
 
-            <a href="#" class="categoria-card">
-              <img src="{{ asset('assets/vasomora.png') }}" alt="Utensílios">
-              <div class="categoria-overlay"><span>UTENSÍLIOS</span></div>
-            </a>
+                  <a href="#" class="categoria-card">
+                      <img src="{{ asset('assets/vasomora.png') }}" alt="utensílios">
+                      <div class="categoria-overlay"><span>utensílios</span></div>
+                  </a>
 
-            <a href="#" class="categoria-card">
-              <img src="{{ asset('assets/vasomora.png') }}" alt="Decorações">
-              <div class="categoria-overlay"><span>DECORAÇÕES</span></div>
-            </a>
+                  <a href="#" class="categoria-card">
+                      <img src="{{ asset('assets/vasomora.png') }}" alt="decorações">
+                      <div class="categoria-overlay"><span>decorações</span></div>
+                  </a>
+              </div>
           </div>
-        </div>
       </section>
 
       <section class="shoppable-secao">

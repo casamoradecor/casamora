@@ -112,12 +112,14 @@
   opacity: 0.8;
 }
 
+/* Container para alinhar título e preço lado a lado */
 .produto-info {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* Um para cada lado */
+  align-items: flex-start;        /* Alinha pelo topo */
   width: 100%;
   margin-bottom: 15px;
+  gap: 10px;                      /* Espaço mínimo entre eles */
 }
 
 .produto-titulo {
@@ -127,34 +129,46 @@
   font-size: 0.85rem;
   letter-spacing: 1px;
   margin: 0;
+  flex: 1;                        /* Ocupa o espaço que sobrar */
+  /* Removemos o 'white-space: nowrap' para o nome poder quebrar linha se for grande, 
+     ou mantemos se você quiser que ele sempre fique em uma linha só com reticências: */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
 }
 
 .produto-preco {
   color: var(--color-brand);
-  font-weight: 700;
+  font-weight: 600; 
+  text-transform: uppercase;
   font-size: 0.9rem;
   margin: 0;
+  white-space: nowrap;            /* Preço nunca quebra linha */
 }
 
 .btn-comprar {
   width: 100%;
-  padding: 12px 0;
+  padding: 10px 0;
   background-color: transparent;
   color: var(--color-brand);
-  border: 1px solid var(--color-brand);
+  border: 1px solid var(--color-brand); /* Contorno fino de 1px */
+  border-radius: 50px;                 /* Cantos bem arredondados */
+  
   font-family: var(--font-base);
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
+  font-weight: 500;                    /* Fonte mais leve para ser delicada */
+  font-size: 0.75rem;                  /* Diminuí levemente para combinar com o arredondado */
+  text-transform: lowercase;           /* Seguindo a regra de minúsculas */
   letter-spacing: 1px;
+  
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   margin-top: auto;
 }
 
 .btn-comprar:hover {
   background-color: var(--color-brand);
   color: #fff;
+  letter-spacing: 1.5px; /* Um leve respiro nas letras ao passar o mouse */
 }
 
 .carrossel-btn {
@@ -198,93 +212,80 @@
 
 /* SEÇÃO CATEGORIAS */
 .categorias-secao {
-  padding: 80px 5%;
-  background-color: #F0F0F0;
+    padding: 80px 5%; /* Mantém o padding lateral de 5% para alinhar com a seção shoppable */
+    background-color: #F0F0F0;
 }
 
 .categorias-titulo {
-  font-family: var(--font-title);
-  color: var(--color-brand);
-  font-size: 2rem;
-  margin-bottom: 40px;
-  text-align: center;
+    font-family: var(--font-title);
+    color: var(--color-brand);
+    font-size: 2rem;
+    margin-bottom: 40px;
+    text-align: center;
 }
 
 .categorias-container {
-  position: relative;
-  width: 100%;
+    width: 100%; 
 }
 
 .categorias-track {
-  display: flex;
-  gap: 40px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 20px;
-  -ms-overflow-style: none; scrollbar-width: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Mantém 3 colunas iguais */
+    gap: 30px; /* Mantém o espaçamento entre os cards */
+    overflow: visible;
 }
 
-.categorias-track::-webkit-scrollbar { display: none; }
-
 .categoria-card {
-  position: relative;
-  flex: 0 0 532px;
-  height: 300px;  
-  border-radius: 12px;
-  overflow: hidden;
-  text-decoration: none;
+    position: relative;
+    width: 100%;
+    height: 250px; /* Altura reduzida de 450px para 250px para tornar as imagens mais horizontais */
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
 }
 
 .categoria-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-  display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantém para preencher o card horizontalmente */
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
 }
 
 .categoria-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
 }
 
 .categoria-card:hover img {
-  transform: scale(1.05);
+    transform: scale(1.08);
 }
 
-.categoria-card:hover .categoria-overlay {
-  background: rgba(0,0,0,0.4);
-}
 
 .categoria-overlay span {
-  color: #fff;
-  font-family: var(--font-base);
-  font-weight: 700;
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+    color: #fff;
+    font-family: var(--font-base);
+    font-weight: 500;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    /* text-transform: lowercase do body global será aplicado automaticamente */
 }
 
-.categorias-container .carrossel-btn {
-  display: none;
-}
-
+/* RESPONSIVIDADE PARA CELULAR - ATUALIZADA */
 @media (max-width: 900px) {
-  .categorias-titulo {
-    font-size: 1.5rem;
-  }
-  .categoria-card {
-    flex: 0 0 350px;
-    height: 200px;
-  }
-  .categorias-track {
-    gap: 20px;
-  }
+    .categorias-track {
+        grid-template-columns: 1fr; /* Mantém 1 coluna no celular */
+        gap: 20px;
+    }
+    
+    .categoria-card {
+        height: 250px; /* Altura mantida em 250px para preservar a proporção horizontal no celular */
+    }
 }
 
 /* SEÇÃO FOTO INTERATIVA */

@@ -77,8 +77,12 @@
 }
 
 /* Itens do Resumo */
+.checkout-itens-lista{
+    text-transform: uppercase;
+}
 .checkout-item {
     display: flex;
+    text-transform: uppercase;
     gap: 20px;
     margin-bottom: 20px;
     padding-bottom: 20px;
@@ -106,8 +110,9 @@
 /* Totais e Botão */
 .checkout-total-row {
     margin-top: 30px;
+    text-transform: uppercase;
     padding-top: 20px;
-    border-top: 2px solid #000;
+    border-top: 2px solid #4B3621;
     display: flex;
     justify-content: space-between;
     font-size: 1.4rem;

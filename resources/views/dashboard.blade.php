@@ -19,7 +19,7 @@
         
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="btn-logout">Sair da Conta</button>
+            <button type="submit" class="btn-logout">SAIR DA CONTA</button>
         </form>
     </aside>
 

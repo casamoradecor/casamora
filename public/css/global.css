@@ -12,7 +12,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  
 }
 
 html, body {
@@ -27,4 +26,37 @@ body {
   color: var(--color-text);
   overflow-x: hidden;
   background-color: #F0F0F0;
+  text-transform: lowercase; /* Aplica minúsculo em todo o site */
+}
+
+/* =========================================
+   EXCEÇÕES (Onde o texto NÃO fica minúsculo)
+   ========================================= */
+
+/* Menu (Header), Rodapé, Inputs e Navegação do Dashboard */
+header, 
+header *, 
+footer, 
+footer *, 
+nav, 
+nav *, 
+input, 
+textarea, 
+select,
+button,
+.dashboard-nav, 
+.dashboard-nav * {
+    text-transform: none !important;
+}
+/* Forçar MAIÚSCULO apenas no carrinho e na sidebar */
+.carrinho-container, 
+.carrinho-container *,
+.carrinho-sidebar, 
+.carrinho-sidebar * {
+    text-transform: uppercase !important;
+}
+
+/* Ajuste fino: caso queira que as unidades (R$) fiquem com espaçamento melhor */
+.price-tag, .carrinho-total span {
+    letter-spacing: 0.5px;
 }
