@@ -6,6 +6,19 @@ use App\Http\Controllers\Admin\ProdutoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PerfilController; 
+use App\Http\Controllers\AdminController;
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/acessar', [AdminController::class, 'validarAcesso'])->name('admin.access');
+    Route::get('/editar', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/banner', [AdminController::class, 'uploadBanner'])->name('admin.uploadBanner');
+    Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
+    Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
+    Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
+    Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
+    Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
+    Route::put('/admin/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
+});
 
 /*
 |--------------------------------------------------------------------------

@@ -11,15 +11,7 @@ class Produto extends Model
     use HasFactory, SoftDeletes;
 
     // Define quais campos podem ser preenchidos via formulário/array
-    protected $fillable = [
-        'categoria_id',
-        'nome',
-        'descricao',
-        'preco',
-        'estoque',
-        'codigo_referencia',
-        'status'
-    ];
+    protected $fillable = ['nome', 'preco', 'imagem', 'categoria_id'];
 
     /**
      * Relacionamento: Um produto pertence a uma categoria.

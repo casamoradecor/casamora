@@ -28,6 +28,11 @@
 
       <nav class="site-nav" id="siteNav">
         <a href="/">INÍCIO</a>
+        @auth
+        @if(auth()->id() === 1)
+            <a href="{{ route('admin.access') }}" style="color: var(--color-brand); font-weight: 700;">MODO EDIÇÃO</a>
+        @endif
+    @endauth
         <a href="#">PRODUTOS</a>
         <a href="#">CONTATO</a>
       </nav>

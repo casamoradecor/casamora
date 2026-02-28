@@ -5,7 +5,7 @@
   @section('content')
     <main>
       <section class="hero">
-        <img src="{{ asset('assets/vasomora.png') }}" alt="vasomora" class="hero-img">
+       <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <img src="{{ asset('assets/LogoMora.png') }}" alt="Casa MORÁ" class="hero-logo">
@@ -15,7 +15,7 @@
 
       <section class="destaque-produtos">
         <div class="destaque-imagem">
-          <img src="{{ asset('assets/vasomora.png') }}" alt="Ambiente decorado">
+          <img src="{{ asset('assets/destaque_home.png') }}" alt="Destaque">
         </div>
 
         <div class="destaque-carrossel">
@@ -58,17 +58,17 @@
           <div class="categorias-container">
               <div class="categorias-track">
                   <a href="#" class="categoria-card">
-                      <img src="{{ asset('assets/vasomora.png') }}" alt="vasos">
+                     <img src="{{ asset('assets/categoria_1.png') }}" alt="vasos">
                       <div class="categoria-overlay"></div>
                   </a>
 
                   <a href="#" class="categoria-card">
-                      <img src="{{ asset('assets/vasomora.png') }}" alt="utensílios">
+                      <img src="{{ asset('assets/categoria_2.png') }}" alt="utensilios">
                       <div class="categoria-overlay"></div>
                   </a>
 
                   <a href="#" class="categoria-card">
-                      <img src="{{ asset('assets/vasomora.png') }}" alt="decorações">
+                      <img src="{{ asset('assets/categoria_1.png') }}" alt="decorações">
                       <div class="categoria-overlay"></div>
                   </a>
               </div>
