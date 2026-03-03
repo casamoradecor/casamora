@@ -67,7 +67,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Atualiza a imagem do ambiente (shoppable_main.png).
+     * Atualiza a imagem do ambiente
      */
     public function updateShoppable(Request $request)
     {
