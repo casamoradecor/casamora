@@ -43,31 +43,19 @@ class AdminController extends Controller
      /**
      * Atualiza o Banner Principal (hero_banner.png).
      */
-    public function updateProduto(Request $request, $id)
-{
+    public function updateProduto(Request $request, $id) {
     $produto = Produto::findOrFail($id);
     
-    $request->validate([
-        'nome' => 'required',
-        'preco' => 'required',
-        'categoria_id' => 'required'
-    ]);
+    // Atualiza nome, preço, estoque e categoria de uma vez
+    $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id']));
 
-    // Se uma nova imagem foi enviada, substitui a antiga
     if ($request->hasFile('imagem')) {
         $path = $request->file('imagem')->store('produtos', 'public');
-        $produto->imagem = $path;
+        $produto->update(['imagem' => $path]);
     }
 
-    $produto->update([
-        'nome' => $request->nome,
-        'preco' => $request->preco,
-        'categoria_id' => $request->categoria_id
-    ]);
-
-    return redirect()->back()->with('sucesso', 'produto atualizado com sucesso!');
+    return redirect()->back()->with('sucesso', 'produto e estoque atualizados!');
 }
-
     /**
      * Atualiza a imagem de Destaque (destaque_home.png).
      */
@@ -104,23 +92,25 @@ class AdminController extends Controller
     public function storeProduto(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string',
-            'preco' => 'required|numeric',
-            'categoria_id' => 'required|integer',
-            'imagem' => 'required|image'
-        ]);
+        'nome' => 'required',
+        'preco' => 'required',
+        'estoque' => 'required|integer',
+        'categoria_id' => 'required',
+        'imagem' => 'required|image'
+    ]);
 
-        $path = $request->file('imagem')->store('produtos', 'public');
+    $path = $request->file('imagem')->store('produtos', 'public');
 
-        Produto::create([
-            'nome' => $request->nome,
-            'preco' => $request->preco,
-            'categoria_id' => $request->categoria_id,
-            'imagem' => $path
-        ]);
+    Produto::create([
+        'nome' => $request->nome,
+        'preco' => $request->preco,
+        'estoque' => $request->estoque,
+        'categoria_id' => $request->categoria_id,
+        'imagem' => $path
+    ]);
 
-        return redirect()->back()->with('sucesso', 'produto adicionado com sucesso!');
-    }
+    return redirect()->back()->with('sucesso', 'produto cadastrado com estoque!');
+}
 
     /**
      * Remove um produto do banco de dados.

@@ -77,38 +77,9 @@
 
       <section class="shoppable-secao">
         <div class="shoppable-container">
-          <img src="{{ asset('assets/EMABALAGEM 2 LOGO RGB.png') }}" alt="Ambiente Decorado" class="shoppable-main-img">
-
-          <div class="shoppable-info">
-            <h2>In Situ Living</h2>
-            <p>Nossa seleção de peças especificamente escolhidas para transformar seu ambiente.</p>
-            <a href="#" class="shop-room-btn">COMPRE ESTE AMBIENTE</a>
-          </div>
-
-          <div class="hotspot" style="top: 45%; left: 35%;">
-            <button class="hotspot-dot"></button>
-            <span class="hotspot-label">Vasos e Decoração</span>
-            <div class="hotspot-popover">
-              <img src="{{ asset('assets/vasomora.png') }}" alt="Vaso Cerâmica">
-              <div class="popover-info">
-                <h4>Vaso Cerâmica</h4>
-                <a href="#">VER MAIS</a>
-              </div>
+            <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado" class="shoppable-main-img">
+            
             </div>
-          </div>
-
-          <div class="hotspot" style="top: 35%; left: 75%;">
-            <button class="hotspot-dot"></button>
-            <span class="hotspot-label">O Sofá Bromley</span>
-            <div class="hotspot-popover">
-              <img src="{{ asset('assets/EMABALAGEM 2 LOGO RGB.png') }}" alt="Sofá Bromley">
-              <div class="popover-info">
-                <h4>O Sofá Bromley</h4>
-                <a href="#">VER MAIS</a>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
   @endsection

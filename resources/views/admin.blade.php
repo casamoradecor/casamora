@@ -60,10 +60,16 @@
                         <option value="3">decorações</option>
                     </select>
                 </div>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="font-size: 0.7rem; font-weight: 700;">PREÇO</label>
-                    <input type="number" step="0.01" name="preco" id="inputPreco" placeholder="189.90" required onkeyup="updateTextPreview()" style="padding: 12px; border: 1px solid #eee; border-radius: 8px; outline: none;">
+
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 0.7rem; font-weight: 700;">PREÇO (R$)</label>
+                        <input type="number" step="0.01" name="preco" id="inputPreco" placeholder="189.90" required onkeyup="updateTextPreview()" style="padding: 12px; border: 1px solid #eee; border-radius: 8px; outline: none;">
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 0.7rem; font-weight: 700;">ESTOQUE INICIAL</label>
+                        <input type="number" name="estoque" placeholder="10" required style="padding: 12px; border: 1px solid #eee; border-radius: 8px; outline: none;">
+                    </div>
                 </div>
                 
                 <button type="submit" style="background: var(--color-brand); color: #fff; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: 700; text-transform: lowercase;">
@@ -91,19 +97,25 @@
                     </div>
 
                     <input type="text" name="nome" value="{{ $produto->nome }}" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 5px; font-size: 0.8rem;">
-                    
-                    <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 15px;">
-                        <span style="font-size: 0.8rem; color: #888;">R$</span>
-                        <input type="number" step="0.01" name="preco" value="{{ $produto->preco }}" style="flex: 1; padding: 8px; border: 1px solid #eee; border-radius: 5px; font-size: 0.8rem;">
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <label style="font-size: 0.6rem; color: #aaa; text-transform: lowercase;">preço atual</label>
+                            <input type="number" step="0.01" name="preco" value="{{ $produto->preco }}" style="width: 100%; padding: 8px; border: 1px solid #eee; border-radius: 5px; font-size: 0.8rem;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 0.6rem; color: #aaa; text-transform: lowercase;">qtd estoque</label>
+                            <input type="number" name="estoque" value="{{ $produto->estoque }}" style="width: 100%; padding: 8px; border: 1px solid #eee; border-radius: 5px; font-size: 0.8rem;">
+                        </div>
                     </div>
 
                     <div style="display: flex; gap: 10px;">
-                        <button type="submit" style="flex: 2; background: #e3dcd2; border: none; padding: 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: lowercase;">salvar alterações</button>
+                        <button type="submit" style="flex: 2; background: #e3dcd2; border: none; padding: 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; text-transform: lowercase;">salvar</button>
                 </form>
                 
                 <form action="{{ route('admin.produto.destroy', $produto->id) }}" method="POST" onsubmit="return confirm('deseja realmente excluir este produto?')">
                     @csrf @method('DELETE')
-                    <button type="submit" style="background: #ffebee; color: #c62828; border: none; padding: 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
+                    <button type="submit" style="background: #ffebee; color: #c62828; border: none; padding: 10px; border-radius: 50%; width: 35px; height: 35px; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
                 </form>
                 </div>
             </div>
@@ -145,33 +157,20 @@
 </main>
 
 <script>
-    // Função para preview da imagem carregada no input
     function previewFile() {
         const preview = document.getElementById('previewImg');
         const file = document.getElementById('inputImagem').files[0];
         const reader = new FileReader();
-
-        reader.onloadend = function () {
-            preview.src = reader.result;
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "{{ asset('assets/vasomora.png') }}";
-        }
+        reader.onloadend = () => { preview.src = reader.result; }
+        if (file) { reader.readAsDataURL(file); }
     }
 
-    // Função para atualizar textos no preview do card
     function updateTextPreview() {
         const nome = document.getElementById('inputNome').value;
         const preco = document.getElementById('inputPreco').value;
-
         document.getElementById('previewNome').innerText = nome || 'nome do item';
-        
         if(preco) {
-            const formatado = parseFloat(preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-            document.getElementById('previewPreco').innerText = 'R$ ' + formatado;
+            document.getElementById('previewPreco').innerText = 'R$ ' + parseFloat(preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
         } else {
             document.getElementById('previewPreco').innerText = 'R$ 0,00';
         }
