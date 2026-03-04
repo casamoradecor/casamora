@@ -1,0 +1,176 @@
+/* Paleta Casa MORÁ: #3b1f15 (Marca), #f9f9f9 (Fundo), #ffffff (Cards) */
+
+:root {
+    --sidebar-width: 260px;
+    --color-admin-bg: #f4f4f4;
+    --color-sidebar-text: #444;
+    --color-sidebar-active-bg: #fdfaf7;
+    --border-light: #e0e0e0;
+}
+
+body.admin-body {
+    background-color: var(--color-admin-bg);
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Esconde elementos do site público no painel */
+.admin-body .site-header, 
+.admin-body .site-footer { 
+    display: none !important; 
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR - Inspirada na Nuvemshop */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    background-color: #fff;
+    border-right: 1px solid var(--border-light);
+    position: fixed;
+    height: 100vh;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+}
+
+.sidebar-logo {
+    padding: 0 25px 30px;
+    border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-logo img { width: 35px; }
+
+.sidebar-nav { 
+    flex: 1; 
+    padding: 0 15px;
+    overflow-y: auto;
+}
+
+.nav-group-title {
+    font-size: 0.65rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 25px 12px 10px;
+    font-weight: 700;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--color-sidebar-text);
+    font-size: 0.85rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.nav-item i { width: 18px; text-align: center; font-size: 1rem; }
+
+.nav-item:hover { 
+    background-color: #f8f9fa; 
+    color: var(--color-brand); 
+}
+
+.nav-item.active { 
+    background-color: var(--color-sidebar-active-bg); 
+    color: var(--color-brand); 
+    font-weight: 600; 
+}
+
+/* CONTEÚDO PRINCIPAL */
+.admin-main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 40px 60px;
+}
+.admin-hidden {
+    display: none !important;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+
+}
+
+.admin-header h1 { 
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; 
+    font-weight: 400; 
+    color: #1a1a1a;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.user-info span {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.user-info strong {
+    color: var(--color-brand);
+    text-transform: capitalize;
+    font-weight: 600;
+}
+
+.admin-header h1 { 
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; 
+    font-weight: 400; 
+    color: #1a1a1a;
+    margin: 0;
+}
+
+/* CARDS PROFISSIONAIS */
+.card-dashboard {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+}
+
+.status-banner {
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    padding: 18px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    color: #2e7d32;
+    font-size: 0.9rem;
+}
+
+.btn-admin-primary {
+    background-color: var(--color-brand);
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: lowercase;
+    transition: opacity 0.3s;
+}
+
+.btn-admin-primary:hover { opacity: 0.9; }
+

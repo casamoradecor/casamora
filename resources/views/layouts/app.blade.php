@@ -58,46 +58,47 @@
 
   @yield('content')
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-col newsletter">
-        <h3>Assine nossa Newsletter</h3>
-        <p>Receba novidades e ofertas exclusivas da Casa MORÁ.</p>
-        <form class="news-form" onsubmit="event.preventDefault();">
-          <input type="email" placeholder="Seu melhor e-mail" required>
-          <button type="submit" aria-label="Enviar"><i class="fa-solid fa-arrow-right"></i></button>
-        </form>
-      </div>
+  @if(!Request::is('admin*'))
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-col newsletter">
+          <h3>Assine nossa Newsletter</h3>
+          <p>Receba novidades e ofertas exclusivas da Casa MORÁ.</p>
+          <form class="news-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Seu melhor e-mail" required>
+            <button type="submit" aria-label="Enviar"><i class="fa-solid fa-arrow-right"></i></button>
+          </form>
+        </div>
 
-      <div class="footer-col links">
-        <h3>Navegação</h3>
-        <a href="/">Início</a>
-        <a href="#">Produtos</a>
-        <a href="#">Sobre Nós</a>
-        <a href="#">Contato</a>
-      </div>
+        <div class="footer-col links">
+          <h3>Navegação</h3>
+          <a href="/">Início</a>
+          <a href="#">Produtos</a>
+          <a href="#">Sobre Nós</a>
+          <a href="#">Contato</a>
+        </div>
 
-      <div class="footer-col links">
-        <h3>Políticas</h3>
-        <a href="#">Trocas e Devoluções</a>
-        <a href="#">Política de Privacidade</a>
-        <a href="#">Termos de Uso</a>
-      </div>
+        <div class="footer-col links">
+          <h3>Políticas</h3>
+          <a href="#">Trocas e Devoluções</a>
+          <a href="#">Política de Privacidade</a>
+          <a href="#">Termos de Uso</a>
+        </div>
 
-      <div class="footer-col social">
-        <h3>Siga a Casa MORÁ</h3>
-        <div class="social-icons">
-          <a href="https://www.instagram.com/casamora.decora/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="https://www.tiktok.com/@casamoradecora" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <div class="footer-col social">
+          <h3>Siga a Casa MORÁ</h3>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/casamora.decora/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@casamoradecora" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="footer-bottom">
-      <p>&copy; 2026 Casa MORÁ. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-
+      <div class="footer-bottom">
+        <p>&copy; 2026 Casa MORÁ. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  @endif
   <aside class="carrinho-sidebar" id="carrinhoSidebar">
     <div class="carrinho-header">
       <h2>Seu Carrinho</h2>

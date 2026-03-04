@@ -20,7 +20,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Exibe a página principal do painel administrativo.
+     * Exibe a página principal do painel administrativo (Listagem de Produtos).
      */
     public function index()
     {
@@ -32,6 +32,61 @@ class AdminController extends Controller
     }
 
     /**
+     * Exibe o formulário de criação de novo produto.
+     * Localizado em: resources/views/admin/create.blade.php
+     */
+    public function createProduto()
+    {
+        if (Auth::id() !== 1) {
+            return redirect('/');
+        }
+        return view('admin.create'); 
+    }
+
+    /**
+     * Salva um novo produto no banco de dados.
+     */
+    public function storeProduto(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required',
+            'preco' => 'required',
+            'estoque' => 'required|integer',
+            'categoria_id' => 'required',
+            'imagem' => 'required|image'
+        ]);
+
+        $path = $request->file('imagem')->store('produtos', 'public');
+
+        Produto::create([
+            'nome' => $request->nome,
+            'preco' => $request->preco,
+            'estoque' => $request->estoque,
+            'categoria_id' => $request->categoria_id,
+            'imagem' => $path
+        ]);
+
+        // Redireciona para a listagem (index) após cadastrar [Fluxo Profissional]
+        return redirect()->route('admin.index')->with('sucesso', 'produto cadastrado com sucesso!');
+    }
+
+    /**
+     * Atualiza um produto existente.
+     */
+    public function updateProduto(Request $request, $id) {
+        $produto = Produto::findOrFail($id);
+        
+        $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id']));
+
+        if ($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('produtos', 'public');
+            $produto->update(['imagem' => $path]);
+        }
+
+        return redirect()->back()->with('sucesso', 'produto e estoque atualizados!');
+    }
+
+    /**
      * Atualiza o Banner Principal (hero_banner.png).
      */
     public function uploadBanner(Request $request) 
@@ -40,22 +95,7 @@ class AdminController extends Controller
         $request->file('hero_img')->move(public_path('assets'), 'hero_banner.png');
         return redirect()->back()->with('sucesso', 'banner atualizado!');
     }
-     /**
-     * Atualiza o Banner Principal (hero_banner.png).
-     */
-    public function updateProduto(Request $request, $id) {
-    $produto = Produto::findOrFail($id);
-    
-    // Atualiza nome, preço, estoque e categoria de uma vez
-    $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id']));
 
-    if ($request->hasFile('imagem')) {
-        $path = $request->file('imagem')->store('produtos', 'public');
-        $produto->update(['imagem' => $path]);
-    }
-
-    return redirect()->back()->with('sucesso', 'produto e estoque atualizados!');
-}
     /**
      * Atualiza a imagem de Destaque (destaque_home.png).
      */
@@ -67,7 +107,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Atualiza a imagem do ambiente
+     * Atualiza a imagem do ambiente.
      */
     public function updateShoppable(Request $request)
     {
@@ -85,32 +125,6 @@ class AdminController extends Controller
         $request->file('cat_img')->move(public_path('assets'), "categoria_{$id}.png");
         return redirect()->back()->with('sucesso', 'categoria atualizada!');
     }
-
-    /**
-     * Salva um novo produto no banco de dados.
-     */
-    public function storeProduto(Request $request)
-    {
-        $request->validate([
-        'nome' => 'required',
-        'preco' => 'required',
-        'estoque' => 'required|integer',
-        'categoria_id' => 'required',
-        'imagem' => 'required|image'
-    ]);
-
-    $path = $request->file('imagem')->store('produtos', 'public');
-
-    Produto::create([
-        'nome' => $request->nome,
-        'preco' => $request->preco,
-        'estoque' => $request->estoque,
-        'categoria_id' => $request->categoria_id,
-        'imagem' => $path
-    ]);
-
-    return redirect()->back()->with('sucesso', 'produto cadastrado com estoque!');
-}
 
     /**
      * Remove um produto do banco de dados.

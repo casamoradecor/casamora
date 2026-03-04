@@ -18,6 +18,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
     Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::put('/admin/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
+    Route::get('/admin/produtos/novo', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
 });
 
 /*
