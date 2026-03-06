@@ -1,0 +1,100 @@
+/* PALETA CASA MORÁ: MARROM #3B1F15 | FUNDO #F4F4F4 */
+
+.admin-body-novo {
+    background-color: #f4f4f4;
+    text-transform: uppercase; /* TUDO MAIÚSCULO */
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* FIX DEFINITIVO DO MENU: BRANCO SÓLIDO */
+.admin-body-novo .site-header {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative !important;
+    display: block !important;
+    z-index: 100;
+}
+
+.novo-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+
+.novo-header {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #3b1f15;
+    padding-bottom: 15px;
+}
+
+.novo-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #3b1f15;
+}
+
+/* ESTILO DOS CARDS */
+.card-form {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 25px;
+}
+
+.label-mora {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #3b1f15;
+}
+
+.input-mora {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    background: #fafafa;
+}
+
+.input-mora:focus {
+    border-color: #3b1f15;
+    background: #fff;
+}
+
+/* ÁREA DE FOTO */
+.upload-placeholder {
+    border: 2px dashed #3b1f15;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+}
+
+/* BOTÃO MARROM ARREDONDADO (PILL) */
+.btn-save-mora {
+    background-color: #3b1f15;
+    color: #ffffff;
+    border: none;
+    padding: 20px 100px;
+    border-radius: 50px; /* BORDAS ARREDONDADAS */
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 40px auto 0;
+}
+
+.btn-save-mora:hover {
+    background-color: #2a160f;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(59, 31, 21, 0.2);
+}

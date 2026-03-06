@@ -1,63 +1,117 @@
 @extends('layouts.app')
 
-@section('title', 'CASA MORÁ — ADICIONAR PRODUTO')
+@section('title', 'CASA MORÁ — PRODUTOS')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('css/create-admin.css') }}">
+    
 @endpush
 
 @section('content')
 <div class="admin-body-full">
     <main class="admin-main-create">
-        
-        <header class="admin-header-create">
-            <h1>adicionar novo produto</h1>        
+        <header class="admin-header-list">
+            <div>
+                <h1>produtos</h1>
+            </div>
+            <a href="{{ route('admin.produtos.novo') }}" class="btn-add-mora">
+                <i class="fa-solid fa-plus"></i> adicionar produto
+            </a>
         </header>
 
-        <form action="{{ route('admin.produto.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            
-            <div class="card-dashboard">
-                <label class="admin-label">fotos do produto</label>
-                <div class="upload-area">
-                    <input type="file" name="imagem" required>
-                </div>
-            </div>
-
-            <div class="card-dashboard">
-                <label class="admin-label">nome do item</label>
-                <input type="text" name="nome" placeholder="ex: vaso de cerâmica morá" class="admin-input" required>
-                
-                <label class="admin-label" style="margin-top: 25px;">descrição detalhada</label>
-                <textarea name="descricao" rows="5" class="admin-input" placeholder="descreva as características e dimensões da peça..."></textarea>
-            </div>
-
-            <div class="grid-2-col">
-                <div class="card-dashboard">
-                    <label class="admin-label">valor de venda (r$)</label>
-                    <input type="number" step="0.01" name="preco" class="admin-input" placeholder="0.00" required>
-                </div>
-                <div class="card-dashboard">
-                    <label class="admin-label">quantidade em estoque</label>
-                    <input type="number" name="estoque" class="admin-input" placeholder="0" required>
-                </div>
-            </div>
-
-            <div class="card-dashboard">
-                <label class="admin-label">selecione a categoria</label>
-                <select name="categoria_id" class="admin-input" required>
-                    <option value="1">vasos</option>
-                    <option value="2">utensílios</option>
-                    <option value="3">decorações</option>
-                </select>
-            </div>
-
-            <div class="footer-actions">
-                <button type="submit" class="btn-save-large">
-                    salvar alterações
-                </button>
-            </div>
-        </form>
+        <div class="table-card">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th width="40"><input type="checkbox"></th>
+                        <th>produto</th>
+                        <th>estoque</th>
+                        <th>preço</th>
+                        <th>lançamento</th>
+                        <th width="100">ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($produtos as $produto)
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <img src="{{ asset('storage/' . $produto->imagem) }}" class="product-img">
+                                <strong>{{ $produto->nome }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ $produto->estoque }} un</td>
+                        <td>r$ {{ number_format($produto->preco, 2, ',', '.') }}</td>
+                        <td>
+                            <form action="{{ route('admin.produto.toggle-lancamento', $produto->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn-launch {{ $produto->lancamento ? 'active' : '' }}">
+                                    {{ $produto->lancamento ? 'no carrossel' : 'ativar' }}
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <a href="{{ route('admin.produtos.edit', $produto->id) }}" style="color: #3b1f15;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                
+                                {{-- BOTÃO QUE ABRE O MODAL --}}
+                                <button type="button" onclick="abrirModalExclusao('{{ $produto->id }}', '{{ $produto->nome }}')" 
+                                        style="background:none; border:none; color:#ff4d4d; cursor:pointer;">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </main>
 </div>
+
+{{-- ESTRUTURA DO MODAL --}}
+<div id="modalDelete" class="modal-overlay">
+    <div class="modal-box">
+        <h2 style="font-family: 'Playfair Display'; color: #3b1f15;">confirmar exclusão</h2>
+        <p style="margin: 20px 0; color: #666; font-size: 0.9rem;">
+            tem certeza que deseja excluir o produto:<br>
+            <strong id="nomeProdutoModal" style="color: #3b1f15; font-size: 1.1rem; display: block; margin-top: 10px;"></strong>
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="fecharModal()" class="btn-modal btn-cancel">cancelar</button>
+            <form id="formDelete" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-modal btn-confirm">excluir agora</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModalExclusao(id, nome) {
+        // Coloca o nome do produto no modal
+        document.getElementById('nomeProdutoModal').innerText = nome.toUpperCase();
+        
+        // Define a URL correta de exclusão
+        document.getElementById('formDelete').action = "/admin/produto/" + id;
+        
+        // Mostra o modal
+        document.getElementById('modalDelete').style.display = 'flex';
+    }
+
+    function fecharModal() {
+        document.getElementById('modalDelete').style.display = 'none';
+    }
+
+    // Fecha se clicar fora da caixa
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modalDelete')) {
+            fecharModal();
+        }
+    }
+</script>
 @endsection

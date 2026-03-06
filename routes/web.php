@@ -8,9 +8,29 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PerfilController; 
 use App\Http\Controllers\AdminController;
 
+/*
+|--------------------------------------------------------------------------
+| PAINEL ADMINISTRATIVO (AdminController)
+|--------------------------------------------------------------------------
+*/
 Route::prefix('admin')->middleware(['auth'])->group(function () {
+    // Acesso e Dashboard Principal
     Route::get('/acessar', [AdminController::class, 'validarAcesso'])->name('admin.access');
     Route::get('/editar', [AdminController::class, 'index'])->name('admin.index');
+
+    // LISTAGEM DE PRODUTOS (Sua tela create.blade.php)
+    Route::get('/visualizar', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
+
+    // CADASTRO DE NOVO PRODUTO (Sua tela novo.blade.php)
+    Route::get('/produtos/novo', [AdminController::class, 'novoProduto'])->name('admin.produtos.novo');
+
+    // Ações de Produtos (Salvar, Deletar, Update, Lançamento)
+    Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
+    Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
+    Route::put('/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
+    Route::post('/produtos/{id}/toggle-lancamento', [AdminController::class, 'toggleLancamento'])->name('admin.produto.toggle-lancamento');
+
+    // Personalização da Home (Banners e Imagens)
     Route::post('/banner', [AdminController::class, 'uploadBanner'])->name('admin.uploadBanner');
     Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
     Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
@@ -19,6 +39,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::put('/admin/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
     Route::get('/admin/produtos/novo', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
+    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduto'])->name('admin.produtos.edit');
 });
 
 /*
