@@ -40,6 +40,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('/admin/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
     Route::get('/admin/produtos/novo', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
     Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduto'])->name('admin.produtos.edit');
+    Route::get('/visual-da-loja', [AdminController::class, 'visualEditor'])->name('admin.visual.edit');
 });
 
 /*

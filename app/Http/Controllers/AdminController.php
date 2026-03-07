@@ -107,6 +107,16 @@ class AdminController extends Controller
 
         return redirect()->route('admin.produtos.create')->with('sucesso', 'PRODUTO ATUALIZADO!');
     }
+    public function visualEditor()
+{
+    if (Auth::id() !== 1) return redirect('/');
+
+    // Busca os dados exatos que a Home usa
+    $produtos = Produto::where('lancamento', true)->latest()->get();
+    $categorias = \App\Models\Categoria::where('status', 'ativa')->get();
+
+    return view('admin.visual', compact('produtos', 'categorias'));
+}
 
     /**
      * EXCLUIR: Remove o produto do banco.

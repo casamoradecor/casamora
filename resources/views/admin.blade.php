@@ -60,7 +60,9 @@
                     <i class="fa-solid fa-image" style="font-size: 1.5rem; color: var(--color-brand); margin-bottom: 15px;"></i>
                     <h4 style="margin-bottom: 10px;">Visual da Home</h4>
                     <p style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">Troque o banner principal, a imagem do ambiente ou as categorias.</p>
-                    <button class="btn-admin-primary">editar visual</button>
+                    <a href="{{ route('admin.visual.edit') }}" class="btn-admin-primary" style="text-decoration: none; display: inline-block; text-align: center;">
+                        editar visual
+                    </a>
                 </div>
 
                 <div style="border: 1px solid #eee; padding: 25px; border-radius: 12px;">
