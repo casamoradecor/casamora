@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\ProdutoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarrinhoController;
-use App\Http\Controllers\PerfilController; 
+use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\AdminController;
 
 /*
@@ -18,29 +18,23 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/acessar', [AdminController::class, 'validarAcesso'])->name('admin.access');
     Route::get('/editar', [AdminController::class, 'index'])->name('admin.index');
 
-    // LISTAGEM DE PRODUTOS (Sua tela create.blade.php)
+    // PRODUTOS
     Route::get('/visualizar', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
-
-    // CADASTRO DE NOVO PRODUTO (Sua tela novo.blade.php)
     Route::get('/produtos/novo', [AdminController::class, 'novoProduto'])->name('admin.produtos.novo');
+    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduto'])->name('admin.produtos.edit');
 
-    // Ações de Produtos (Salvar, Deletar, Update, Lançamento)
+    // AÇÕES
     Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
-    Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::put('/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
+    Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::post('/produtos/{id}/toggle-lancamento', [AdminController::class, 'toggleLancamento'])->name('admin.produto.toggle-lancamento');
 
-    // Personalização da Home (Banners e Imagens)
+    // EDIÇÃO VISUAL DA HOME
+    Route::get('/visual-da-loja', [AdminController::class, 'visualEditor'])->name('admin.visual.edit');
     Route::post('/banner', [AdminController::class, 'uploadBanner'])->name('admin.uploadBanner');
     Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
     Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
     Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
-    Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
-    Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
-    Route::put('/admin/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
-    Route::get('/admin/produtos/novo', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
-    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduto'])->name('admin.produtos.edit');
-    Route::get('/visual-da-loja', [AdminController::class, 'visualEditor'])->name('admin.visual.edit');
 });
 
 /*
@@ -70,10 +64,10 @@ Route::post('/carrinho/diminuir', [CarrinhoController::class, 'diminuir'])->name
 Route::middleware('auth')->group(function () {
     // Tela de fechamento
     Route::get('/checkout', [CarrinhoController::class, 'checkout'])->name('checkout');
-    
+
     // Processamento do pedido no banco
     Route::post('/finalizar-pedido', [CarrinhoController::class, 'finalizarPedido'])->name('pedido.finalizar');
-    
+
     // Tela de sucesso (após salvar no banco)
     Route::get('/pedido-sucesso/{id}', function($id) {
         return view('pedidos.sucesso', ['pedidoId' => $id]);
@@ -87,7 +81,7 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
-    
+
     // Painel principal (Resumo)
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -108,7 +102,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- ROTAS DE PERFIL (Movi para dentro do grupo auth) ---
     Route::get('/perfil', [PerfilController::class, 'edit'])->name('perfil.edit');
     Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
-    
+
     // A ROTA QUE ESTAVA FALTANDO AQUI:
     Route::put('/perfil/senha', [PerfilController::class, 'updatePassword'])->name('perfil.password.update');
 });

@@ -28,9 +28,29 @@ class CarrinhoController extends Controller
      */
     public function adicionar(Request $request)
     {
-        $produto = Produto::findOrFail($request->produto_id);
+        // 1. Validação rigorosa: se não veio ID, para tudo aqui.
+        if (!$request->produto_id) {
+            return response()->json(['success' => false, 'message' => 'ID ausente'], 400);
+        }
+
+        $produto = Produto::find($request->produto_id);
+
+        // 2. Só prossegue se o produto REALMENTE existir no banco
+        if (!$produto) {
+            return response()->json(['success' => false, 'message' => 'Produto não encontrado'], 404);
+        }
+
         $carrinho = session()->get('carrinho', []);
 
+        // 3. Trata a URL da imagem (Garante que nunca seja null)
+        $caminho = $produto->imagem;
+        if ($caminho && str_contains($caminho, 'assets')) {
+            $urlFinal = asset(ltrim($caminho, '/'));
+        } else {
+            $urlFinal = $caminho ? \Storage::url($caminho) : asset('assets/vasomora.png');
+        }
+
+        // 4. Grava na sessão APENAS se tivermos dados válidos
         if(isset($carrinho[$produto->id])) {
             $carrinho[$produto->id]['quantidade']++;
         } else {
@@ -39,12 +59,12 @@ class CarrinhoController extends Controller
                 "nome" => $produto->nome,
                 "quantidade" => 1,
                 "preco" => $produto->preco,
-                "imagem" => $produto->imagem
+                "imagem" => $urlFinal
             ];
         }
 
         session()->put('carrinho', $carrinho);
-        
+
         return response()->json([
             'success' => true,
             'itens' => $carrinho,
@@ -94,13 +114,13 @@ class CarrinhoController extends Controller
     public function checkout()
     {
         $carrinho = session()->get('carrinho', []);
-        
+
         if(empty($carrinho)) {
             return redirect()->route('home');
         }
 
         $total = $this->calcularTotal($carrinho);
-        
+
         return view('pedidos.checkout', compact('carrinho', 'total'));
     }
 
@@ -127,7 +147,7 @@ class CarrinhoController extends Controller
 
         // 2. Montagem da string de endereço completo para salvar na coluna 'endereco'
         $enderecoConcatenado = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
-        
+
         if ($request->complemento) {
             $enderecoConcatenado .= " ({$request->complemento})";
         }
@@ -143,7 +163,7 @@ class CarrinhoController extends Controller
                 'nome_entrega' => Auth::user()->name,
                 'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
                 'cep' => preg_replace('/\D/', '', $request->cep),
-                'endereco' => $enderecoConcatenado, 
+                'endereco' => $enderecoConcatenado,
             ]);
 
             // 4. Criar os Itens do Pedido (Relacionamento)
