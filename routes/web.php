@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoriaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
     Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
     Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
+    Route::get('/categorias', [CategoriaController::class, 'index'])->name('admin.categorias.index');
+    Route::post('/categorias', [CategoriaController::class, 'store'])->name('admin.categorias.store');
+    Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy'])->name('admin.categorias.destroy');
 });
 
 /*
@@ -43,6 +47,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/produtos', [HomeController::class, 'shop'])->name('produtos.index');
 
 
 /*

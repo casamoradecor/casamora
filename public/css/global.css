@@ -5,6 +5,8 @@
   --color-text: #2b2b2b;
   --color-brand: #3b1f15;
   --color-sub: #4b2b22;
+  --sidebar-width: 260px;
+  --border-light: #e0e0e0;
 }
 
 /* Reset Mínimo */
@@ -22,7 +24,7 @@ html, body {
 /* Base: Texto normal Poppins */
 body {
   font-family: var(--font-base);
-  font-weight: 400; 
+  font-weight: 400;
   color: var(--color-text);
   overflow-x: hidden;
   background-color: #F0F0F0;
@@ -34,24 +36,24 @@ body {
    ========================================= */
 
 /* Menu (Header), Rodapé, Inputs e Navegação do Dashboard */
-header, 
-header *, 
-footer, 
-footer *, 
-nav, 
-nav *, 
-input, 
-textarea, 
+header,
+header *,
+footer,
+footer *,
+nav,
+nav *,
+input,
+textarea,
 select,
 button,
-.dashboard-nav, 
+.dashboard-nav,
 .dashboard-nav * {
     text-transform: none !important;
 }
 /* Forçar MAIÚSCULO apenas no carrinho e na sidebar */
-.carrinho-container, 
+.carrinho-container,
 .carrinho-container *,
-.carrinho-sidebar, 
+.carrinho-sidebar,
 .carrinho-sidebar * {
     text-transform: uppercase !important;
 }

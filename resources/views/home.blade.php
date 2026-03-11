@@ -1,6 +1,7 @@
   @extends('layouts.app')
 
   @section('title', 'Casa MORÁ — Home')
+  @section('header_class', 'header-transparent')
 
   @section('content')
     <main>
@@ -24,7 +25,7 @@
 
           <div class="carrossel-track" id="carrosselTrack">
       @foreach($produtos as $produto)
-      @php 
+      @php
           // Lógica para decidir se usa a URL do Storage ou do Asset direto
           $caminho = $produto->imagem;
           if ($caminho && str_contains($caminho, 'assets')) {
@@ -35,23 +36,23 @@
       @endphp
 
       <div class="produto-card">
-          <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">          
+          <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">
           <div class="produto-info">
               <h3 class="produto-titulo">{{ $produto->nome }}</h3>
               <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
           </div>
-          
-          <button class="btn-comprar" 
+
+          <button class="btn-comprar"
                   data-id="{{ $produto->id }}"
-                  data-nome="{{ $produto->nome }}" 
-                  data-preco="{{ $produto->preco }}" 
+                  data-nome="{{ $produto->nome }}"
+                  data-preco="{{ $produto->preco }}"
                   data-imagem="{{ $urlFinal }}"> adicionar ao carrinho
           </button>
       </div>
   @endforeach
   </div>
       </section>
-      
+
       <section class="categorias-secao">
           <h2 class="categorias-titulo">compre por categoria</h2>
 
@@ -78,7 +79,7 @@
       <section class="shoppable-secao">
         <div class="shoppable-container">
             <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado" class="shoppable-main-img">
-            
+
             </div>
       </section>
     </main>

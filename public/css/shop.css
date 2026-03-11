@@ -1,0 +1,125 @@
+.shop-header {
+    padding: 140px 5% 40px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.shop-header h1 {
+    font-family: var(--font-title);
+    color: var(--color-brand);
+    font-size: 2.5rem;
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 50px 20px;
+    padding: 20px 5% 80px;
+    background-color: #fff;
+}
+
+.shop-card {
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    display: block;
+}
+
+.shop-card-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    transition: transform 0.5s ease;
+}
+
+.shop-card:hover .shop-card-image {
+    transform: scale(1.02);
+}
+
+.shop-card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.shop-card-title {
+    font-family: var(--font-base);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+}
+
+.shop-card-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-brand);
+    white-space: nowrap;
+    text-transform: uppercase !important;
+}
+
+.shop-card-sub {
+    display: block;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* BOTÃO COMPRAR (Aparece no hover) */
+.shop-card .btn-comprar {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 0.7rem;
+    background: transparent;
+    color: var(--color-brand);
+    border: 1px solid var(--color-brand);
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: lowercase;
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-family: var(--font-base);
+}
+
+.shop-card:hover .btn-comprar {
+    opacity: 1;
+}
+
+.shop-card .btn-comprar:hover {
+    background: var(--color-brand);
+    color: #fff;
+}
+
+/* BADGE SOLD OUT */
+.badge-sold-out {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #fff;
+    padding: 5px 12px;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid #eee;
+    z-index: 10;
+    color: var(--color-text);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .shop-card .btn-comprar { opacity: 1; }
+}

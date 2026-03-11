@@ -11,12 +11,18 @@ class HomeController extends Controller
     public function index()
     {
         $produtos = Produto::where('lancamento', true)
-            ->latest() 
+            ->latest()
             ->get();
 
         // Mantemos a busca de categorias ativas
         $categorias = Categoria::where('status', 'ativa')->get();
 
         return view('home', compact('produtos', 'categorias'));
+    }
+
+    public function shop()
+    {
+        $produtos = Produto::all();
+        return view('produtos.index', compact('produtos'));
     }
 }

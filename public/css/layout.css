@@ -1,18 +1,26 @@
 /* HEADER */
+
 .site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  padding: 10px 5%;
-  background-color: transparent;
-  transition: background-color 0.3s ease;
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.site-header.scrolled {
-  background-color: #F0F0F0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* CLASSE ESPECIAL PARA A HOME */
+.site-header.header-transparent {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* QUANDO SCROLLAR NA HOME, ELE VOLTA A SER BRANCO */
+.site-header.header-transparent.scrolled {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .header-inner {
@@ -55,7 +63,7 @@
 .header-actions {
   display: flex;
   gap: 15px;
-  background-color: transparent; 
+  background-color: transparent;
   padding: 12px 0;
   box-shadow: none;
 }

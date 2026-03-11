@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produto;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -20,38 +21,40 @@ class AdminController extends Controller
     }
 
     /**
-     * Dashboard Principal (Redireciona ou mostra resumo).
+     * Dashboard Principal.
      */
     public function index()
-{
-    if (Auth::id() !== 1) return redirect('/');
-    
-    // Retorna a view da Home (banners, destaques, etc)
-    return view('admin'); 
-}
+    {
+        if (Auth::id() !== 1) return redirect('/');
+        return view('admin');
+    }
 
     /**
-     * LISTAGEM: Exibe a tabela estilo Nuvemshop (resources/views/admin/create.blade.php).
+     * LISTAGEM DE PRODUTOS.
      */
     public function createProduto()
-{
-    if (Auth::id() !== 1) return redirect('/');
-    
-    $produtos = Produto::all(); 
-    return view('admin.create', compact('produtos')); 
-}
+    {
+        if (Auth::id() !== 1) return redirect('/');
+
+        // Carregamos a categoria junto com o produto para mostrar o nome na tabela
+        $produtos = Produto::with('categoria')->get();
+        return view('admin.create', compact('produtos'));
+    }
 
     /**
-     * FORMULÁRIO NOVO: Abre a tela de cadastro (resources/views/admin/novo.blade.php).
+     * FORMULÁRIO NOVO: Agora envia as categorias para o formulário.
      */
     public function novoProduto()
     {
         if (Auth::id() !== 1) return redirect('/');
-        return view('admin.novo'); 
+
+        $categorias = Categoria::where('status', 'ativa')->get();
+
+        return view('admin.novo', compact('categorias'));
     }
 
     /**
-     * SALVAR NOVO: Processa o cadastro no banco.
+     * SALVAR NOVO PRODUTO.
      */
     public function storeProduto(Request $request)
     {
@@ -59,7 +62,7 @@ class AdminController extends Controller
             'nome' => 'required',
             'preco' => 'required',
             'estoque' => 'required|integer',
-            'categoria_id' => 'required',
+            'categoria_id' => 'required|exists:categorias,id',
             'imagem' => 'required|image'
         ]);
 
@@ -71,33 +74,38 @@ class AdminController extends Controller
             'estoque' => $request->estoque,
             'categoria_id' => $request->categoria_id,
             'imagem' => $path,
-            'lancamento' => $request->has('lancamento')
+            'lancamento' => $request->has('lancamento'),
+            'descricao' => $request->descricao
         ]);
 
         return redirect()->route('admin.produtos.create')->with('sucesso', 'PRODUTO CADASTRADO!');
     }
 
     /**
-     * FORMULÁRIO EDITAR: Abre a tela de edição (resources/views/admin/editar.blade.php).
+     * FORMULÁRIO EDITAR: Também envia as categorias para permitir troca.
      */
     public function editProduto($id)
     {
         if (Auth::id() !== 1) return redirect('/');
+
         $produto = Produto::findOrFail($id);
-        return view('admin.editar', compact('produto'));
+        $categorias = Categoria::where('status', 'ativa')->get();
+
+        return view('admin.editar', compact('produto', 'categorias'));
     }
 
     /**
-     * ATUALIZAR: Processa a edição dos dados.
+     * ATUALIZAR PRODUTO.
      */
-    public function updateProduto(Request $request, $id) {
+    public function updateProduto(Request $request, $id)
+    {
         $produto = Produto::findOrFail($id);
-        
-        $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id']));
 
-        // Atualiza lançamento separadamente (checkbox)
+        // Adicionamos 'descricao' na lista de campos permitidos
+        $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id', 'descricao']));
+
         $produto->lancamento = $request->has('lancamento');
-        
+
         if ($request->hasFile('imagem')) {
             $path = $request->file('imagem')->store('produtos', 'public');
             $produto->imagem = $path;
@@ -107,19 +115,19 @@ class AdminController extends Controller
 
         return redirect()->route('admin.produtos.create')->with('sucesso', 'PRODUTO ATUALIZADO!');
     }
+
     public function visualEditor()
-{
-    if (Auth::id() !== 1) return redirect('/');
+    {
+        if (Auth::id() !== 1) return redirect('/');
 
-    // Busca os dados exatos que a Home usa
-    $produtos = Produto::where('lancamento', true)->latest()->get();
-    $categorias = \App\Models\Categoria::where('status', 'ativa')->get();
+        $produtos = Produto::where('lancamento', true)->latest()->get();
+        $categorias = Categoria::where('status', 'ativa')->get();
 
-    return view('admin.visual', compact('produtos', 'categorias'));
-}
+        return view('admin.visual', compact('produtos', 'categorias'));
+    }
 
     /**
-     * EXCLUIR: Remove o produto do banco.
+     * EXCLUIR PRODUTO (SoftDelete).
      */
     public function destroyProduto($id)
     {
@@ -129,7 +137,7 @@ class AdminController extends Controller
     }
 
     /**
-     * TOGGLE LANÇAMENTO: Alterna o destaque no carrossel.
+     * TOGGLE LANÇAMENTO.
      */
     public function toggleLancamento($id)
     {
@@ -140,16 +148,16 @@ class AdminController extends Controller
         return redirect()->back()->with('sucesso', 'STATUS DE LANÇAMENTO ATUALIZADO!');
     }
 
-    /* --- PERSONALIZAÇÃO DA HOME --- */
+    /* --- PERSONALIZAÇÃO DA HOME (IMAGENS ESTÁTICAS) --- */
 
-    public function uploadBanner(Request $request) 
+    public function uploadBanner(Request $request)
     {
         $request->validate(['hero_img' => 'required|image']);
         $request->file('hero_img')->move(public_path('assets'), 'hero_banner.png');
         return redirect()->back()->with('sucesso', 'BANNER ATUALIZADO!');
     }
 
-    public function updateDestaque(Request $request) 
+    public function updateDestaque(Request $request)
     {
         $request->validate(['destaque_img' => 'required|image']);
         $request->file('destaque_img')->move(public_path('assets'), 'destaque_home.png');
@@ -163,7 +171,7 @@ class AdminController extends Controller
         return redirect()->back()->with('sucesso', 'AMBIENTE ATUALIZADO!');
     }
 
-    public function updateCategoria(Request $request, $id) 
+    public function updateCategoria(Request $request, $id)
     {
         $request->validate(['cat_img' => 'required|image']);
         $request->file('cat_img')->move(public_path('assets'), "categoria_{$id}.png");

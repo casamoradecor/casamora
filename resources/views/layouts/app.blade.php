@@ -34,7 +34,7 @@
         <a href="{{ route('admin.index') }}">MODO EDIÇÃO</a>
     @endif
     @endauth
-        <a href="#">PRODUTOS</a>
+          <a href="{{ route('produtos.index') }}">PRODUTOS</a>
         <a href="#">CONTATO</a>
       </nav>
 
@@ -74,7 +74,7 @@
         <div class="footer-col links">
           <h3>Navegação</h3>
           <a href="/">Início</a>
-          <a href="#">Produtos</a>
+          <a href="{{ route('produtos.index') }}">Produtos</a>
           <a href="#">Sobre Nós</a>
           <a href="#">Contato</a>
         </div>
@@ -117,7 +117,7 @@
         <span>Total:</span>
         <span id="valorTotal">R$ 0,00</span>
       </div>
-      <a href="{{ route('checkout') }}" class="btn-finalizar" style="display: block; text-align: center; text-decoration: none; padding: 15px; background: #000; color: #fff; margin-top: 10px;">FINALIZAR COMPRA</a>
+      <a href="{{ route('checkout') }}" class="btn-finalizar">FINALIZAR COMPRA</a>
     </div>
   </aside>
 

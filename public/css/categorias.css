@@ -1,0 +1,282 @@
+/* =========================================
+   GESTÃO DE CATEGORIAS - CASA MORÁ
+   ========================================= */
+
+/* 1. ESTRUTURA E GRID */
+.categorias-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divisão simétrica */
+    gap: 30px;
+    align-items: stretch;
+    margin-bottom: 40px;
+}
+
+/* Container do botão de salvar ao final */
+.categorias-footer-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-bottom: 60px;
+}
+
+/* 2. ESTILO DOS CARDS */
+.categorias-form-card,
+.categorias-table-card {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 15px;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.categorias-title {
+    font-family: var(--font-title);
+    color: var(--color-brand);
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    text-transform: lowercase;
+}
+
+/* 3. FORMULÁRIO E INPUTS */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.label-mora {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #bbbbbb;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-mora {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: var(--font-base);
+    font-size: 0.9rem;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-mora:focus {
+    border-color: var(--color-brand);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 31, 21, 0.05);
+}
+
+textarea.input-mora {
+    resize: none;
+}
+
+/* 4. TABELA (ALINHAMENTO DEFINITIVO) */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Força as colunas a respeitarem as larguras abaixo */
+}
+
+/* Larguras das Colunas: Nome(45%), Status(30%), Ações(25%) */
+.admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: 45%; text-align: left; }
+.admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 30%; text-align: center; }
+.admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: 25%; text-align: right; }
+
+.admin-table th {
+    padding: 0 0 15px 0;
+    font-size: 0.75rem;
+    color: #bbbbbb;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.admin-table td {
+    padding: 20px 0;
+    border-bottom: 1px solid #f9f9f9;
+    vertical-align: middle;
+}
+
+.categoria-nome {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-brand);
+    text-transform: lowercase;
+}
+
+.status-badge {
+    font-size: 0.65rem;
+    background: #f4f4f4;
+    color: #999999;
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* 5. AÇÕES (ÍCONES EM LINHA E ALINHADOS) */
+.td-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px; /* Espaço horizontal entre os ícones */
+    align-items: center;
+    padding-left: 115px !important; /* Ajuste fino para alinhar com o th */
+}
+
+.btn-action-minimal {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Tamanho confortável para clique */
+    color: #333333;
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.btn-action-minimal:hover {
+    color: var(--color-brand);
+    transform: scale(1.15);
+}
+
+.btn-action-minimal.btn-trash:hover {
+    color: #ff4d4d;
+}
+
+/* 6. BOTÕES GLOBAIS */
+.btn-add-mora {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--color-brand);
+    color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: lowercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-save-mora-final {
+    background-color: var(--color-brand);
+    color: #ffffff;
+    border: none;
+    padding: 18px 60px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-transform: lowercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-save-mora-final:hover {
+    background-color: var(--color-sub);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(59, 31, 21, 0.15);
+}
+/* MODAIS CASA MORÁ */
+.modal-mora-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: none; /* Escondido por padrão */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-mora-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.modal-mora-title {
+    font-family: var(--font-title);
+    font-size: 1.8rem;
+    color: var(--color-brand);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.modal-mora-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.modal-mora-item-name {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.modal-mora-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Botões do Modal */
+.btn-modal-cancel {
+    background: #eeeeee;
+    color: #666;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+.btn-modal-execute {
+    background: var(--color-brand);
+    color: #fff;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+/* 7. RESPONSIVIDADE */
+@media (max-width: 1024px) {
+    .categorias-grid {
+        grid-template-columns: 1fr; /* Empilha no tablet/mobile */
+    }
+
+    .admin-main {
+        padding: 30px 20px;
+    }
+
+    .btn-save-mora-final {
+        width: 100%;
+        justify-content: center;
+    }
+}

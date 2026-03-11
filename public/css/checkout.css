@@ -122,7 +122,7 @@
 .btn-confirmar {
     width: 100%;
     padding: 20px;
-    background-color: #4B3621; /* Marrom Elegante */
+    background-color: #4B3621;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -134,15 +134,14 @@
 }
 
 .btn-confirmar:hover {
-    background-color: #5D4037; /* Um tom mais claro no hover */
+    background-color: #5D4037;
     opacity: 1;
 }
 
-/* Aproveite para ajustar os inputs para combinarem */
 .input-checkout:focus {
     border-bottom-color: #4B3621;
 }
-/* Adicione isso ao seu checkout.css */
+
 .address-grid {
     display: flex;
     gap: 20px;
@@ -153,7 +152,7 @@
 .flex-2 { flex: 2; }
 .flex-3 { flex: 3; }
 
-/* Deixa os campos bloqueados com uma aparência sutil */
+
 input[readonly] {
     background-color: #f9f9f9;
     color: #888;

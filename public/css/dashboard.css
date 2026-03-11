@@ -6,8 +6,8 @@
     display: flex;
     padding: 150px 10% 80px;
     gap: 50px;
-    min-height: 60vh; /* Ajustado para preencher a tela */
-    background-color: var(--color-bg, #F0F0F0);
+    min-height: 60vh;
+    background-color: #F0F0F0;
 }
 
 .dashboard-nav {

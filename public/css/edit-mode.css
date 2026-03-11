@@ -9,52 +9,52 @@
     background-color: #F0F0F0;
 }
 
-/* FIX: Menu superior sempre clicável e acima de tudo */
 .admin-visual-editor .site-header {
     background-color: #ffffff !important;
     position: relative !important;
     display: block !important;
-    z-index: 99999 !important; /* Valor máximo para não ser coberto pelo banner */
+    z-index: 99999 !important;
     pointer-events: auto !important;
 }
 
 /* 2. ESTILOS DE EDIÇÃO (OVERLAYS) */
-.edit-container { 
-    position: relative; 
-    cursor: pointer; 
-    overflow: hidden; 
+.edit-container {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 .edit-overlay {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    background: rgba(59, 31, 21, 0.4); /* Marrom Casa MORÁ transparente */
-    display: flex; 
-    align-items: center; 
+    background: rgba(59, 31, 21, 0.4);
+    display: flex;
+    align-items: center;
     justify-content: center;
-    opacity: 0; 
-    transition: 0.3s; 
-    z-index: 100 !important; /* Fica abaixo do menu superior */
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 100 !important;
 }
 
-.edit-container:hover .edit-overlay { 
-    opacity: 1; 
+.edit-container:hover .edit-overlay {
+    opacity: 1;
 }
 
 .btn-edit-label {
-    background: #fff; 
-    color: #3b1f15; 
+    background: #fff;
+    color: var(--color-brand);
     padding: 12px 25px;
-    border-radius: 50px; 
-    font-weight: 800; 
-    text-transform: uppercase; 
-    font-size: 0.7rem; 
-    border: none; 
+    border-radius: 50px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    border: none;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-family: var(--font-base);
 }
 
 /* 3. LAYOUT ORIGINAL DA HOME (HERO SECTION) */
@@ -65,7 +65,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .hero-img {
@@ -78,8 +78,8 @@
 
 .hero-content {
     position: relative;
-    z-index: 101 !important; /* Acima do overlay de edição, mas abaixo do menu */
-    pointer-events: none;     /* O mouse "atravessa" o texto para clicar no overlay */
+    z-index: 101 !important;
+    pointer-events: none;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -87,7 +87,12 @@
 }
 
 .hero-logo { width: 100%; max-width: 1000px; height: auto; }
-.hero-sub { margin-top: 350px; color: #fff; font-size: clamp(1rem, 2vw, 1.2rem); }
+.hero-sub {
+    margin-top: 350px;
+    color: #fff;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-family: var(--font-base);
+}
 
 /* 4. SEÇÃO DESTAQUE E CARROSSEL */
 .destaque-produtos {
@@ -98,7 +103,7 @@
 
 .destaque-imagem img {
     max-width: 300px;
-    height: 550px; 
+    height: 550px;
     border-radius: 8px;
     object-fit: cover;
 }
@@ -106,10 +111,14 @@
 .carrossel-track {
     display: flex;
     gap: 20px;
-    overflow-x: hidden; /* No admin podemos travar o scroll se necessário */
+    overflow-x: hidden;
 }
 
-.produto-card { flex: 0 0 280px; text-transform: lowercase; }
+.produto-card {
+    flex: 0 0 280px;
+    text-transform: lowercase;
+    font-family: var(--font-base);
+}
 .produto-card img { width: 100%; height: 350px; object-fit: cover; margin-bottom: 15px; }
 
 /* 5. SEÇÃO CATEGORIAS */
