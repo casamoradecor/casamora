@@ -56,6 +56,11 @@
     text-transform: lowercase;
     letter-spacing: 0.5px;
 }
+.shop-product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
 
 .shop-card-price {
     font-size: 0.9rem;

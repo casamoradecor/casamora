@@ -8,6 +8,7 @@ use App\Models\Pedido;
 use App\Models\PedidoItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CarrinhoController extends Controller
 {
@@ -28,36 +29,44 @@ class CarrinhoController extends Controller
      */
     public function adicionar(Request $request)
     {
-        // 1. Validação rigorosa: se não veio ID, para tudo aqui.
         if (!$request->produto_id) {
             return response()->json(['success' => false, 'message' => 'ID ausente'], 400);
         }
 
         $produto = Produto::find($request->produto_id);
 
-        // 2. Só prossegue se o produto REALMENTE existir no banco
         if (!$produto) {
             return response()->json(['success' => false, 'message' => 'Produto não encontrado'], 404);
         }
 
+        $quantidadeSolicitada = (int) $request->input('quantidade', 1);
         $carrinho = session()->get('carrinho', []);
+        $quantidadeJaNoCarrinho = isset($carrinho[$produto->id]) ? $carrinho[$produto->id]['quantidade'] : 0;
+        $totalFinal = $quantidadeJaNoCarrinho + $quantidadeSolicitada;
 
-        // 3. Trata a URL da imagem (Garante que nunca seja null)
+        if ($totalFinal > $produto->estoque) {
+            return response()->json([
+                'success' => false,
+                'message' => "Estoque insuficiente. Temos apenas {$produto->estoque} unidades em estoque."
+            ], 400);
+        }
+
+        // Tratamento da URL da Imagem
         $caminho = $produto->imagem;
         if ($caminho && str_contains($caminho, 'assets')) {
             $urlFinal = asset(ltrim($caminho, '/'));
         } else {
-            $urlFinal = $caminho ? \Storage::url($caminho) : asset('assets/vasomora.png');
+            $urlFinal = $caminho ? Storage::url($caminho) : asset('assets/vasomora.png');
         }
 
-        // 4. Grava na sessão APENAS se tivermos dados válidos
+        // Atualização da Sessão
         if(isset($carrinho[$produto->id])) {
-            $carrinho[$produto->id]['quantidade']++;
+            $carrinho[$produto->id]['quantidade'] += $quantidadeSolicitada;
         } else {
             $carrinho[$produto->id] = [
                 "id" => $produto->id,
                 "nome" => $produto->nome,
-                "quantidade" => 1,
+                "quantidade" => $quantidadeSolicitada,
                 "preco" => $produto->preco,
                 "imagem" => $urlFinal
             ];
@@ -114,13 +123,9 @@ class CarrinhoController extends Controller
     public function checkout()
     {
         $carrinho = session()->get('carrinho', []);
-
-        if(empty($carrinho)) {
-            return redirect()->route('home');
-        }
+        if(empty($carrinho)) return redirect()->route('home');
 
         $total = $this->calcularTotal($carrinho);
-
         return view('pedidos.checkout', compact('carrinho', 'total'));
     }
 
@@ -130,12 +135,10 @@ class CarrinhoController extends Controller
     public function finalizarPedido(Request $request)
     {
         $carrinho = session()->get('carrinho', []);
-
         if (empty($carrinho)) {
             return redirect()->route('home')->with('erro', 'Seu carrinho está vazio.');
         }
 
-        // 1. Validação dos novos campos individuais de endereço
         $request->validate([
             'cep' => 'required',
             'rua' => 'required',
@@ -145,28 +148,32 @@ class CarrinhoController extends Controller
             'estado' => 'required',
         ]);
 
-        // 2. Montagem da string de endereço completo para salvar na coluna 'endereco'
-        $enderecoConcatenado = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
-
-        if ($request->complemento) {
-            $enderecoConcatenado .= " ({$request->complemento})";
-        }
-
         DB::beginTransaction();
 
         try {
-            // 3. Criar o Pedido (Cabeçalho)
+            foreach ($carrinho as $id => $item) {
+                $produtoBanco = Produto::lockForUpdate()->find($id);
+
+                if (!$produtoBanco || $produtoBanco->estoque < $item['quantidade']) {
+                    throw new \Exception("Desculpe, o produto '{$item['nome']}' não possui estoque suficiente para finalizar a compra.");
+                }
+                $produtoBanco->decrement('estoque', $item['quantidade']);
+            }
+            $enderecoCompleto = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
+            if ($request->complemento) $enderecoCompleto .= " ({$request->complemento})";
+
+            // CRIAR PEDIDO
             $pedido = Pedido::create([
                 'user_id' => Auth::id(),
-                'total' => collect($carrinho)->sum(fn($item) => $item['preco'] * $item['quantidade']),
+                'total' => $this->calcularTotal($carrinho),
                 'status' => 'pendente',
                 'nome_entrega' => Auth::user()->name,
                 'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
                 'cep' => preg_replace('/\D/', '', $request->cep),
-                'endereco' => $enderecoConcatenado,
+                'endereco' => $enderecoCompleto,
             ]);
 
-            // 4. Criar os Itens do Pedido (Relacionamento)
+            //Criar os Itens do Pedido (Relacionamento)
             foreach ($carrinho as $id => $detalhes) {
                 PedidoItem::create([
                     'pedido_id' => $pedido->id,
@@ -177,15 +184,13 @@ class CarrinhoController extends Controller
             }
 
             DB::commit();
-
-            // 5. Limpar a sessão do carrinho após o sucesso
             session()->forget('carrinho');
 
             return redirect()->route('pedido.sucesso', $pedido->id);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('erro', 'Falha ao processar pedido: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('erro', $e->getMessage());
         }
     }
 }

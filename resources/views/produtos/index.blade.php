@@ -8,7 +8,6 @@
 
 @section('content')
     <header class="shop-header">
-
     </header>
 
     <main class="products-grid">
@@ -26,15 +25,17 @@
                 @if($produto->estoque <= 0)
                     <span class="badge-sold-out">esgotado</span>
                 @endif
-
-                <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}" class="shop-card-image">
+                <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
+                    <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}" class="shop-card-image">
+                </a>
 
                 <div class="shop-card-info">
-                    <h3 class="shop-card-title">{{ $produto->nome }}</h3>
+                    <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
+                        <h3 class="shop-card-title">{{ $produto->nome }}</h3>
+                    </a>
                     <span class="shop-card-price">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
                 </div>
-
-                <span class="shop-card-sub">coleção morada</span>
+                <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
 
                 <button class="btn-comprar"
                         data-id="{{ $produto->id }}"

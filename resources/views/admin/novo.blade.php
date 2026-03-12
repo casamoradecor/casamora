@@ -25,12 +25,18 @@
                             <input type="file" name="imagem" required>
                         </div>
                     </div>
-
+                    <div class="form-grid-2">
+                        <div class="card-form">
+                            <label class="label-mora">código do produto (sku)</label>
+                            <input type="text" name="codigo" placeholder="ex: mora-001" class="input-mora" required>
+                        </div>
+                        <div class="card-form">
+                            <label class="label-mora">nome do item</label>
+                            <input type="text" name="nome" placeholder="ex: vaso de cerâmica morá" class="input-mora" required>
+                        </div>
+                    </div>
                     <div class="card-form">
-                        <label class="label-mora">nome do item</label>
-                        <input type="text" name="nome" placeholder="ex: vaso de cerâmica morá" class="input-mora" required>
-
-                        <label class="label-mora margin-top-20">descrição detalhada</label>
+                        <label class="label-mora">descrição detalhada</label>
                         <textarea name="descricao" rows="5" class="input-mora" placeholder="detalhes técnicos e estilo..."></textarea>
                     </div>
 
@@ -45,6 +51,34 @@
                         </div>
                     </div>
 
+                    <div style="margin: 20px 0 10px 10px;">
+                        <span class="label-mora" style="opacity: 0.6; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">
+                            Dimensões para cálculo de Frete
+                        </span>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="card-form">
+                            <label class="label-mora">peso (kg) — ex: 0.800</label>
+                            <input type="number" step="0.001" name="peso" placeholder="0.000" class="input-mora" required>
+                        </div>
+                        <div class="card-form">
+                            <label class="label-mora">largura (cm)</label>
+                            <input type="number" name="largura" placeholder="0" class="input-mora" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="card-form">
+                            <label class="label-mora">altura (cm)</label>
+                            <input type="number" name="altura" placeholder="0" class="input-mora" required>
+                        </div>
+                        <div class="card-form">
+                            <label class="label-mora">comprimento (cm)</label>
+                            <input type="number" name="comprimento" placeholder="0" class="input-mora" required>
+                        </div>
+                    </div>
+
                     <div class="card-form">
                         <div class="form-row-between">
                             <div class="form-col-45">
@@ -56,10 +90,13 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-col-45 checkbox-group">
-                                <input type="checkbox" name="lancamento" value="1" id="check_lancamento" class="checkbox-mora">
-                                <label for="check_lancamento" class="label-mora">
-                                    definir como lançamento
+
+                            <div class="form-col-45">
+                                <label class="label-mora">status de destaque</label>
+                                <label class="switch-wrapper" for="check_lancamento">
+                                    <input type="checkbox" name="lancamento" value="1" id="check_lancamento" class="switch-input">
+                                    <div class="switch-button"></div>
+                                    <span class="label-mora label-switch">definir como lançamento</span>
                                 </label>
                             </div>
                         </div>

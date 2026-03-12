@@ -100,6 +100,60 @@
     background-color: #fdfdfd;
 }
 
+.switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    user-select: none;
+    margin-top: 20px;
+    width: fit-content;
+}
+
+/* Esconde o check original */
+.switch-input {
+    display: none;
+}
+
+/* Trilho do Switch */
+.switch-button {
+    width: 48px;
+    height: 24px;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+/* Bolinha do Switch */
+.switch-button::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estado Ativo */
+.switch-input:checked + .switch-button {
+    background-color: var(--color-brand);
+}
+
+.switch-input:checked + .switch-button::before {
+    transform: translateX(24px);
+}
+
+.label-switch {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    cursor: pointer;
+}
+
 /* BOTÃO MARROM ARREDONDADO (PILL) */
 .btn-save-mora {
     background-color: var(--color-brand);

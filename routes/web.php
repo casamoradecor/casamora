@@ -8,6 +8,7 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\FreteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +22,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     // PRODUTOS
     Route::get('/visualizar', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
-    Route::get('/produtos/novo', [AdminController::class, 'novoProduto'])->name('admin.produtos.novo');
-    Route::get('/produtos/{id}/editar', [AdminController::class, 'editProduto'])->name('admin.produtos.edit');
-
+    Route::get('/produtos/novo', [ProdutoController::class, 'create'])->name('admin.produtos.novo');
+    Route::post('/produto', [ProdutoController::class, 'store'])->name('admin.produto.store');
+    Route::get('/produtos/{id}/editar', [ProdutoController::class, 'edit'])->name('admin.produtos.edit');
+    Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('admin.produto.update');
     // AÇÕES
     Route::post('/produto', [AdminController::class, 'storeProduto'])->name('admin.produto.store');
     Route::put('/produto/{id}', [AdminController::class, 'updateProduto'])->name('admin.produto.update');
@@ -48,7 +50,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [HomeController::class, 'shop'])->name('produtos.index');
-
+Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +81,7 @@ Route::middleware('auth')->group(function () {
     })->name('pedido.sucesso');
 });
 
-
+Route::get('/frete/calcular', [App\Http\Controllers\FreteController::class, 'calcular'])->name('frete.calcular');
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD & HISTÓRICO DO CLIENTE (Minha Conta)

@@ -29,7 +29,7 @@
                 <table class="admin-table">
                     <thead>
                     <tr>
-                        <th width="40"><input type="checkbox"></th>
+                        <th>código</th>
                         <th>produto</th>
                         <th>estoque</th>
                         <th>preço</th>
@@ -40,7 +40,9 @@
                     <tbody>
                     @foreach($produtos as $produto)
                         <tr>
-                            <td><input type="checkbox"></td>
+                            <td>
+                                <span class="sku-label">{{ $produto->codigo ?? 'S/C' }}</span>
+                            </td>
                             <td>
                                 <div class="product-info">
                                     <img src="{{ asset('storage/' . $produto->imagem) }}" class="product-img">

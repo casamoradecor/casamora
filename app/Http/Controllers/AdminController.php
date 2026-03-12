@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produto;
 use App\Models\Categoria;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -36,20 +37,18 @@ class AdminController extends Controller
     {
         if (Auth::id() !== 1) return redirect('/');
 
-        // Carregamos a categoria junto com o produto para mostrar o nome na tabela
         $produtos = Produto::with('categoria')->get();
         return view('admin.create', compact('produtos'));
     }
 
     /**
-     * FORMULÁRIO NOVO: Agora envia as categorias para o formulário.
+     * FORMULÁRIO NOVO.
      */
     public function novoProduto()
     {
         if (Auth::id() !== 1) return redirect('/');
 
         $categorias = Categoria::where('status', 'ativa')->get();
-
         return view('admin.novo', compact('categorias'));
     }
 
@@ -59,30 +58,40 @@ class AdminController extends Controller
     public function storeProduto(Request $request)
     {
         $request->validate([
+            'codigo' => 'required|unique:produtos,codigo|max:50', // Validação do SKU
             'nome' => 'required',
             'preco' => 'required',
             'estoque' => 'required|integer',
             'categoria_id' => 'required|exists:categorias,id',
-            'imagem' => 'required|image'
+            'imagem' => 'required|image',
+            'peso' => 'required|numeric',
+            'largura' => 'required|integer',
+            'altura' => 'required|integer',
+            'comprimento' => 'required|integer',
         ]);
 
         $path = $request->file('imagem')->store('produtos', 'public');
 
         Produto::create([
+            'codigo' => $request->codigo, // Salvando o SKU
             'nome' => $request->nome,
             'preco' => $request->preco,
             'estoque' => $request->estoque,
             'categoria_id' => $request->categoria_id,
             'imagem' => $path,
-            'lancamento' => $request->has('lancamento'),
-            'descricao' => $request->descricao
+            'lancamento' => $request->has('lancamento'), // Captura o Switch
+            'descricao' => $request->descricao,
+            'peso' => $request->peso,
+            'largura' => $request->largura,
+            'altura' => $request->altura,
+            'comprimento' => $request->comprimento,
         ]);
 
         return redirect()->route('admin.produtos.create')->with('sucesso', 'PRODUTO CADASTRADO!');
     }
 
     /**
-     * FORMULÁRIO EDITAR: Também envia as categorias para permitir troca.
+     * FORMULÁRIO EDITAR.
      */
     public function editProduto($id)
     {
@@ -101,8 +110,19 @@ class AdminController extends Controller
     {
         $produto = Produto::findOrFail($id);
 
-        // Adicionamos 'descricao' na lista de campos permitidos
-        $produto->update($request->only(['nome', 'preco', 'estoque', 'categoria_id', 'descricao']));
+        $request->validate([
+            'codigo' => 'required|max:50|unique:produtos,codigo,' . $id, // Único, ignorando o próprio ID
+            'nome' => 'required',
+            'preco' => 'required',
+            'estoque' => 'required|integer',
+            'categoria_id' => 'required|exists:categorias,id',
+            'peso' => 'required|numeric',
+            'largura' => 'required|integer',
+            'altura' => 'required|integer',
+            'comprimento' => 'required|integer',
+        ]);
+
+        $produto->update($request->only(['codigo', 'nome', 'preco', 'estoque', 'categoria_id', 'descricao', 'peso', 'largura', 'altura', 'comprimento']));
 
         $produto->lancamento = $request->has('lancamento');
 
@@ -119,10 +139,8 @@ class AdminController extends Controller
     public function visualEditor()
     {
         if (Auth::id() !== 1) return redirect('/');
-
         $produtos = Produto::where('lancamento', true)->latest()->get();
         $categorias = Categoria::where('status', 'ativa')->get();
-
         return view('admin.visual', compact('produtos', 'categorias'));
     }
 
@@ -136,19 +154,13 @@ class AdminController extends Controller
         return redirect()->back()->with('sucesso', 'PRODUTO REMOVIDO!');
     }
 
-    /**
-     * TOGGLE LANÇAMENTO.
-     */
     public function toggleLancamento($id)
     {
         $produto = Produto::findOrFail($id);
         $produto->lancamento = !$produto->lancamento;
         $produto->save();
-
         return redirect()->back()->with('sucesso', 'STATUS DE LANÇAMENTO ATUALIZADO!');
     }
-
-    /* --- PERSONALIZAÇÃO DA HOME (IMAGENS ESTÁTICAS) --- */
 
     public function uploadBanner(Request $request)
     {

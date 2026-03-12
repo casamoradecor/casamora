@@ -64,6 +64,16 @@
 }
 
 /* TABELA DE PRODUTOS */
+.sku-label {
+    font-family: var(--font-base);
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #888;
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
 .table-card {
     background: #ffffff;
     border-radius: 12px;
