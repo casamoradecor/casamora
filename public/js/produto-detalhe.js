@@ -1,58 +1,95 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const campoQtd = document.getElementById('qtd-produto');
-    const btnAumentar = document.getElementById('aumentar-qtd');
-    const btnDiminuir = document.getElementById('diminuir-qtd');
+// Ajusta a quantidade no input visual
+function ajustarQtd(valor) {
+    const campo = document.getElementById('qtd-produto');
+    if (!campo) return;
+    let novaQtd = parseInt(campo.value) + valor;
+    if (novaQtd >= 1) campo.value = novaQtd;
+}
+
+// Botão principal de comprar/adicionar na tela do produto
+function adicionarComQtd(irParaCheckout) {
+    const qtd = document.getElementById('qtd-produto') ? document.getElementById('qtd-produto').value : 1;
     const btnAdicionar = document.getElementById('btn-add-carrinho');
-    const btnFinalizar = document.getElementById('btn-finalizar-agora');
 
-    // 1. Controle do + e -
-    btnAumentar.addEventListener('click', () => campoQtd.value = parseInt(campoQtd.value) + 1);
-    btnDiminuir.addEventListener('click', () => {
-        if (parseInt(campoQtd.value) > 1) campoQtd.value = parseInt(campoQtd.value) - 1;
-    });
+    if (!btnAdicionar) return;
 
-    // 2. Função de Adicionar (Igual ao que o CarrinhoManager faz)
-    async function mandarProCarrinho(irParaCheckout) {
-        // Pegamos as URLs e o Token das Meta Tags do App Blade
-        const urlAdicionar = document.querySelector('meta[name="carrinho-url"]').content;
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+    const produtoId = btnAdicionar.getAttribute('data-id');
+    const urlAdicionar = document.querySelector('meta[name="carrinho-url"]').content;
+    const token = document.querySelector('meta[name="csrf-token"]').content;
 
-        const dados = {
-            produto_id: btnAdicionar.getAttribute('data-id'), // O nome tem que ser produto_id
-            quantidade: campoQtd.value
-        };
+    // Feedback visual e bloqueio do botão
+    const originalText = btnAdicionar.innerText;
+    btnAdicionar.innerText = "AGUARDE...";
+    btnAdicionar.disabled = true;
 
-        try {
-            const response = await fetch(urlAdicionar, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(dados)
-            });
+    fetch(urlAdicionar, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ produto_id: produtoId, quantidade: qtd })
+    })
+        .then(response => response.json())
+        .then(data => {
+            btnAdicionar.innerText = originalText;
+            btnAdicionar.disabled = false;
+
+            if (!data.success) {
+                window.showMoraToast(data.message || 'Estoque indisponível.', 'error');
+                return;
+            }
 
             if (irParaCheckout) {
                 window.location.href = "/checkout";
             } else {
-                // ABRE A BARRA LATERAL (Suas classes do carrinho.js)
-                const sidebar = document.getElementById('carrinhoSidebar');
-                const overlay = document.getElementById('carrinhoOverlay');
-
-                sidebar.classList.add('aberto');
-                overlay.classList.add('ativo');
-
-                // Aqui está o truque: disparar um evento para o carrinho.js atualizar
-                // Como não queremos mexer no app.blade, vamos apenas recarregar a lista
-                // chamando o clique no botão de abrir o carrinho que já existe no topo
-                document.getElementById('btnCarrinho').click();
+                window.showMoraToast('Produto adicionado ao carrinho!', 'success');
+                // Atualiza o sidebar do carrinho
+                if (typeof CarrinhoManager !== 'undefined') {
+                    const manager = new CarrinhoManager();
+                    manager.abrirSidebar();
+                } else {
+                    location.reload();
+                }
             }
-        } catch (error) {
-            console.error("Erro ao adicionar:", error);
-        }
-    }
+        })
+        .catch(error => {
+            btnAdicionar.innerText = originalText;
+            btnAdicionar.disabled = false;
+            console.error('Erro:', error);
+            window.showMoraToast('Erro ao comunicar com o servidor.', 'error');
+        });
+}
 
-    btnAdicionar.addEventListener('click', () => mandarProCarrinho(false));
-    btnFinalizar.addEventListener('click', () => mandarProCarrinho(true));
-});
+// Calcula o frete de um único produto
+function calcularFrete() {
+    const cep = document.getElementById('cep-destino').value;
+    const resultadoDiv = document.getElementById('resultado-frete');
+    const btnAdicionar = document.getElementById('btn-add-carrinho');
+
+    if (cep.length < 8 || !btnAdicionar) return;
+
+    const produtoId = btnAdicionar.getAttribute('data-id');
+
+    resultadoDiv.style.display = 'block';
+    resultadoDiv.innerHTML = '<p style="font-size: 0.7rem; color: #999;">Calculando...</p>';
+
+    fetch(`/frete/calcular?cep=${cep}&produto_id=${produtoId}`)
+        .then(response => response.json())
+        .then(data => {
+            resultadoDiv.innerHTML = '';
+
+            if (data.error || data.length === 0) {
+                resultadoDiv.innerHTML = '<p style="color: red; font-size: 0.75rem;">Indisponível para este CEP.</p>';
+                return;
+            }
+
+            data.forEach(opcao => {
+                resultadoDiv.innerHTML += `
+                    <div class="frete-item">
+                        <div><strong>${opcao.nome}</strong><span>${opcao.prazo}</span></div>
+                        <strong>R$ ${opcao.preco}</strong>
+                    </div>`;
+            });
+        })
+        .catch(error => {
+            resultadoDiv.innerHTML = '<p style="color: red; font-size: 0.75rem;">Erro ao calcular frete.</p>';
+        });
+}

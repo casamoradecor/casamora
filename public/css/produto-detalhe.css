@@ -190,3 +190,40 @@
 .frete-nome { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #4a3427; }
 .frete-prazo { font-size: 0.75rem; color: #999; }
 .frete-preco { font-weight: 700; color: #4a3427; font-size: 0.9rem; }
+
+/* ==========================
+   TOAST - CASA MORÁ
+   ========================== */
+#mora-toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mora-toast {
+    min-width: 250px;
+    background-color: #4a3427;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 4px;
+    font-family: var(--font-base, 'Poppins', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.mora-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.mora-toast.error {
+    background-color: #c94c4c;
+}

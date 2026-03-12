@@ -19,7 +19,6 @@ class FreteController extends Controller
             $opcoesFrete = [];
             $precoSedexBase = null;
 
-            // 1. CONSULTA A API PRIMEIRO (Para pegar o valor do SEDEX)
             if (env('MELHOR_ENVIO_TOKEN')) {
                 $response = Http::withToken(env('MELHOR_ENVIO_TOKEN'))
                     ->post(env('MELHOR_ENVIO_URL') . '/me/shipment/calculate', [
@@ -28,7 +27,7 @@ class FreteController extends Controller
                         "products" => [[
                             "id" => $produto->id,
                             "width" => $produto->largura,
-                            "height" => $produto->height ?? $produto->altura,
+                            "height" => $produto->altura, // Usando a propriedade correta
                             "length" => $produto->comprimento,
                             "weight" => $produto->peso,
                             "insurance_value" => $produto->preco,
@@ -39,14 +38,11 @@ class FreteController extends Controller
                 if ($response->successful()) {
                     $servicos = $response->json();
                     foreach ($servicos as $s) {
-                        if (isset($s['name']) && !isset($s['error'])) {
-                            // Guardamos o preço se for SEDEX para usar no Uber depois
-                            if (str_contains(strtoupper($s['name']), 'SEDEX')) {
-                                $precoSedexBase = (float) $s['price'];
-                            }
-
+                        // FILTRO: Apenas SEDEX
+                        if (isset($s['name']) && !isset($s['error']) && str_contains(strtoupper($s['name']), 'SEDEX')) {
+                            $precoSedexBase = (float) $s['price'];
                             $opcoesFrete[] = [
-                                'nome'  => $s['name'],
+                                'nome'  => 'SEDEX',
                                 'preco' => number_format($s['price'], 2, ',', '.'),
                                 'prazo' => $s['delivery_range']['max'] . ' dias úteis',
                                 'icone' => 'fa-truck'
@@ -56,19 +52,12 @@ class FreteController extends Controller
                 }
             }
 
-            // 2. LÓGICA DO UBER (Baseada no SEDEX)
             $prefixo = substr($cepDestino, 0, 2);
             $regioesLocais = ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
 
             if (in_array($prefixo, $regioesLocais)) {
-                // Se conseguimos o preço do SEDEX, subtraímos 5.
-                // Se a API falhou, usamos um valor fixo de segurança (ex: 20,00)
                 $valorUber = $precoSedexBase ? ($precoSedexBase - 5) : 20.00;
-
-                // Evita frete negativo ou de graça caso o SEDEX seja muito barato
                 if ($valorUber < 10) $valorUber = 10.00;
-
-                // Adiciona o Uber no INÍCIO da lista para dar destaque
                 array_unshift($opcoesFrete, [
                     'nome'  => 'Entrega Flash (Uber/Mora)',
                     'preco' => number_format($valorUber, 2, ',', '.'),
@@ -80,6 +69,96 @@ class FreteController extends Controller
             return response()->json($opcoesFrete);
 
         } catch (\Exception $e) {
+            return response()->json(['error' => 'Falha ao calcular'], 500);
+        }
+    }
+
+    public function calcularCarrinho(Request $request)
+    {
+        try {
+            $cepDestino = preg_replace('/\D/', '', $request->cep);
+
+            if (strlen($cepDestino) !== 8) {
+                return response()->json(['error' => 'CEP inválido'], 400);
+            }
+
+            $carrinho = session()->get('carrinho', []);
+
+            if (empty($carrinho)) {
+                return response()->json(['error' => 'Carrinho vazio'], 400);
+            }
+
+            $produtosApi = [];
+
+            foreach ($carrinho as $id => $item) {
+                if (!isset($item['nome']) || $item['nome'] === 'NULL') continue;
+
+                $produtoDb = \App\Models\Produto::find($id);
+
+                if ($produtoDb) {
+                    $produtosApi[] = [
+                        "id" => $produtoDb->id,
+                        "width" => $produtoDb->largura ?: 15,
+                        "height" => $produtoDb->altura ?: 15,
+                        "length" => $produtoDb->comprimento ?: 15,
+                        "weight" => $produtoDb->peso ?: 0.5,
+                        "insurance_value" => $produtoDb->preco,
+                        "quantity" => $item['quantidade']
+                    ];
+                }
+            }
+
+            if (empty($produtosApi)) {
+                return response()->json(['error' => 'Produtos não encontrados no banco'], 404);
+            }
+
+            $opcoesFrete = [];
+            $precoSedexBase = null;
+
+            if (env('MELHOR_ENVIO_TOKEN')) {
+                $response = \Illuminate\Support\Facades\Http::withToken(env('MELHOR_ENVIO_TOKEN'))
+                    ->post(env('MELHOR_ENVIO_URL') . '/me/shipment/calculate', [
+                        "from" => ["postal_code" => "09530401"],
+                        "to"   => ["postal_code" => $cepDestino],
+                        "products" => $produtosApi
+                    ]);
+
+                if ($response->successful()) {
+                    $servicos = $response->json();
+                    foreach ($servicos as $s) {
+                        // FILTRO: Apenas SEDEX
+                        if (isset($s['name']) && !isset($s['error']) && str_contains(strtoupper($s['name']), 'SEDEX')) {
+                            $precoSedexBase = (float) $s['price'];
+                            $opcoesFrete[] = [
+                                'nome'  => 'SEDEX',
+                                'preco' => number_format($s['price'], 2, ',', '.'),
+                                'prazo' => $s['delivery_range']['max'] . ' dias úteis',
+                                'icone' => 'fa-truck'
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $prefixo = substr($cepDestino, 0, 2);
+            $regioesLocais = ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
+
+            if (in_array($prefixo, $regioesLocais)) {
+                $valorUber = $precoSedexBase ? ($precoSedexBase - 5) : 20.00;
+                if ($valorUber < 10) $valorUber = 10.00;
+
+                array_unshift($opcoesFrete, [
+                    'nome'  => 'Entrega Flash (Uber/Mora)',
+                    'preco' => number_format($valorUber, 2, ',', '.'),
+                    'prazo' => 'Até 24h',
+                    'icone' => 'fa-bolt'
+                ]);
+            }
+
+            return response()->json($opcoesFrete);
+
+        } catch (\Exception $e) {
+            \Log::error("Erro Frete Checkout: " . $e->getMessage());
             return response()->json(['error' => 'Falha ao calcular'], 500);
         }
     }

@@ -160,6 +160,141 @@ input[readonly] {
     border-bottom: 1px dashed #ccc;
 }
 
+.controle-qtd-checkout {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 8px;
+}
+
+.btn-qtd-mini {
+    background: transparent;
+    border: none;
+    width: 25px;
+    height: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #4a3427;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-qtd-mini:hover {
+    background: #f5f5f5;
+}
+
+.qtd-numero-mini {
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 20px;
+    text-align: center;
+    color: #4a3427;
+}
+
+/* NOVAS CLASSES PARA A TOTALIZAÇÃO COM FRETE */
+.linha-subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* NOVAS CLASSES PARA AS OPÇÕES DE FRETE */
+.opcoes-frete-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #ccc;
+}
+
+.titulo-frete-checkout {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #4a3427;
+    margin-bottom: 15px;
+}
+
+.frete-radio-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.frete-radio-item:hover {
+    border-color: #d1c4bc;
+}
+
+.frete-radio-item input[type="radio"] {
+    accent-color: #4a3427;
+    width: 18px;
+    height: 18px;
+}
+
+.frete-radio-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.f-nome-chk { font-weight: 700; font-size: 0.8rem; color: #4a3427; text-transform: uppercase; }
+.f-prazo-chk { font-size: 0.7rem; color: #888; text-transform: lowercase; }
+.f-preco-chk { font-weight: 800; color: #4a3427; font-size: 0.9rem; text-transform: uppercase}
+
+/* Botão desabilitado até escolher frete */
+.btn-confirmar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* ==========================
+   TOAST - CASA MORÁ
+   ========================== */
+#mora-toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mora-toast {
+    min-width: 250px;
+    background-color: #4a3427;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 4px;
+    font-family: var(--font-base, 'Poppins', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.mora-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.mora-toast.error {
+    background-color: #c94c4c;
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
     .checkout-container {

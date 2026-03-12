@@ -1,8 +1,42 @@
+// ==========================================
+// 1. FUNÇÃO GLOBAL DO TOAST (CASA MORÁ)
+// ==========================================
+window.showMoraToast = function(mensagem, tipo = 'success') {
+    let container = document.getElementById('mora-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'mora-toast-container';
+        document.body.appendChild(container);
+
+        // Estilos injetados dinamicamente
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #mora-toast-container { position: fixed; top: 30px; right: 30px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
+            .mora-toast { min-width: 250px; background-color: #4a3427; color: #fff; padding: 16px 24px; border-radius: 4px; font-family: 'Poppins', sans-serif; font-size: 0.8rem; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateX(120%); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+            .mora-toast.show { transform: translateX(0); opacity: 1; }
+            .mora-toast.error { background-color: #c94c4c; }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `mora-toast ${tipo}`;
+    toast.innerHTML = `<i class="fa-solid ${tipo === 'error' ? 'fa-circle-exclamation' : 'fa-check'}"></i> &nbsp; ${mensagem}`;
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 3500);
+};
+
+// ==========================================
+// 2. CLASSE GERENCIADORA DO CARRINHO
+// ==========================================
 class CarrinhoManager {
     constructor() {
-        // Seletores de Meta Tags com proteção contra erros
         const getMeta = (name) => document.querySelector(`meta[name="${name}"]`)?.getAttribute('content');
-
         this.urlAdicionar = getMeta('carrinho-url');
         this.urlListar = getMeta('carrinho-listar-url');
         this.urlDiminuir = getMeta('carrinho-diminuir-url');
@@ -23,25 +57,23 @@ class CarrinhoManager {
     }
 
     iniciarEventos() {
-        // Eventos de Abertura/Fechamento
         this.btnCarrinho?.addEventListener('click', () => this.abrirSidebar());
         this.btnFecharCarrinho?.addEventListener('click', () => this.fecharSidebar());
         this.overlay?.addEventListener('click', () => this.fecharSidebar());
 
-        // Evento de Compra
+        // Botões "Comprar" da Home / Vitrine
         document.querySelectorAll('.btn-comprar').forEach(botao => {
             botao.addEventListener('click', (e) => this.adicionarAoCarrinho(e));
         });
 
-        // Delegação para botões internos do carrinho
+        // Botões + e - dentro do Sidebar
         this.lista?.addEventListener('click', (e) => {
             const id = e.target.getAttribute('data-id');
             if (!id) return;
-
             if (e.target.classList.contains('btn-aumentar')) {
-                this.alterarQuantidadeInstantanea(id, 'aumentar');
+                this.alterarQuantidadeInstantanea(id, 'aumentar', e.target);
             } else if (e.target.classList.contains('btn-diminuir')) {
-                this.alterarQuantidadeInstantanea(id, 'diminuir');
+                this.alterarQuantidadeInstantanea(id, 'diminuir', e.target);
             }
         });
     }
@@ -58,62 +90,74 @@ class CarrinhoManager {
     adicionarAoCarrinho(evento) {
         const botao = evento.currentTarget;
         const produtoId = botao.getAttribute('data-id');
-        if (!produtoId || produtoId === "NULL") return; // Anti-NULL preventivo
-
-        const produtoData = {
-            nome: botao.getAttribute('data-nome'),
-            preco: parseFloat(botao.getAttribute('data-preco') || 0),
-            imagem: botao.getAttribute('data-imagem')
-        };
+        if (!produtoId || produtoId === "NULL") return;
 
         const originalText = botao.innerText;
-        botao.innerText = "ADICIONANDO...";
+        botao.innerText = "AGUARDE...";
         botao.disabled = true;
 
-        this.alterarQuantidadeInstantanea(produtoId, 'aumentar', produtoData, () => {
-            botao.innerText = originalText;
-            botao.disabled = false;
-            this.abrirSidebar();
-        });
+        fetch(this.urlAdicionar, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': this.csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ produto_id: produtoId, quantidade: 1 })
+        })
+            .then(response => response.json())
+            .then(data => {
+                botao.innerText = originalText;
+                botao.disabled = false;
+
+                if (data.success) {
+                    this.itensLocais = data.itens;
+                    this.totalLocal = data.total;
+                    this.renderizar();
+                    this.abrirSidebar();
+                    window.showMoraToast('Produto adicionado ao carrinho!', 'success');
+                } else {
+                    window.showMoraToast(data.message || 'Estoque indisponível.', 'error');
+                }
+            })
+            .catch(err => {
+                botao.innerText = originalText;
+                botao.disabled = false;
+                window.showMoraToast('Erro ao comunicar com o servidor.', 'error');
+            });
     }
 
-    alterarQuantidadeInstantanea(produtoId, acao, produtoData = null, callback = null) {
-        let item = this.itensLocais[produtoId];
-
-        if (acao === 'aumentar') {
-            if (item) {
-                item.quantidade++;
-            } else if (produtoData) {
-                this.itensLocais[produtoId] = { id: produtoId, ...produtoData, quantidade: 1 };
-            }
-        } else if (acao === 'diminuir' && item) {
-            if (item.quantidade > 1) {
-                item.quantidade--;
-            } else {
-                delete this.itensLocais[produtoId];
-            }
-        }
-
-        this.renderizar();
-        if (callback) callback();
-
+    // O parâmetro 'botao' serve para desativarmos ele temporariamente
+    alterarQuantidadeInstantanea(produtoId, acao, botao = null) {
         const url = acao === 'aumentar' ? this.urlAdicionar : this.urlDiminuir;
+        if (botao) botao.disabled = true;
+
         fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': this.csrfToken },
-            body: JSON.stringify({ produto_id: produtoId })
-        }).catch(err => console.error('Erro de sync:', err));
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': this.csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ produto_id: produtoId, quantidade: 1 })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (botao) botao.disabled = false;
+                if (data.success) {
+                    this.itensLocais = data.itens;
+                    this.totalLocal = data.total;
+                    this.renderizar();
+                } else {
+                    window.showMoraToast(data.message || 'Estoque insuficiente.', 'error');
+                }
+            })
+            .catch(err => {
+                if (botao) botao.disabled = false;
+                window.showMoraToast('Erro ao atualizar quantidade.', 'error');
+            });
     }
 
     renderizar() {
         const itens = this.itensLocais;
-        // Recalcula o total com base no que está na tela
         this.totalLocal = Object.values(itens).reduce((acc, curr) => {
             return (curr.nome && curr.nome !== "NULL") ? acc + (curr.preco * curr.quantidade) : acc;
         }, 0);
 
         if (!itens || Object.keys(itens).length === 0) {
-            this.lista.innerHTML = '<p class="carrinho-vazio">Seu carrinho está vazio.</p>';
+            this.lista.innerHTML = '<p class="carrinho-vazio" style="text-align:center; padding: 20px; color:#888; font-size:0.85rem;">Seu carrinho está vazio.</p>';
             this.valorTotal.innerText = 'R$ 0,00';
             return;
         }
@@ -121,43 +165,96 @@ class CarrinhoManager {
         let html = '';
         for (let id in itens) {
             let item = itens[id];
-
-            // FILTRO ANTI-NULL
             if (!item.nome || item.nome === "NULL") continue;
 
             let precoTotalItem = (item.preco * item.quantidade).toLocaleString('pt-BR', {minimumFractionDigits: 2});
-
-            // FIX DA IMAGEM: Usa a URL direta que vem do botão/controlador
             let imagemSrc = item.imagem || '/assets/vasomora.png';
 
             html += `
-                <div class="carrinho-item" style="display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px; align-items: center;">
-                    <img src="${imagemSrc}" alt="${item.nome}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                <div class="carrinho-item" style="display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; align-items: center;">
+                    <img src="${imagemSrc}" alt="${item.nome}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 4px;">
                     <div style="flex: 1;">
-                        <h4 style="font-size: 0.8rem; font-weight: 700; margin: 0; text-transform: uppercase;">${item.nome}</h4>
-                        <p style="font-size: 0.85rem; margin: 5px 0; color: #3b1f15; font-weight: bold;">R$ ${precoTotalItem}</p>
-
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <button class="btn-diminuir" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ccc; background: #fff;">-</button>
-                            <span style="font-size: 0.85rem; font-weight: 600;">${item.quantidade}</span>
-                            <button class="btn-aumentar" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ccc; background: #fff;">+</button>
+                        <h4 style="font-size: 0.75rem; font-weight: 700; margin: 0; text-transform: uppercase; color: #4a3427;">${item.nome}</h4>
+                        <p style="font-size: 0.85rem; margin: 5px 0; color: #4a3427; font-weight: bold;">R$ ${precoTotalItem}</p>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                            <button class="btn-diminuir" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #4a3427;">-</button>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #4a3427; width: 15px; text-align:center;">${item.quantidade}</span>
+                            <button class="btn-aumentar" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #4a3427;">+</button>
                         </div>
                     </div>
                 </div>
             `;
         }
-
         this.lista.innerHTML = html;
         this.valorTotal.innerText = `R$ ${this.totalLocal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
     }
 
-    abrirSidebar() {
-        this.sidebar?.classList.add('aberto');
-        this.overlay?.classList.add('ativo');
-    }
+    abrirSidebar() { this.sidebar?.classList.add('aberto'); this.overlay?.classList.add('ativo'); }
+    fecharSidebar() { this.sidebar?.classList.remove('aberto'); this.overlay?.classList.remove('ativo'); }
+}
 
-    fecharSidebar() {
-        this.sidebar?.classList.remove('aberto');
-        this.overlay?.classList.remove('ativo');
-    }
+// ==========================================
+// 3. FUNÇÕES DA TELA DE PRODUTO
+// ==========================================
+function ajustarQtd(valor) {
+    const campo = document.getElementById('qtd-produto');
+    if (!campo) return;
+    let novaQtd = parseInt(campo.value) + valor;
+    if (novaQtd >= 1) campo.value = novaQtd;
+}
+
+function adicionarComQtd(irParaCheckout) {
+    const qtd = document.getElementById('qtd-produto') ? document.getElementById('qtd-produto').value : 1;
+    const btnAdicionar = document.getElementById('btn-add-carrinho');
+    if (!btnAdicionar) return;
+
+    const produtoId = btnAdicionar.getAttribute('data-id');
+    const urlAdicionar = document.querySelector('meta[name="carrinho-url"]').content;
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(urlAdicionar, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ produto_id: produtoId, quantidade: qtd })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                window.showMoraToast(data.message || 'Estoque indisponível.', 'error');
+                return;
+            }
+
+            if (irParaCheckout) {
+                window.location.href = "/checkout";
+            } else {
+                window.showMoraToast('Produto adicionado ao carrinho!', 'success');
+                if (typeof CarrinhoManager !== 'undefined') {
+                    const manager = new CarrinhoManager();
+                    manager.abrirSidebar();
+                } else { location.reload(); }
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+}
+
+// ==========================================
+// 4. FUNÇÃO DO CHECKOUT (+ e - do resumo)
+// ==========================================
+function alterarQtdCheckout(produtoId, variacao) {
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch('/carrinho/atualizar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ produto_id: produtoId, variacao: variacao })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                window.location.reload();
+            } else {
+                window.showMoraToast(data.error || 'Quantidade indisponível no momento.', 'error');
+            }
+        })
+        .catch(error => console.error('Erro:', error));
 }

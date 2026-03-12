@@ -61,8 +61,8 @@ Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.in
 Route::get('/carrinho/listar', [CarrinhoController::class, 'listar'])->name('carrinho.listar');
 Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
 Route::post('/carrinho/diminuir', [CarrinhoController::class, 'diminuir'])->name('carrinho.diminuir');
-
-
+Route::post('/carrinho/atualizar', [App\Http\Controllers\CarrinhoController::class, 'atualizarQtd'])->name('carrinho.atualizar');
+Route::get('/pedido/sucesso/{id}', [App\Http\Controllers\CarrinhoController::class, 'pedidoSucesso'])->name('pedido.sucesso');
 /*
 |--------------------------------------------------------------------------
 | FLUXO DE CHECKOUT E FINALIZAÇÃO (Requer Login)
@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/frete/calcular', [App\Http\Controllers\FreteController::class, 'calcular'])->name('frete.calcular');
+Route::get('/frete/calcular-carrinho', [App\Http\Controllers\FreteController::class, 'calcularCarrinho'])->name('frete.calcular-carrinho');
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD & HISTÓRICO DO CLIENTE (Minha Conta)

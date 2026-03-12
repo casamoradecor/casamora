@@ -9,7 +9,11 @@ class Pedido extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['cliente_id', 'endereco_id', 'valor_produtos', 'valor_frete', 'valor_desconto', 'valor_total', 'status', 'payment_id', 'codigo_externo'];
+    protected $fillable = [
+        'cliente_id', 'endereco_id', 'valor_produtos', 'valor_frete',
+        'valor_desconto', 'valor_total', 'status', 'payment_id',
+        'codigo_externo', 'nome_entrega', 'cpf_entrega', 'cep', 'endereco'
+    ];
 
     public function cliente() { return $this->belongsTo(Cliente::class); }
     public function itens() { return $this->hasMany(PedidoItem::class); }

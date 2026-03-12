@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Produto;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
+use App\Models\Endereco;
+use App\Models\Pagamento;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class CarrinhoController extends Controller
 {
@@ -39,7 +42,7 @@ class CarrinhoController extends Controller
             return response()->json(['success' => false, 'message' => 'Produto não encontrado'], 404);
         }
 
-        $quantidadeSolicitada = (int) $request->input('quantidade', 1);
+        $quantidadeSolicitada = (int)$request->input('quantidade', 1);
         $carrinho = session()->get('carrinho', []);
         $quantidadeJaNoCarrinho = isset($carrinho[$produto->id]) ? $carrinho[$produto->id]['quantidade'] : 0;
         $totalFinal = $quantidadeJaNoCarrinho + $quantidadeSolicitada;
@@ -47,20 +50,16 @@ class CarrinhoController extends Controller
         if ($totalFinal > $produto->estoque) {
             return response()->json([
                 'success' => false,
-                'message' => "Estoque insuficiente. Temos apenas {$produto->estoque} unidades em estoque."
+                'message' => "Estoque insuficiente. Temos apenas {$produto->estoque} unidades."
             ], 400);
         }
 
-        // Tratamento da URL da Imagem
         $caminho = $produto->imagem;
-        if ($caminho && str_contains($caminho, 'assets')) {
-            $urlFinal = asset(ltrim($caminho, '/'));
-        } else {
-            $urlFinal = $caminho ? Storage::url($caminho) : asset('assets/vasomora.png');
-        }
+        $urlFinal = ($caminho && str_contains($caminho, 'assets'))
+            ? asset(ltrim($caminho, '/'))
+            : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
 
-        // Atualização da Sessão
-        if(isset($carrinho[$produto->id])) {
+        if (isset($carrinho[$produto->id])) {
             $carrinho[$produto->id]['quantidade'] += $quantidadeSolicitada;
         } else {
             $carrinho[$produto->id] = [
@@ -82,115 +81,190 @@ class CarrinhoController extends Controller
     }
 
     /**
-     * Diminui a quantidade ou remove o item do carrinho
+     * Atualiza a quantidade diretamente na tela de Checkout
      */
-    public function diminuir(Request $request)
+    public function atualizarQtd(Request $request)
     {
-        $carrinho = session()->get('carrinho', []);
         $id = $request->produto_id;
+        $variacao = (int)$request->variacao;
+        $carrinho = session()->get('carrinho', []);
 
-        if(isset($carrinho[$id])) {
-            if($carrinho[$id]['quantidade'] > 1) {
-                $carrinho[$id]['quantidade']--;
-            } else {
+        if (isset($carrinho[$id])) {
+            $novaQuantidade = $carrinho[$id]['quantidade'] + $variacao;
+
+            if ($novaQuantidade <= 0) {
                 unset($carrinho[$id]);
+            } else {
+                if ($variacao > 0) {
+                    $produto = Produto::find($id);
+                    if ($produto && $novaQuantidade > $produto->estoque) {
+                        return response()->json(['error' => 'Estoque insuficiente'], 400);
+                    }
+                }
+                $carrinho[$id]['quantidade'] = $novaQuantidade;
             }
+
             session()->put('carrinho', $carrinho);
+            return response()->json(['success' => true]);
         }
 
-        return response()->json([
-            'success' => true,
-            'itens' => $carrinho,
-            'total' => $this->calcularTotal($carrinho)
-        ]);
+        return response()->json(['error' => 'Produto não encontrado'], 404);
     }
 
     /**
-     * Função auxiliar para calcular o valor total da sessão
-     */
-    private function calcularTotal($carrinho)
-    {
-        $total = 0;
-        foreach($carrinho as $item) {
-            $total += $item['preco'] * $item['quantidade'];
-        }
-        return $total;
-    }
-
-    /**
-     * Exibe a tela de Checkout (na pasta pedidos)
+     * Exibe a tela de Checkout
      */
     public function checkout()
     {
         $carrinho = session()->get('carrinho', []);
-        if(empty($carrinho)) return redirect()->route('home');
+        if (empty($carrinho)) return redirect()->route('home');
 
         $total = $this->calcularTotal($carrinho);
         return view('pedidos.checkout', compact('carrinho', 'total'));
     }
 
     /**
-     * Processa a finalização do pedido e salva no banco de dados
+     * PROCESSO DE FINALIZAÇÃO E INTEGRAÇÃO MERCADO PAGO
      */
     public function finalizarPedido(Request $request)
     {
         $carrinho = session()->get('carrinho', []);
-        if (empty($carrinho)) {
-            return redirect()->route('home')->with('erro', 'Seu carrinho está vazio.');
-        }
+        if (empty($carrinho)) return redirect()->route('home')->with('erro', 'Carrinho vazio.');
 
         $request->validate([
-            'cep' => 'required',
-            'rua' => 'required',
-            'numero' => 'required',
-            'bairro' => 'required',
-            'cidade' => 'required',
-            'estado' => 'required',
+            'cep' => 'required', 'rua' => 'required', 'numero' => 'required',
+            'bairro' => 'required', 'cidade' => 'required', 'estado' => 'required',
+            'frete_escolhido' => 'required', 'valor_frete' => 'required',
         ]);
 
         DB::beginTransaction();
-
         try {
+            $userId = Auth::id();
+            $enderecoTexto = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
+
+            // 1. Criar Endereço
+            $enderecoDb = Endereco::create([
+                'cliente_id' => $userId,
+                'cep' => preg_replace('/\D/', '', $request->cep),
+                'logradouro' => $request->rua,
+                'numero' => $request->numero,
+                'bairro' => $request->bairro,
+                'cidade' => $request->cidade,
+                'estado' => $request->estado,
+                'complemento' => $request->complemento,
+            ]);
+
+            $valorProdutos = 0;
+            $itensMp = [];
+
+            // 2. Validar Estoque e Preparar Itens para MP
             foreach ($carrinho as $id => $item) {
-                $produtoBanco = Produto::lockForUpdate()->find($id);
-
-                if (!$produtoBanco || $produtoBanco->estoque < $item['quantidade']) {
-                    throw new \Exception("Desculpe, o produto '{$item['nome']}' não possui estoque suficiente para finalizar a compra.");
+                $produto = Produto::lockForUpdate()->find($id);
+                if (!$produto || $produto->estoque < $item['quantidade']) {
+                    throw new \Exception("Estoque insuficiente para: {$item['nome']}");
                 }
-                $produtoBanco->decrement('estoque', $item['quantidade']);
-            }
-            $enderecoCompleto = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
-            if ($request->complemento) $enderecoCompleto .= " ({$request->complemento})";
+                $produto->decrement('estoque', $item['quantidade']);
+                $valorProdutos += ($item['preco'] * $item['quantidade']);
 
-            // CRIAR PEDIDO
+                $itensMp[] = [
+                    'title' => $item['nome'],
+                    'quantity' => (int)$item['quantidade'],
+                    'unit_price' => (float)$item['preco']
+                ];
+            }
+
+            $valorFrete = (float)$request->valor_frete;
+
+            // 3. Criar o Pedido
             $pedido = Pedido::create([
-                'user_id' => Auth::id(),
-                'total' => $this->calcularTotal($carrinho),
+                'cliente_id' => $userId,
+                'endereco_id' => $enderecoDb->id,
+                'valor_produtos' => $valorProdutos,
+                'valor_frete' => $valorFrete,
+                'valor_total' => $valorProdutos + $valorFrete,
                 'status' => 'pendente',
+                'codigo_externo' => 'MOR-' . time(),
                 'nome_entrega' => Auth::user()->name,
                 'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
                 'cep' => preg_replace('/\D/', '', $request->cep),
-                'endereco' => $enderecoCompleto,
+                'endereco' => $enderecoTexto,
             ]);
 
-            //Criar os Itens do Pedido (Relacionamento)
+            // 4. Criar Itens do Pedido
             foreach ($carrinho as $id => $detalhes) {
                 PedidoItem::create([
                     'pedido_id' => $pedido->id,
                     'produto_id' => $id,
                     'quantidade' => $detalhes['quantidade'],
                     'preco_unitario' => $detalhes['preco'],
+                    'subtotal' => $detalhes['quantidade'] * $detalhes['preco'],
                 ]);
+            }
+
+            // 5. Registro de Pagamento Local
+            Pagamento::create([
+                'pedido_id' => $pedido->id,
+                'metodo' => 'pix',
+                'status' => 'pending',
+                'valor_pago' => 0
+            ]);
+
+            // Adicionar Frete ao MP
+            if ($valorFrete > 0) {
+                $itensMp[] = [
+                    'title' => 'Frete: ' . $request->frete_escolhido,
+                    'quantity' => 1,
+                    'unit_price' => $valorFrete
+                ];
+            }
+
+            // 6. Chamada Mercado Pago
+            $mpResponse = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
+                ->post('https://api.mercadopago.com/checkout/preferences', [
+                    'items' => $itensMp,
+                    'back_urls' => [
+                        'success' => route('pedido.sucesso', ['id' => $pedido->id]),
+                        'failure' => route('checkout'),
+                        'pending' => route('pedido.sucesso', ['id' => $pedido->id]),
+                    ],
+                    'auto_return' => 'approved',
+                    'external_reference' => (string) $pedido->id,
+                    'statement_descriptor' => 'CASA MORA',
+                ]);
+
+            if ($mpResponse->failed()) {
+                throw new \Exception('Erro ao comunicar com Mercado Pago: ' . $mpResponse->body());
             }
 
             DB::commit();
             session()->forget('carrinho');
 
-            return redirect()->route('pedido.sucesso', $pedido->id);
+            return redirect()->away($mpResponse->json()['init_point']);
 
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('erro', $e->getMessage());
         }
+    }
+
+    /**
+     * Tela de Sucesso
+     */
+    public function pedidoSucesso($id)
+    {
+        $pedido = Pedido::findOrFail($id);
+        return view('pedidos.sucesso', compact('pedido'));
+    }
+
+    /**
+     * Função privada para cálculo de total
+     */
+    private function calcularTotal($carrinho)
+    {
+        $total = 0;
+        foreach ($carrinho as $item) {
+            $total += $item['preco'] * $item['quantidade'];
+        }
+        return $total;
     }
 }

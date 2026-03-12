@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Endereco extends Model
 {
-    protected $fillable = ['cliente_id', 'cep', 'logradouro', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'tipo'];
+    protected $fillable = [
+        'cliente_id', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento'];
 
     public function cliente() { return $this->belongsTo(Cliente::class); }
 }

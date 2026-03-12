@@ -10,32 +10,57 @@
 
 @section('content')
     <main class="checkout-container">
+        @if(session('erro'))
+            <div
+                style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-family: 'Poppins', sans-serif; font-size: 0.85rem;">
+                <i class="fa-solid fa-circle-exclamation"></i> {{ session('erro') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div
+                style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-family: 'Poppins', sans-serif; font-size: 0.85rem;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div class="checkout-form-section">
             <h2>Dados de Entrega</h2>
 
-            <form action="{{ route('pedido.finalizar') }}" method="POST" class="checkout-form">
+            <form action="{{ route('pedido.finalizar') }}" method="POST" class="checkout-form" id="form-checkout">
                 @csrf
+
+                {{-- Inputs ocultos para o Frete --}}
+                <input type="hidden" name="frete_escolhido" id="frete_escolhido_input" required>
+                <input type="hidden" name="valor_frete" id="valor_frete_input" value="0">
 
                 <div class="form-group">
                     <label>Nome para Entrega</label>
-                    <input type="text" value="{{ Auth::user()->name ?? '' }}" class="input-checkout input-disabled" readonly>
+                    <input type="text" value="{{ Auth::user()->name ?? '' }}" class="input-checkout input-disabled"
+                           readonly>
                 </div>
 
                 <div class="form-group">
                     <label>CPF</label>
-                    <input type="text" value="{{ Auth::user()->cpf }}" class="input-checkout input-disabled" readonly>
+                    <input type="text" value="{{ Auth::user()->cpf ?? '' }}" class="input-checkout input-disabled"
+                           readonly>
                 </div>
 
                 <div class="form-group">
                     <label>CEP</label>
-                    <input type="text" name="cep" id="cep" placeholder="00000-000" class="input-checkout" required maxlength="9">
+                    <input type="text" name="cep" id="cep" placeholder="00000-000" class="input-checkout" required
+                           maxlength="9">
                 </div>
 
                 <div class="address-grid">
                     <div class="form-group flex-3">
                         <label>RUA</label>
-                        <input type="text" name="rua" id="logradouro" placeholder="Nome da rua" class="input-checkout" required>
+                        <input type="text" name="rua" id="logradouro" placeholder="Nome da rua" class="input-checkout"
+                               required>
                     </div>
                     <div class="form-group flex-1">
                         <label>NÚMERO</label>
@@ -46,11 +71,13 @@
                 <div class="address-grid">
                     <div class="form-group">
                         <label>BAIRRO</label>
-                        <input type="text" name="bairro" id="bairro" placeholder="Seu bairro" class="input-checkout" required>
+                        <input type="text" name="bairro" id="bairro" placeholder="Seu bairro" class="input-checkout"
+                               required>
                     </div>
                     <div class="form-group">
                         <label>COMPLEMENTO</label>
-                        <input type="text" name="complemento" id="complemento" placeholder="Apt, bloco..." class="input-checkout">
+                        <input type="text" name="complemento" id="complemento" placeholder="Apt, bloco..."
+                               class="input-checkout">
                     </div>
                 </div>
 
@@ -65,7 +92,13 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-confirmar">
+                {{-- Container injetado pelo frete.js --}}
+                <div id="box-opcoes-frete" class="opcoes-frete-container" style="display: none;">
+                    <h3 class="titulo-frete-checkout">Escolha o envio</h3>
+                    <div id="lista-fretes-checkout"></div>
+                </div>
+
+                <button type="submit" class="btn-confirmar" id="btn-finalizar" disabled>
                     CONFIRMAR PEDIDO
                 </button>
             </form>
@@ -77,71 +110,62 @@
             <div class="checkout-itens-lista">
                 @php $totalGeral = 0; @endphp
 
-                @foreach($carrinho as $item)
-                    {{-- BLOQUEIO ANTI-NULL: Ignora itens inválidos no resumo --}}
-                    @if(!isset($item['nome']) || $item['nome'] === 'NULL') @continue @endif
+                @foreach($carrinho as $id => $item)
+                    @if(!isset($item['nome']) || $item['nome'] === 'NULL')
+                        @continue
+                    @endif
 
                     @php
-                        /* FIX DA IMAGEM: O Controller já envia a URL pronta (asset ou Storage::url) */
                         $imagemSrc = $item['imagem'] ?? asset('assets/vasomora.png');
                         $totalGeral += $item['preco'] * $item['quantidade'];
                     @endphp
 
                     <div class="checkout-item">
-                        {{-- Usamos a imagemSrc tratada --}}
-                        <img src="{{ $imagemSrc }}" alt="{{ $item['nome'] }}" style="border-radius: 8px;">
+                        <img src="{{ $imagemSrc }}" alt="{{ $item['nome'] }}" style="border-radius: 4px;">
                         <div class="checkout-item-info">
-                            <h4 style="text-transform: uppercase; font-size: 0.8rem;">{{ $item['nome'] }}</h4>
-                            <p>Qtd: {{ $item['quantidade'] }}</p>
-                            <p class="checkout-item-price">R$ {{ number_format($item['preco'] * $item['quantidade'], 2, ',', '.') }}</p>
+                            <h4 style="text-transform: uppercase; font-size: 0.8rem; line-height: 1.2; margin-bottom: 8px;">{{ $item['nome'] }}</h4>
+
+                            {{-- CONTROLE DE QUANTIDADE QUE CHAMA O CARRINHO.JS --}}
+                            <div class="controle-qtd-checkout">
+                                <button type="button" class="btn-qtd-mini" onclick="alterarQtdCheckout({{ $id }}, -1)">
+                                    -
+                                </button>
+                                <span class="qtd-numero-mini" id="qtd-val-{{ $id }}">{{ $item['quantidade'] }}</span>
+                                <button type="button" class="btn-qtd-mini" onclick="alterarQtdCheckout({{ $id }}, 1)">
+                                    +
+                                </button>
+                            </div>
+
+                            <p class="checkout-item-price">
+                                R$ {{ number_format($item['preco'] * $item['quantidade'], 2, ',', '.') }}</p>
                         </div>
                     </div>
                 @endforeach
             </div>
 
+            {{-- LINHAS DE TOTALIZAÇÃO --}}
+            <div class="linha-subtotal">
+                <span>Subtotal</span>
+                <span id="valor-subtotal"
+                      data-valor="{{ $totalGeral }}">R$ {{ number_format($totalGeral, 2, ',', '.') }}</span>
+            </div>
+
+            <div class="linha-subtotal">
+                <span>Frete</span>
+                <span id="valor-frete-display">R$ 0,00</span>
+            </div>
+
             <div class="checkout-total-row">
                 <span>TOTAL</span>
-                <span style="color: #3b1f15;">R$ {{ number_format($totalGeral, 2, ',', '.') }}</span>
+                <span id="valor-total-final"
+                      style="color: #4a3427;">R$ {{ number_format($totalGeral, 2, ',', '.') }}</span>
             </div>
         </div>
     </main>
-
-    {{-- SCRIPT DE CEP E MÁSCARA MANTIDO --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cepInput = document.getElementById('cep');
-
-            cepInput.addEventListener('blur', function() {
-                let cep = this.value.replace(/\D/g, '');
-
-                if (cep.length === 8) {
-                    document.getElementById('logradouro').value = "...";
-                    document.getElementById('bairro').value = "...";
-                    document.getElementById('localidade').value = "...";
-                    document.getElementById('uf').value = "...";
-
-                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (!data.erro) {
-                                document.getElementById('logradouro').value = data.logradouro;
-                                document.getElementById('bairro').value = data.bairro;
-                                document.getElementById('localidade').value = data.localidade;
-                                document.getElementById('uf').value = data.uf;
-                                document.getElementById('numero').focus();
-                            } else {
-                                alert("CEP não encontrado.");
-                            }
-                        })
-                        .catch(error => console.error('Erro ao buscar CEP:', error));
-                }
-            });
-
-            cepInput.addEventListener('input', function(e) {
-                let v = e.target.value.replace(/\D/g, '');
-                v = v.replace(/^(\d{5})(\d)/, '$1-$2');
-                e.target.value = v.slice(0, 9);
-            });
-        });
+        window.subtotalBase = {{ $totalGeral }};
     </script>
+    <script src="{{ asset('js/carrinho.js') }}"></script>
+    <script src="{{ asset('js/frete.js') }}"></script>
+    <script src="{{ asset('js/checkout.js') }}"></script>
 @endsection
