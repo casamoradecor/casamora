@@ -9,7 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FreteController;
-
+use App\Http\Controllers\WebhookController;
 /*
 |--------------------------------------------------------------------------
 | PAINEL ADMINISTRATIVO (AdminController)
@@ -63,6 +63,7 @@ Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->na
 Route::post('/carrinho/diminuir', [CarrinhoController::class, 'diminuir'])->name('carrinho.diminuir');
 Route::post('/carrinho/atualizar', [App\Http\Controllers\CarrinhoController::class, 'atualizarQtd'])->name('carrinho.atualizar');
 Route::get('/pedido/sucesso/{id}', [App\Http\Controllers\CarrinhoController::class, 'pedidoSucesso'])->name('pedido.sucesso');
+Route::post('/webhook/mercadopago', [WebhookController::class, 'receberNotificacao']);
 /*
 |--------------------------------------------------------------------------
 | FLUXO DE CHECKOUT E FINALIZAÇÃO (Requer Login)

@@ -218,16 +218,17 @@ class CarrinhoController extends Controller
                 ];
             }
 
-            // 6. Chamada Mercado Pago
+            // 6. Chamada Mercado Pago (Forçando URL absoluta)
             $mpResponse = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
                 ->post('https://api.mercadopago.com/checkout/preferences', [
                     'items' => $itensMp,
                     'back_urls' => [
-                        'success' => route('pedido.sucesso', ['id' => $pedido->id]),
-                        'failure' => route('checkout'),
-                        'pending' => route('pedido.sucesso', ['id' => $pedido->id]),
+                        // Usamos url() para garantir que o domínio venha do .env
+                        'success' => url('/pedido/sucesso/' . $pedido->id),
+                        'failure' => url('/checkout'),
+                        'pending' => url('/pedido/sucesso/' . $pedido->id),
                     ],
-                    'auto_return' => 'approved',
+                  //  'auto_return' => 'approved',
                     'external_reference' => (string) $pedido->id,
                     'statement_descriptor' => 'CASA MORA',
                 ]);
