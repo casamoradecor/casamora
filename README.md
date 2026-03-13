@@ -1,64 +1,81 @@
-
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛒 Casa MORÁ - E-commerce
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="350">
 </p>
 
-## About Laravel
+<p align="center">
+Projeto de uma plataforma de <strong>E-commerce</strong> desenvolvida utilizando o framework Laravel.
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 📌 Sobre o Projeto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+O **Casa MORÁ** é um sistema de comércio eletrônico desenvolvido como projeto acadêmico, com o objetivo de permitir a venda online de produtos de decoração e utilidades domésticas.
 
-## Learning Laravel
+A plataforma permite que os usuários naveguem pelos produtos disponíveis, adicionem itens ao carrinho de compras e realizem pedidos de forma simples e intuitiva.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+O sistema foi desenvolvido utilizando tecnologias modernas de desenvolvimento web, com foco em organização de código, estrutura de banco de dados e experiência do usuário.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+# 🚀 Tecnologias Utilizadas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+<p align="center">
 
-### Premium Partners
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width="60"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="60"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="60"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" width="60"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" width="60"/>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" width="60"/>
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+</p>
 
-## Contributing
+### Front-end
+- HTML5
+- CSS3
+- JavaScript
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Responsáveis pela estrutura, estilização e interatividade da interface do usuário.
 
-## Code of Conduct
+### Back-end
+- PHP
+- Laravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Responsáveis pela lógica da aplicação, gerenciamento das rotas, controle dos dados e funcionamento do sistema.
 
-## Security Vulnerabilities
+### Banco de Dados
+- SQL (MySQL)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Utilizado para armazenamento das informações do sistema, como:
 
-## License
+- produtos
+- usuários
+- pedidos
+- carrinho de compras
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# casamora
-Projeto de um site de E-commerce desenvolvido em Laravel
->>>>>>> d02c923c84bb9c573adb32589a00674eda119747
+---
+
+# ⚙️ Funcionalidades do Sistema
+
+O sistema possui as seguintes funcionalidades principais:
+
+- Visualização de produtos
+- Página de detalhes do produto
+- Carrinho de compras
+- Adição e remoção de produtos no carrinho
+- Cadastro de usuários
+- Login de usuários
+- Finalização de pedidos
+- Integração com sistema de pagamento
+- Área administrativa para gerenciamento
+
+---
+
+# 🗂 Estrutura do Projeto
+
+O projeto segue a arquitetura **MVC (Model-View-Controller)** fornecida pelo Laravel.
+
+Principais componentes:
