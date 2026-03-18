@@ -70,6 +70,7 @@
     font-size: 1rem;
     color: var(--color-text);
     margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .btn-logout {
@@ -88,6 +89,161 @@
 
 .btn-logout:hover {
     text-decoration: underline;
+}
+/* AJUSTES DO CARD DE PEDIDO RECENTE */
+.card-content {
+    margin-bottom: 15px;
+}
+
+.card-date {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.card-total {
+    font-size: 0.95rem;
+    margin-top: 5px;
+}
+
+/* LINK DE AÇÃO (VER DETALHES / VER PRODUTOS) */
+.btn-card-action {
+    color: var(--color-brand);
+    font-size: 0.75rem;
+    margin-top: 20px;
+    display: block;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: underline;
+
+    transition: opacity 0.2s;
+}
+
+.btn-card-action:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+/* Cores por Status */
+.status-pending {
+    background-color: #FDF4E3; /* Creme/Amarelo bem claro */
+    color: #B28900;            /* Dourado escuro */
+    border: 1px solid #F5E6BE;
+}
+
+.status-approved, .status-pago {
+    background-color: #E8F5E9; /* Verde claro */
+    color: #2E7D32;            /* Verde escuro */
+    border: 1px solid #C8E6C9;
+}
+
+/* Ajuste do Título do Card para não ficar colado */
+.card-content p {
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.resultado{
+    text-transform: uppercase;
+}
+
+/* =========================================
+   DETALHES DO PEDIDO (SHOW)
+   ========================================= */
+
+.order-details-header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 25px;
+}
+
+.order-details-header h2 {
+    margin-bottom: 10px;
+}
+
+.order-details-header p {
+    font-size: 0.8rem;
+    color: #888;
+    letter-spacing: 1px;
+}
+
+/* LISTA DE ITENS */
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.order-item img {
+    width: 70px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.order-item-text p:first-child {
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.order-item-text p:last-child {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+/* RESUMO DE VALORES NO FINAL */
+.order-summary {
+    margin-top: 40px;
+    text-align: right;
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+
+.order-summary-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.order-summary-total {
+    margin-top: 15px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--color-brand);
+}
+.order-summary-row span {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.order-summary-total {
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-top: 15px;
 }
 
 /* Ajuste Responsivo */
