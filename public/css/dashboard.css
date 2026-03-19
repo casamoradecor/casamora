@@ -245,6 +245,62 @@
     font-weight: 900;
     margin-top: 15px;
 }
+/* =========================================
+   TABELA DE PEDIDOS (DASHBOARD)
+   ========================================= */
+
+.tabela-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF; /* FUNDO BRANCO */
+    border: 1px solid #DDDDDD; /* BORDA EXTERNA */
+    margin-top: 20px;
+    text-transform: uppercase; /* TUDO EM MAIÚSCULO */
+    letter-spacing: 1px;
+}
+
+.tabela-pedidos th {
+    background-color: #F8F8F8;
+    padding: 15px;
+    text-align: left;
+    font-size: 0.7rem;
+    color: #333;
+    border: 1px solid #EEEEEE; /* BORDAS INTERNAS */
+    font-weight: 800;
+}
+
+.tabela-pedidos td {
+    padding: 15px;
+    border: 1px solid #EEEEEE; /* BORDAS INTERNAS */
+    font-size: 0.8rem;
+    color: #555;
+    vertical-align: middle;
+}
+
+/* Efeito de destaque ao passar o mouse */
+.tabela-pedidos tr:hover {
+    background-color: #FAFAFA;
+}
+
+/* Reajuste das Tags de Status para caberem na tabela */
+.status-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    border-radius: 2px;
+}
+
+.status-pending { background: #FFF4E5; color: #B8860B; }
+.status-approved, .status-pago { background: #E8F5E9; color: #2E7D32; }
+
+/* Link de Ver Detalhes dentro da tabela */
+.link-tabela {
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: var(--color-brand);
+    text-decoration: underline;
+}
 
 /* Ajuste Responsivo */
 @media (max-width: 900px) {

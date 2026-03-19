@@ -1,0 +1,206 @@
+/* =========================================
+   ESTILOS DE ENDEREÇOS - CASA MORÁ
+   ========================================= */
+
+/* Layout Base */
+.dashboard-container {
+    display: flex;
+    padding: 150px 10% 80px;
+    gap: 50px;
+    min-height: 60vh;
+    background-color: #F0F0F0;
+    text-transform: uppercase; /* GARANTE MAIÚSCULAS NO CONTAINER */
+}
+
+.dashboard-nav {
+    flex: 1;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-nav a {
+    text-decoration: none;
+    color: var(--color-brand);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    transition: opacity 0.3s;
+    text-transform: uppercase;
+}
+.btn-logout {
+    margin-top: 40px;
+    background: none;
+    border: none;
+    color: #cc0000;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.btn-logout:hover {
+    text-decoration: underline;
+}
+
+.dashboard-nav a:hover {
+    opacity: 0.6;
+}
+
+.dashboard-content {
+    flex: 3;
+}
+
+.dashboard-content h2 {
+    font-family: var(--font-title);
+    font-size: 1.8rem;
+    color: var(--color-brand);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.dashboard-content p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+/* --- TABELA DE PEDIDOS/ENDEREÇOS --- */
+.tabela-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    text-transform: uppercase;
+}
+
+.tabela-pedidos th {
+    background-color: #F8F8F8;
+    padding: 15px;
+    text-align: left;
+    font-size: 0.7rem;
+    color: #333;
+    border: 1px solid #EEEEEE;
+    font-weight: 800;
+}
+
+.tabela-pedidos td {
+    padding: 15px;
+    border: 1px solid #EEEEEE;
+    font-size: 0.8rem;
+    color: #555;
+    vertical-align: middle;
+}
+
+.link-tabela {
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: #000;
+    text-decoration: underline;
+    text-transform: uppercase;
+}
+
+.link-tabela.excluir {
+    color: #CC0000 !important;
+}
+
+/* --- BOTÃO NOVO ENDEREÇO --- */
+.btn-novo-endereco {
+    border: 1px solid #000;
+    padding: 10px 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: #000;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
+
+.btn-novo-endereco:hover {
+    background: #000;
+    color: #FFF;
+}
+
+/* --- MODAL DE CONFIRMAÇÃO --- */
+.modal-mora {
+    display: none; /* JS controla isso */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px); /* Efeito de desfoque no fundo */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #FFF;
+    padding: 40px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-transform: uppercase;
+}
+
+.modal-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #000;
+    letter-spacing: 2px;
+}
+
+.modal-content p {
+    font-size: 0.75rem;
+    color: #777;
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-confirm {
+    background: #CC0000;
+    color: #FFF;
+    border: none;
+    padding: 12px 25px;
+    font-weight: 800;
+    font-size: 0.7rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn-cancel {
+    background: #EEE;
+    color: #333;
+    border: none;
+    padding: 12px 25px;
+    font-weight: 800;
+    font-size: 0.7rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* --- FORMULÁRIOS (CREATE / EDIT) --- */
+.input-mora {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #DDD;
+    background: #FAFAFA;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}

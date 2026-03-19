@@ -12,6 +12,7 @@ use App\Http\Controllers\FreteController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EnderecoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,19 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
 });
 
+/*
+|--------------------------------------------------------------------------
+| ENDEREÇOS
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    Route::get('/meus-enderecos', [EnderecoController::class, 'index'])->name('enderecos.index');
+    Route::get('/meus-enderecos/novo', [EnderecoController::class, 'create'])->name('enderecos.create');
+    Route::post('/meus-enderecos', [EnderecoController::class, 'store'])->name('enderecos.store');
+    Route::get('/meus-enderecos/{id}/editar', [EnderecoController::class, 'edit'])->name('enderecos.edit');
+    Route::put('/meus-enderecos/{id}', [EnderecoController::class, 'update'])->name('enderecos.update');
+    Route::delete('/meus-enderecos/{id}', [EnderecoController::class, 'destroy'])->name('enderecos.destroy');
+});
 /*
 |--------------------------------------------------------------------------
 | AUTENTICAÇÃO

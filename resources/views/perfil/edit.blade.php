@@ -7,10 +7,11 @@
 @section('content')
 <main class="dashboard-container">
     <aside class="dashboard-nav">
-        <a href="{{ route('dashboard') }}">RESUMO</a>
+        <a href="{{ route('dashboard') }}" style="text-decoration: underline;">RESUMO</a>
         <a href="{{ route('pedidos.index') }}">MEUS PEDIDOS</a>
-        <a href="{{ route('perfil.edit') }}" style="text-decoration: underline;">MEU PERFIL</a>
-        
+        <a href="{{ route('enderecos.index') }}">ENDEREÇOS</a>
+        <a href="{{ route('perfil.edit') }}">EDITAR PERFIL</a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="btn-logout">SAIR DA CONTA</button>

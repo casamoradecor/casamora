@@ -142,17 +142,21 @@ class CarrinhoController extends Controller
             $userId = Auth::id();
             $enderecoTexto = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
 
-            // 1. Criar Endereço
-            $enderecoDb = Endereco::create([
-                'cliente_id' => $userId,
-                'cep' => preg_replace('/\D/', '', $request->cep),
-                'logradouro' => $request->rua,
-                'numero' => $request->numero,
-                'bairro' => $request->bairro,
-                'cidade' => $request->cidade,
-                'estado' => $request->estado,
-                'complemento' => $request->complemento,
-            ]);
+            // 1. Criar ou Buscar Endereço (EVITA DUPLICADOS)
+            $enderecoDb = Endereco::updateOrCreate(
+                [
+                    'cliente_id' => $userId,
+                    'cep' => preg_replace('/\D/', '', $request->cep),
+                    'numero' => $request->numero,
+                ],
+                [
+                    'logradouro' => $request->rua,
+                    'bairro' => $request->bairro,
+                    'cidade' => $request->cidade,
+                    'estado' => $request->estado,
+                    'complemento' => $request->complemento,
+                ]
+            );
 
             $valorProdutos = 0;
             $itensMp = [];
