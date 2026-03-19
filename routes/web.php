@@ -85,14 +85,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/editar', [AdminController::class, 'index'])->name('admin.index');
 
     // PRODUTOS (Rotas de Resource e Customizadas)
-    Route::resource('produtos', ProdutoController::class);
-    Route::get('/visualizar', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
     Route::get('/produtos/novo', [ProdutoController::class, 'create'])->name('admin.produtos.novo');
-    Route::post('/produto', [ProdutoController::class, 'store'])->name('admin.produto.store');
     Route::get('/produtos/{id}/editar', [ProdutoController::class, 'edit'])->name('admin.produtos.edit');
+    Route::get('/visualizar', [AdminController::class, 'createProduto'])->name('admin.produtos.create');
+    Route::resource('produtos', ProdutoController::class);
+    Route::post('/produto', [ProdutoController::class, 'store'])->name('admin.produto.store');
     Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('admin.produto.update');
-
-    // AÇÕES DE ADMINISTRAÇÃO
     Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::post('/produtos/{id}/toggle-lancamento', [AdminController::class, 'toggleLancamento'])->name('admin.produto.toggle-lancamento');
 
