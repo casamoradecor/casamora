@@ -73,6 +73,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
     Route::put('/perfil/senha', [PerfilController::class, 'updatePassword'])->name('perfil.password.update');
 });
+// Rota para a vitrine pública (onde estão os filtros)
+Route::get('/produtos', [ProdutoController::class, 'vitrine'])->name('produtos.index');
 
 /*
 |--------------------------------------------------------------------------

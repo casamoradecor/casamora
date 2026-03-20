@@ -8,6 +8,51 @@
 
 @section('content')
     <header class="shop-header">
+        <div class="shop-filters-bar">
+            <form action="{{ route('produtos.index') }}" method="GET" class="filter-form">
+                <div class="search-group"
+                     style="display: flex; align-items: center; border-bottom: 1px solid var(--color-brand); gap: 5px;">
+
+                    <input type="text" name="busca" id="search-input" value="{{ request('busca') }}"
+                           placeholder="pesquisar na coleção..." class="search-input"
+                           style="border-bottom: none; flex: 1; padding-right: 5px;">
+
+                    @if(request('busca'))
+                        <a href="{{ route('produtos.index') }}" class="btn-clear-search" title="limpar busca"
+                           style="text-decoration: none; color: #999; font-size: 1.1rem; padding: 0 5px; line-height: 1;">
+                            &times;
+                        </a>
+                    @endif
+                    <button type="submit" class="btn-search-icon"
+                            style="background: none; border: none; cursor: pointer; padding: 0 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                             class="bi bi-search" viewBox="0 0 16 16" style="color: var(--color-brand);">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="select-groups">
+                    <select name="categoria" onchange="this.form.submit()">
+                        <option value="">todas as coleções</option>
+                        @foreach($categorias as $cat)
+                            <option value="{{ $cat->id }}" {{ request('categoria') == $cat->id ? 'selected' : '' }}>
+                                {{ $cat->nome }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select name="ordem" onchange="this.form.submit()">
+                        <option value="">ordenar por</option>
+                        <option value="preco_min" {{ request('ordem') == 'preco_min' ? 'selected' : '' }}>menor preço
+                        </option>
+                        <option value="preco_max" {{ request('ordem') == 'preco_max' ? 'selected' : '' }}>maior preço
+                        </option>
+                    </select>
+                </div>
+
+            </form>
+        </div>
     </header>
 
     <main class="products-grid">
@@ -37,13 +82,21 @@
                 </div>
                 <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
 
-                <button class="btn-comprar"
-                        data-id="{{ $produto->id }}"
-                        data-nome="{{ $produto->nome }}"
-                        data-preco="{{ $produto->preco }}"
-                        data-imagem="{{ $urlFinal }}">
-                    adicionar ao carrinho
-                </button>
+                <div class="shop-card-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-comprar"
+                            data-id="{{ $produto->id }}"
+                            data-nome="{{ $produto->nome }}"
+                            data-preco="{{ $produto->preco }}"
+                            data-imagem="{{ $urlFinal }}"
+                            style="flex: 1; opacity: 1;">
+                        adicionar ao carrinho
+                    </button>
+
+                    <a href="{{ route('produto.show', $produto->id) }}" class="btn-comprar ver-mais-btn"
+                       style="flex: 1; opacity: 1; text-align: center; text-decoration: none; border: 1px solid #ddd; background: #fff; color: #333;">
+                        ver mais
+                    </a>
+                </div>
             </div>
         @endforeach
     </main>

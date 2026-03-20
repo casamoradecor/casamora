@@ -86,4 +86,27 @@ class ProdutoController extends Controller
 
         return redirect()->route('admin.produtos.index')->with('success', 'ITEM ATUALIZADO!');
     }
+
+    public function vitrine(Request $request)
+    {
+        $categorias = Categoria::all();
+        $query = Produto::with('categoria');
+        if ($request->filled('busca')) {
+            $query->where('nome', 'LIKE', '%' . $request->busca . '%');
+        }
+        if ($request->filled('categoria')) {
+            $query->where('categoria_id', $request->categoria);
+        }
+
+        if ($request->ordem == 'preco_min') {
+            $query->orderBy('preco', 'asc');
+        } elseif ($request->ordem == 'preco_max') {
+            $query->orderBy('preco', 'desc');
+        } else {
+            $query->latest();
+        }
+
+        $produtos = $query->get();
+        return view('produtos.index', compact('produtos', 'categorias'));
+    }
 }

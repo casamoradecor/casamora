@@ -33,11 +33,9 @@
     object-fit: cover;
     margin-bottom: 15px;
     background-color: #f9f9f9;
-    transition: transform 0.5s ease;
-}
-
-.shop-card:hover .shop-card-image {
-    transform: scale(1.02);
+    /* TRAVA DE MOVIMENTO NA IMAGEM */
+    transition: none !important;
+    transform: none !important;
 }
 
 .shop-card-info {
@@ -56,6 +54,7 @@
     text-transform: lowercase;
     letter-spacing: 0.5px;
 }
+
 .shop-product-link {
     text-decoration: none;
     color: inherit;
@@ -78,33 +77,69 @@
     margin-top: 4px;
 }
 
-/* BOTÃO COMPRAR (Aparece no hover) */
-.shop-card .btn-comprar {
-    width: 100%;
-    margin-top: 15px;
-    padding: 10px;
-    font-size: 0.7rem;
-    background: transparent;
-    color: var(--color-brand);
+.shop-filters-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.shop-filters-container select {
     border: 1px solid var(--color-brand);
-    border-radius: 50px;
-    cursor: pointer;
-    text-transform: lowercase;
-    opacity: 0;
-    transition: all 0.3s ease;
+    background: #fff;
+    padding: 10px 20px;
+    font-size: 0.75rem;
     font-family: var(--font-base);
+    text-transform: lowercase;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    color: var(--color-text);
 }
 
-.shop-card:hover .btn-comprar {
-    opacity: 1;
+.shop-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.shop-card .btn-comprar:hover {
+.shop-card .btn-comprar,
+.btn-ver-mais {
+    flex: 1;
+    padding: 12px 5px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: lowercase;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: none !important;
+    transform: none !important;
+}
+
+.shop-card .btn-comprar:hover,
+.btn-ver-mais:hover {
+    font-size: 0.6rem !important;
+    font-weight: 700 !important;
+    transform: none !important;
+}
+
+.shop-card .btn-comprar {
     background: var(--color-brand);
     color: #fff;
+    border: 1px solid var(--color-brand);
 }
 
-/* BADGE SOLD OUT */
+.btn-ver-mais {
+    background: #fff;
+    color: var(--color-brand);
+    border: 1px solid var(--color-brand);
+}
+
 .badge-sold-out {
     position: absolute;
     top: 15px;
@@ -119,12 +154,123 @@
     color: var(--color-text);
 }
 
-/* RESPONSIVIDADE */
+.shop-filters-bar {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 5% 20px;
+    border-bottom: 1px solid #f0f0f0; /* Linha sutil de boutique */
+}
+
+.filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Busca Minimalista */
+.search-group {
+    flex: 1;
+    max-width: 350px;
+}
+
+.search-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--color-brand);
+    padding: 8px 0;
+    font-size: 0.8rem;
+    font-family: var(--font-base);
+    text-transform: lowercase;
+    outline: none;
+    background: transparent;
+    color: var(--color-text);
+}
+
+/* Grupo de Selects */
+.select-groups {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-search-icon {
+    transition: none !important;
+    transform: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-search-icon:hover {
+    opacity: 0.7; /* Apenas uma leve mudança de tom ao passar o mouse */
+    transform: none !important;
+}
+
+/* Garante que o input não tenha a borda dupla agora que o container tem a borda */
+.search-input {
+    border: none !important;
+}
+
+.btn-clear-search {
+    transition: none !important;
+    transform: none !important;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-clear-search:hover {
+    color: var(--color-brand) !important;
+    transform: none !important;
+}
+
+/* Garante que o input não quebre com os novos botões */
+.search-input {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
+.select-groups select {
+    border: 1px solid #e2e2e2;
+    background: #fff;
+    padding: 10px 15px;
+    font-size: 0.7rem;
+    font-family: var(--font-base);
+    text-transform: uppercase; /* Toque de site de luxo */
+    letter-spacing: 1px;
+    border-radius: 4px; /* Casando com o seu border-radius dos botões */
+    outline: none;
+    cursor: pointer;
+    color: #444;
+    min-width: 160px;
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .search-group {
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 1024px) {
-    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
-    .products-grid { grid-template-columns: 1fr; }
-    .shop-card .btn-comprar { opacity: 1; }
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .shop-card-actions {
+        opacity: 1;
+    }
 }
