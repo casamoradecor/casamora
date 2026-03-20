@@ -125,6 +125,7 @@
 
   <script src="{{ asset('js/main.js') }}"></script>
   <script src="{{ asset('js/carrinho.js') }}"></script>
+  <script src="{{ asset('js/frete.js') }}"></script>
   @stack('js')
 </body>
 </html>

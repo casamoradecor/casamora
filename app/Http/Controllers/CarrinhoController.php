@@ -80,6 +80,32 @@ class CarrinhoController extends Controller
         ]);
     }
 
+    public function diminuir(Request $request)
+    {
+        $id = $request->produto_id;
+        $carrinho = session()->get('carrinho', []);
+
+        if (isset($carrinho[$id])) {
+            // Se a quantidade for maior que 1, apenas diminui
+            if ($carrinho[$id]['quantidade'] > 1) {
+                $carrinho[$id]['quantidade']--;
+            } else {
+                // Se for a última unidade, remove do carrinho
+                unset($carrinho[$id]);
+            }
+
+            session()->put('carrinho', $carrinho);
+
+            return response()->json([
+                'success' => true,
+                'itens' => $carrinho,
+                'total' => $this->calcularTotal($carrinho)
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'PRODUTO NÃO ENCONTRADO'], 404);
+    }
+
     /**
      * Atualiza a quantidade diretamente na tela de Checkout
      */
@@ -232,8 +258,8 @@ class CarrinhoController extends Controller
                         'failure' => url('/checkout'),
                         'pending' => url('/pedido/sucesso/' . $pedido->id),
                     ],
-                  //  'auto_return' => 'approved',
-                    'external_reference' => (string) $pedido->id,
+                    //  'auto_return' => 'approved',
+                    'external_reference' => (string)$pedido->id,
                     'statement_descriptor' => 'CASA MORA',
                 ]);
 

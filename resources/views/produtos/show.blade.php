@@ -84,9 +84,9 @@
                         <i class="fa-solid fa-truck-fast"></i> Calcular Frete e Prazo
                     </label>
                     <div class="grupo-input-frete" style="display: flex; gap: 8px;">
-                        <input type="text" id="cep-destino" placeholder="00000-000" maxlength="9"
+                        <input type="text" id="cep-destino" placeholder="00000-000" maxlength="8"
                                style="flex: 1; padding: 12px; border: 1px solid #ddd; outline: none; font-size: 0.85rem;">
-                        <button type="button" onclick="calcularFrete()" class="botao-calc-frete"
+                        <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="botao-calc-frete"
                                 style="background: #4a3427; color: #fff; border: none; padding: 0 20px; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; cursor: pointer;">
                             Calcular
                         </button>

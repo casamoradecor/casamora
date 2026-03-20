@@ -1,28 +1,39 @@
 // Calcula o frete de um único item (Tela de Produto)
 function calcularFreteProduto(produtoId) {
-    const cep = document.getElementById('cep-destino').value;
+    const cepInput = document.getElementById('cep-destino');
     const resultadoDiv = document.getElementById('resultado-frete');
+
+    // Limpa o CEP (mantém só números) e valida
+    const cep = cepInput.value.replace(/\D/g, '');
 
     if (cep.length < 8) return;
 
     resultadoDiv.style.display = 'block';
-    resultadoDiv.innerHTML = '<p style="font-size: 0.7rem; color: #999;">Calculando...</p>';
+    resultadoDiv.innerHTML = '<p style="font-size: 0.7rem; color: #999; text-transform: uppercase;">Calculando...</p>';
 
     fetch(`/frete/calcular?cep=${cep}&produto_id=${produtoId}`)
         .then(response => response.json())
         .then(data => {
             resultadoDiv.innerHTML = '';
-            if (data.length === 0) {
-                resultadoDiv.innerHTML = '<p style="color: red; font-size: 0.75rem;">Indisponível para este CEP.</p>';
+            if (!data || data.length === 0) {
+                resultadoDiv.innerHTML = '<p style="color: red; font-size: 0.75rem; text-transform: uppercase;">Indisponível para este CEP.</p>';
                 return;
             }
+
             data.forEach(opcao => {
+                // Monta o HTML com as classes do seu CSS
                 resultadoDiv.innerHTML += `
-                    <div class="frete-item">
-                        <div><strong>${opcao.nome}</strong><span>${opcao.prazo}</span></div>
-                        <strong>r$ ${opcao.preco}</strong>
+                    <div class="resultado-frete-item">
+                        <div class="frete-info">
+                            <span class="frete-nome">${opcao.nome}</span>
+                            <span class="frete-prazo">${opcao.prazo}</span>
+                        </div>
+                        <span class="frete-preco">R$ ${opcao.preco}</span>
                     </div>`;
             });
+        })
+        .catch(() => {
+            resultadoDiv.innerHTML = '<p style="color: red; font-size: 0.75rem; text-transform: uppercase;">Erro ao calcular.</p>';
         });
 }
 
@@ -38,7 +49,7 @@ function buscarFreteCheckout(cep, subtotalBase) {
         .then(response => response.json())
         .then(data => {
             listaFretes.innerHTML = '';
-            if(data.length === 0) {
+            if (data.length === 0) {
                 listaFretes.innerHTML = '<p style="color:red; font-size:0.8rem;">Frete indisponível.</p>';
                 return;
             }

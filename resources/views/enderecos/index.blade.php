@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'MEUS ENDERECOS — CASA MORÁ')
+@section('title', 'MEUS ENDEREÇOS — CASA MORÁ')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('css/endereco.css') }}">
@@ -9,9 +9,9 @@
 @section('content')
     <main class="dashboard-container">
         <aside class="dashboard-nav">
-            <a href="{{ route('dashboard') }}" style="text-decoration: underline;">RESUMO</a>
+            <a href="{{ route('dashboard') }}">RESUMO</a>
             <a href="{{ route('pedidos.index') }}">MEUS PEDIDOS</a>
-            <a href="{{ route('enderecos.index') }}">ENDEREÇOS</a>
+            <a href="{{ route('enderecos.index') }}" class="active">ENDEREÇOS</a>
             <a href="{{ route('perfil.edit') }}">EDITAR PERFIL</a>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -21,11 +21,12 @@
         </aside>
 
         <section class="dashboard-content">
-            {{-- CABEÇALHO COM BOTÃO ADICIONAR --}}
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <header class="dashboard-header">
                 <h2>MEUS ENDEREÇOS</h2>
-                <a href="{{ route('enderecos.create') }}" class="btn-novo-endereco">+ NOVO ENDEREÇO</a>
-            </div>
+                <a href="{{ route('enderecos.create') }}" class="btn-add-mora">
+                    <i class="fa-solid fa-plus"></i> adicionar novo endereço
+                </a>
+            </header>
 
             <p>GERENCIE SEUS ENDEREÇOS DE ENTREGA CADASTRADOS NA CASA MORÁ.</p>
 
@@ -39,7 +40,7 @@
                     <tr>
                         <th>ENDEREÇO</th>
                         <th>BAIRRO / CIDADE</th>
-                        <th style="text-align: center;">AÇÕES</th>
+                        <th class="text-center">AÇÕES</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,19 +48,16 @@
                         <tr>
                             <td>
                                 <strong>RUA: {{ $e->logradouro }}, {{ $e->numero }}</strong><br>
-                                <span style="font-size: 0.7rem; color: #888;">CEP: {{ $e->cep }}</span>
+                                <span class="cep-label">CEP: {{ $e->cep }}</span>
                             </td>
                             <td>{{ $e->bairro }} - {{ $e->cidade }}/{{ $e->estado }}</td>
-                            <td style="text-align: center;">
-                                <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
-                                    {{-- BOTÃO EDITAR --}}
-                                    <a href="{{ route('enderecos.edit', $e->id) }}" class="link-tabela">EDITAR</a>
-
-                                    {{-- BOTÃO EXCLUIR QUE ABRE O MODAL --}}
-                                    <button type="button" class="link-tabela excluir"
-                                            onclick="openDeleteModal({{ $e->id }})"
-                                            style="background:none; border:none; cursor:pointer; color:#CC0000; font-weight: 800; font-size: 0.7rem; text-decoration: underline;">
-                                        EXCLUIR
+                            <td class="text-center">
+                                <div class="actions-flex">
+                                    <a href="{{ route('enderecos.edit', $e->id) }}" class="btn-action-minimal">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <button type="button" class="btn-action-minimal trash" onclick="openDeleteModal({{ $e->id }})">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
                             </td>
@@ -71,7 +69,6 @@
         </section>
     </main>
 
-    {{-- MODAL DE EXCLUSÃO CUSTOMIZADO --}}
     <div id="deleteModal" class="modal-mora">
         <div class="modal-content">
             <h3>TEM CERTEZA?</h3>
@@ -92,7 +89,6 @@
         function openDeleteModal(id) {
             const modal = document.getElementById('deleteModal');
             const form = document.getElementById('formDelete');
-            // Ajusta a rota do form dinamicamente
             form.action = '/meus-enderecos/' + id;
             modal.style.display = 'flex';
         }
@@ -101,7 +97,6 @@
             document.getElementById('deleteModal').style.display = 'none';
         }
 
-        // Fecha o modal se clicar fora da caixa branca
         window.onclick = function (event) {
             const modal = document.getElementById('deleteModal');
             if (event.target == modal) {
