@@ -17,8 +17,6 @@
         <section class="dashboard-content">
             <div class="order-details-header">
                 <h2>DETALHES DO PEDIDO #{{ $pedido->id }}</h2>
-                <p>REALIZADO EM {{ $pedido->created_at->format('d/m/Y \À\S H:i') }}</p>
-
                 <span class="status-tag status-{{ $pedido->status }}">
                 {{ $pedido->status == 'approved' ? 'PAGO' : 'PENDENTE' }}
             </span>

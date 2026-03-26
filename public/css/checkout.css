@@ -295,6 +295,48 @@ input[readonly] {
     background-color: #c94c4c;
 }
 
+.enderecos-salvos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.card-endereco {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: #fff;
+}
+.card-endereco:hover {
+    border-color: #4a3427;
+}
+.card-endereco.active {
+    border-color: #4a3427;
+    background: #fdfaf8;
+    box-shadow: 0 2px 8px rgba(74, 52, 39, 0.1);
+}
+.card-endereco input[type="radio"] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    accent-color: #4a3427;
+}
+.card-endereco strong {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #333;
+}
+.card-endereco span {
+    font-size: 0.75rem;
+    color: #666;
+    line-height: 1.4;
+    display: block;
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
     .checkout-container {

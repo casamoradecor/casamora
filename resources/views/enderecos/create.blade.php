@@ -75,4 +75,51 @@
             </form>
         </section>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cepInput = document.getElementById('cep');
+
+            // Máscara simples para o CEP (00000-000)
+            cepInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 5) {
+                    value = value.substring(0, 5) + '-' + value.substring(5, 8);
+                }
+                e.target.value = value;
+            });
+
+            // Consulta ao sair do campo (blur)
+            cepInput.addEventListener('blur', function() {
+                const cep = this.value.replace(/\D/g, '');
+
+                if (cep.length === 8) {
+                    // Preenchimento temporário para feedback visual
+                    const campos = ['logradouro', 'bairro', 'cidade', 'estado'];
+                    campos.forEach(id => document.getElementById(id).value = '...');
+
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                document.getElementById('logradouro').value = data.logradouro;
+                                document.getElementById('bairro').value = data.bairro;
+                                document.getElementById('cidade').value = data.localidade;
+                                document.getElementById('estado').value = data.uf;
+
+                                // Foca no campo número automaticamente
+                                document.getElementsByName('numero')[0].focus();
+                            } else {
+                                alert('CEP não encontrado.');
+                                campos.forEach(id => document.getElementById(id).value = '');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro na consulta:', error);
+                            campos.forEach(id => document.getElementById(id).value = '');
+                        });
+                }
+            });
+        });
+    </script>
 @endsection

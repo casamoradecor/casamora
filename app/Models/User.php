@@ -18,12 +18,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'cpf',       
-    'telefone',  
-    'status',
+        'name',
+        'email',
+        'password',
+        'cpf',
+        'telefone',
+        'status',
     ];
 
     /**
@@ -47,5 +47,18 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relacionamentos adicionados para o Checkout
+     */
+    public function enderecos()
+    {
+        return $this->hasMany(Endereco::class, 'cliente_id');
+    }
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'cliente_id');
     }
 }

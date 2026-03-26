@@ -3,7 +3,6 @@ function calcularFreteProduto(produtoId) {
     const cepInput = document.getElementById('cep-destino');
     const resultadoDiv = document.getElementById('resultado-frete');
 
-    // Limpa o CEP (mantém só números) e valida
     const cep = cepInput.value.replace(/\D/g, '');
 
     if (cep.length < 8) return;
@@ -21,7 +20,6 @@ function calcularFreteProduto(produtoId) {
             }
 
             data.forEach(opcao => {
-                // Monta o HTML com as classes do seu CSS
                 resultadoDiv.innerHTML += `
                     <div class="resultado-frete-item">
                         <div class="frete-info">
@@ -42,6 +40,8 @@ function buscarFreteCheckout(cep, subtotalBase) {
     const containerFrete = document.getElementById('box-opcoes-frete');
     const listaFretes = document.getElementById('lista-fretes-checkout');
 
+    if (!containerFrete || !listaFretes) return;
+
     containerFrete.style.display = 'block';
     listaFretes.innerHTML = '<p style="font-size:0.8rem; color:#888;">Calculando opções de envio...</p>';
 
@@ -49,7 +49,7 @@ function buscarFreteCheckout(cep, subtotalBase) {
         .then(response => response.json())
         .then(data => {
             listaFretes.innerHTML = '';
-            if (data.length === 0) {
+            if (!data || data.length === 0) {
                 listaFretes.innerHTML = '<p style="color:red; font-size:0.8rem;">Frete indisponível.</p>';
                 return;
             }
@@ -70,6 +70,9 @@ function buscarFreteCheckout(cep, subtotalBase) {
                     </label>
                 `;
             });
+        })
+        .catch(() => {
+            listaFretes.innerHTML = '<p style="color:red; font-size:0.8rem;">Erro ao conectar com o serviço de frete.</p>';
         });
 }
 
@@ -82,3 +85,22 @@ function selecionarFrete(valor, nome, subtotalBase) {
     document.getElementById('valor-total-final').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
     document.getElementById('btn-finalizar').disabled = false;
 }
+
+/**
+ * NOVO: Listener automático para o campo de CEP no Checkout
+ * Isso garante que tanto digitando quanto selecionando o card, o frete seja buscado.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const inputCepCheckout = document.getElementById('cep');
+
+    if (inputCepCheckout) {
+        // 'input' captura tanto digitação quanto o dispatchEvent dos cards
+        inputCepCheckout.addEventListener('input', function() {
+            const cep = this.value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                // window.subtotalBase é definido no script do seu Blade
+                buscarFreteCheckout(cep, window.subtotalBase);
+            }
+        });
+    }
+});

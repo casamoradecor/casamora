@@ -62,8 +62,6 @@
     color: #3d2b1f;
     margin: 0;
 }
-
-/* --- BOTÃO PILL (MARROM) --- */
 .btn-add-mora {
     background-color: #3d2b1f;
     color: #ffffff !important;
@@ -80,7 +78,100 @@
     cursor: pointer;
 }
 
-/* --- TABELA DE LISTAGEM --- */
+/* --- BOTÃO PILL (ESTILO CASA MORÁ) --- */
+.btn-pill {
+    background-color: #3d2b1f;
+    color: #ffffff !important;
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: opacity 0.2s ease;
+}
+
+.btn-pill:hover {
+    opacity: 0.9;
+}
+
+.btn-pill.full-width {
+    width: 100%;
+}
+
+/* Botão menor de voltar */
+.dashboard-header .btn-pill {
+    padding: 8px 20px;
+    font-size: 0.65rem;
+}
+
+/* --- FORMULÁRIO DE ENDEREÇO --- */
+.info-card {
+    background: #FFF;
+    padding: 40px;
+    border: 1px solid #EEE;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Labels */
+.form-group label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Inputs */
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #DDD;
+    background: #FAFAFA;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-family: inherit;
+    color: #333;
+}
+
+.form-group input:focus {
+    border-color: #3d2b1f;
+    background: #FFF;
+    outline: none;
+}
+
+.form-submit {
+    margin-top: 30px;
+}
+
+/* Ajustes Mobile */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* --- RESTANTE DOS ESTILOS (TABELAS, MODAIS ETC) --- */
 .tabela-pedidos {
     width: 100%;
     border-collapse: collapse;
@@ -121,63 +212,24 @@
 
 .btn-action-minimal.trash { color: #e74c3c; }
 
-/* --- FORMULÁRIO DE CADASTRO/EDIÇÃO --- */
-.info-card {
-    background: #FFF;
-    padding: 40px;
-    border: 1px solid #EEE;
-}
-
-.form-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.card-form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.label-mora {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: #888;
-    letter-spacing: 1px;
-}
-
-.input-mora {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #DDD;
-    background: #FAFAFA;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-.input-mora:focus {
-    border-color: #3d2b1f;
-    background: #FFF;
-    outline: none;
-}
-
-/* --- MODAL --- */
 .modal-mora {
     display: none;
     position: fixed;
     z-index: 9999;
-    left: 0; top: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background: #FFF;
+    background-color: #fff;
     padding: 40px;
-    width: 400px;
+    border-radius: 4px;
+    width: 90%;
+    max-width: 400px;
     text-align: center;
 }
