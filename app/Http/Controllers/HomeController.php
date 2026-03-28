@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Models\ShoppablePoint;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -14,10 +15,11 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
-        // Mantemos a busca de categorias ativas
         $categorias = Categoria::where('status', 'ativa')->get();
 
-        return view('home', compact('produtos', 'categorias'));
+        $shoppablePoints = ShoppablePoint::with('produto')->get();
+
+        return view('home', compact('produtos', 'categorias', 'shoppablePoints'));
     }
 
     public function shop()

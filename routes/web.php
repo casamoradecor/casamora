@@ -107,6 +107,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
     Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
     Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
+
+    Route::post('/admin/shoppable/save', [AdminController::class, 'saveHotspot'])->name('admin.saveHotspot');
+    Route::delete('/admin/shoppable/delete/{id}', [App\Http\Controllers\AdminController::class, 'deleteHotspot'])->name('admin.deleteHotspot');
 });
 
 /*

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Models\ShoppablePoint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -139,9 +140,43 @@ class AdminController extends Controller
     public function visualEditor()
     {
         if (Auth::id() !== 1) return redirect('/');
-        $produtos = Produto::where('lancamento', true)->latest()->get();
+        $produtos = Produto::all();
         $categorias = Categoria::where('status', 'ativa')->get();
-        return view('admin.visual', compact('produtos', 'categorias'));
+        $shoppablePoints = ShoppablePoint::with('produto')->get();
+
+        return view('admin.visual', compact('produtos', 'categorias', 'shoppablePoints'));
+    }
+
+    public function saveHotspot(Request $request)
+    {
+        if (Auth::id() !== 1) return response()->json(['error' => 'Unauthorized'], 403);
+
+        $request->validate([
+            'produto_id' => 'required|exists:produtos,id',
+            'x_pos' => 'required|numeric',
+            'y_pos' => 'required|numeric',
+        ]);
+
+        ShoppablePoint::create([
+            'produto_id' => $request->produto_id,
+            'x_pos' => $request->x_pos,
+            'y_pos' => $request->y_pos,
+        ]);
+
+        return redirect()->back()->with('sucesso', 'PONTO VINCULADO AO AMBIENTE!');
+    }
+
+    /**
+     * 4. EXCLUIR PONTO (Caso o admin erre o lugar)
+     */
+    public function deleteHotspot($id)
+    {
+        if (\Illuminate\Support\Facades\Auth::id() !== 1) return redirect('/');
+
+        $ponto = \App\Models\ShoppablePoint::findOrFail($id);
+        $ponto->delete();
+
+        return redirect()->back()->with('sucesso', 'PONTO REMOVIDO COM SUCESSO!');
     }
 
     /**

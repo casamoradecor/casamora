@@ -1,8 +1,3 @@
-/* ============================================================
-   CASA MORÁ — CSS CONSOLIDADO DO EDITOR VISUAL
-   ============================================================ */
-
-/* 1. CONFIGURAÇÕES DO ADMIN E RESET DO MENU */
 .admin-visual-editor {
     width: 100%;
     overflow-x: hidden;
@@ -17,7 +12,6 @@
     pointer-events: auto !important;
 }
 
-/* 2. ESTILOS DE EDIÇÃO (OVERLAYS) */
 .edit-container {
     position: relative;
     cursor: pointer;
@@ -37,6 +31,7 @@
     opacity: 0;
     transition: 0.3s;
     z-index: 100 !important;
+    pointer-events: none;
 }
 
 .edit-container:hover .edit-overlay {
@@ -55,9 +50,9 @@
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     font-family: var(--font-base);
+    pointer-events: auto;
 }
 
-/* 3. LAYOUT ORIGINAL DA HOME (HERO SECTION) */
 .hero {
     position: relative;
     height: 100vh;
@@ -89,12 +84,10 @@
 .hero-logo { width: 100%; max-width: 1000px; height: auto; }
 .hero-sub {
     margin-top: 350px;
-    color: #fff;
     font-size: clamp(1rem, 2vw, 1.2rem);
     font-family: var(--font-base);
 }
 
-/* 4. SEÇÃO DESTAQUE E CARROSSEL */
 .destaque-produtos {
     display: flex;
     padding: 250px 5%;
@@ -121,7 +114,6 @@
 }
 .produto-card img { width: 100%; height: 350px; object-fit: cover; margin-bottom: 15px; }
 
-/* 5. SEÇÃO CATEGORIAS */
 .categorias-secao { padding: 80px 5%; background-color: #F0F0F0; }
 .categorias-track {
     display: grid;
@@ -132,15 +124,208 @@
 .categoria-card { height: 250px; border-radius: 12px; overflow: hidden; }
 .categoria-card img { width: 100%; height: 100%; object-fit: cover; }
 
-/* 6. SEÇÃO SHOPPABLE */
 .shoppable-secao { padding: 80px 5%; background-color: #F0F0F0; }
-.shoppable-container { border-radius: 16px; overflow: hidden; }
-.shoppable-main-img { width: 100%; height: 80vh; object-fit: cover; }
 
-/* RESPONSIVIDADE BÁSICA */
+.shoppable-container-v2 {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    background: #fff;
+}
+
+.shoppable-main-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    cursor: crosshair;
+}
+
+.hotspot-dot {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    text-transform: uppercase;
+}
+
+.hotspot-circle {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    background: transparent !important;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+}
+
+.hotspot-label {
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,1);
+    white-space: nowrap;
+}
+
+.hotspot-product-preview {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    width: 300px;
+    display: flex;
+    padding: 20px;
+    gap: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.hotspot-dot.active .hotspot-product-preview {
+    opacity: 1;
+    visibility: visible;
+}
+
+.preview-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    gap: 6px;
+}
+
+.preview-info h4 {
+    font-size: 0.85rem;
+    margin: 0;
+    color: #3d2b1f;
+    line-height: 1.3;
+    font-weight: 800;
+}
+
+.preview-info p {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+}
+
+.ver-mais-link {
+    font-size: 0.65rem;
+    color: #888;
+    text-decoration: underline;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+}
+
+.hotspot-delete-form {
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    z-index: 100;
+}
+
+.btn-delete-point {
+    background: #cc0000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.modal-mora {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    text-transform: uppercase;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 800;
+    color: #3d2b1f;
+}
+
+.modal-content p {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.input-mora {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.input-mora:focus {
+    border-color: #3d2b1f;
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-cancel, .btn-confirm {
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: lowercase;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.btn-confirm {
+    background: #3d2b1f;
+    color: #fff;
+}
+
 @media (max-width: 900px) {
     .destaque-produtos, .categorias-track {
         flex-direction: column;
         grid-template-columns: 1fr;
     }
+    .hotspot-label { display: none; }
 }
