@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .hero-img {
@@ -31,10 +31,10 @@
 }
 
 .hero-logo {
-  position: absolute; 
+  position: absolute;
   display: block;
   margin: 0 auto;
-  width: 100%; 
+  width: 100%;
   max-width: 1000px;
   height: auto;
   object-fit: contain;
@@ -52,7 +52,7 @@
 /* SEÇÃO DESTAQUE E CARROSSEL */
 .destaque-produtos {
   display: flex;
-  align-items: center; 
+  align-items: center;
   gap: 100px;
   padding: 250px 5%;
   width: 100%;
@@ -60,24 +60,24 @@
 }
 
 .destaque-imagem {
-  width: auto; 
-  flex-shrink: 0; 
+  width: auto;
+  flex-shrink: 0;
 }
 
 .destaque-imagem img {
-  width: auto; 
+  width: auto;
   max-width: 300px;
-  height: 550px; 
+  height: 550px;
   border-radius: 8px;
   display: block;
   object-fit: cover;
 }
 
 .destaque-carrossel {
-  flex: 1; 
-  min-width: 0; 
+  flex: 1;
+  min-width: 0;
   padding-left: 20px;
-  position: relative; 
+  position: relative;
 }
 
 .carrossel-track {
@@ -125,21 +125,21 @@
 .produto-titulo {
   color: var(--color-sub);
   font-family: var(--font-base);
-  font-weight: 400;  
+  font-weight: 400;
   font-size: 0.85rem;
   letter-spacing: 1px;
   margin: 0;
   flex: 1;                        /* Ocupa o espaço que sobrar */
-  /* Removemos o 'white-space: nowrap' para o nome poder quebrar linha se for grande, 
+  /* Removemos o 'white-space: nowrap' para o nome poder quebrar linha se for grande,
      ou mantemos se você quiser que ele sempre fique em uma linha só com reticências: */
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .produto-preco {
   color: var(--color-brand);
-  font-weight: 600; 
+  font-weight: 600;
   text-transform: uppercase;
   font-size: 0.9rem;
   margin: 0;
@@ -153,13 +153,13 @@
   color: var(--color-brand);
   border: 1px solid var(--color-brand); /* Contorno fino de 1px */
   border-radius: 50px;                 /* Cantos bem arredondados */
-  
+
   font-family: var(--font-base);
   font-weight: 500;                    /* Fonte mais leve para ser delicada */
   font-size: 0.75rem;                  /* Diminuí levemente para combinar com o arredondado */
   text-transform: lowercase;           /* Seguindo a regra de minúsculas */
   letter-spacing: 1px;
-  
+
   cursor: pointer;
   transition: all 0.4s ease;
   margin-top: auto;
@@ -201,7 +201,7 @@
   .destaque-produtos {
     flex-direction: column;
   }
-  .destaque-imagem, 
+  .destaque-imagem,
   .destaque-carrossel {
     width: 100%;
   }
@@ -225,7 +225,7 @@
 }
 
 .categorias-container {
-    width: 100%; 
+    width: 100%;
 }
 
 .categorias-track {
@@ -282,7 +282,7 @@
         grid-template-columns: 1fr; /* Mantém 1 coluna no celular */
         gap: 20px;
     }
-    
+
     .categoria-card {
         height: 250px; /* Altura mantida em 250px para preservar a proporção horizontal no celular */
     }
@@ -324,7 +324,7 @@
 .shoppable-info {
   position: absolute;
   bottom: 50px;
-  left: 50px;  
+  left: 50px;
   color: #fff;
   max-width: 400px;
   z-index: 5;
@@ -412,7 +412,7 @@
 }
 
 .hotspot.ativo .hotspot-popover {
-  display: flex; 
+  display: flex;
 }
 
 .hotspot-popover img {

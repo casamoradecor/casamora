@@ -12,7 +12,7 @@ class ProdutoController extends Controller
 {
     public function index()
     {
-        $produtos = Produto::with('categoria')->get();
+        $produtos = Produto::with('categoria')->latest()->get();
         return view('admin.create', compact('produtos'));
     }
 
@@ -33,29 +33,32 @@ class ProdutoController extends Controller
         $request->validate([
             'codigo' => 'required|unique:produtos,codigo|max:50',
             'nome' => 'required|max:255',
-            'preco' => 'required|numeric',
+            'preco' => 'required',
             'categoria_id' => 'required|exists:categorias,id',
-            'imagem' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'imagem' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'peso' => 'required|numeric',
             'largura' => 'required|integer',
             'altura' => 'required|integer',
             'comprimento' => 'required|integer',
+            'estoque' => 'required|integer',
+            'descricao' => 'nullable'
         ]);
 
         $dados = $request->all();
+
+        $preco = str_replace(',', '.', $request->preco);
+        $dados['preco'] = (float) $preco;
+
         $dados['lancamento'] = $request->has('lancamento');
 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
             $dados['imagem'] = $request->imagem->store('produtos', 'public');
         }
 
-        // SALVAMENTO REAL
         Produto::create($dados);
-
-        return redirect()->route('admin.produtos.index')->with('success', 'ITEM CADASTRADO!');
+        return redirect()->route('admin.produtos.create')->with('success', 'ITEM CADASTRADO!');
     }
 
-    // ADICIONE ESTE MÉTODO (Ele é quem leva o código para a tela de editar)
     public function edit($id)
     {
         $produto = Produto::findOrFail($id);
@@ -63,7 +66,6 @@ class ProdutoController extends Controller
         return view('admin.editar', compact('produto', 'categorias'));
     }
 
-    // ADICIONE ESTE MÉTODO (Ele salva as alterações do código)
     public function update(Request $request, $id)
     {
         $produto = Produto::findOrFail($id);
@@ -71,10 +73,15 @@ class ProdutoController extends Controller
         $request->validate([
             'codigo' => 'required|max:50|unique:produtos,codigo,' . $id,
             'nome' => 'required|max:255',
-            'preco' => 'required|numeric',
+            'preco' => 'required',
+            'categoria_id' => 'required|exists:categorias,id',
+            'estoque' => 'required|integer',
         ]);
 
         $dados = $request->all();
+        $preco = str_replace(',', '.', $request->preco);
+        $dados['preco'] = (float) $preco;
+
         $dados['lancamento'] = $request->has('lancamento');
 
         if ($request->hasFile('imagem')) {
@@ -83,17 +90,18 @@ class ProdutoController extends Controller
         }
 
         $produto->update($dados);
-
-        return redirect()->route('admin.produtos.index')->with('success', 'ITEM ATUALIZADO!');
+        return redirect()->route('admin.produtos.create')->with('success', 'ITEM ATUALIZADO!');
     }
 
     public function vitrine(Request $request)
     {
         $categorias = Categoria::all();
         $query = Produto::with('categoria');
+
         if ($request->filled('busca')) {
             $query->where('nome', 'LIKE', '%' . $request->busca . '%');
         }
+
         if ($request->filled('categoria')) {
             $query->where('categoria_id', $request->categoria);
         }

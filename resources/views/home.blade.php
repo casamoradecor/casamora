@@ -26,7 +26,6 @@
                 <div class="carrossel-track" id="carrosselTrack">
                     @foreach($produtos as $produto)
                         @php
-                            // Lógica para decidir se usa a URL do Storage ou do Asset direto
                             $caminho = $produto->imagem;
                             if ($caminho && str_contains($caminho, 'assets')) {
                                 $urlFinal = asset(ltrim($caminho, '/'));
@@ -123,31 +122,20 @@
 
                     hotspots.forEach(dot => {
                         dot.addEventListener('click', function (e) {
-                            // Seleciona o balão dentro deste ponto
                             const preview = this.querySelector('.hotspot-product-preview');
-
-                            // Se o clique foi na bolinha ou no nome, controlamos o balão
                             if (e.target.closest('.hotspot-circle') || e.target.closest('.hotspot-label')) {
-
-                                // Se o balão está escondido, mostra ele e cancela o link
                                 if (preview.style.visibility === 'hidden' || preview.style.opacity === '0') {
                                     e.preventDefault();
-
-                                    // Fecha todos os outros primeiro
                                     document.querySelectorAll('.hotspot-product-preview').forEach(p => {
                                         p.style.opacity = '0';
                                         p.style.visibility = 'hidden';
                                     });
-
-                                    // Abre o atual
                                     preview.style.opacity = '1';
                                     preview.style.visibility = 'visible';
                                 }
                             }
                         });
                     });
-
-                    // Fecha se clicar fora
                     document.addEventListener('click', function (e) {
                         if (!e.target.closest('.hotspot-dot')) {
                             document.querySelectorAll('.hotspot-product-preview').forEach(p => {
