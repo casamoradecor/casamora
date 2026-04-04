@@ -50,6 +50,7 @@
                         </div>
                     @endforeach
                 </div>
+            </div>
         </section>
 
         <section class="categorias-secao">
@@ -57,42 +58,39 @@
 
             <div class="categorias-container">
                 <div class="categorias-track">
-                    <a href="#" class="categoria-card">
-                        <img src="{{ asset('assets/categoria_1.png') }}" alt="vasos">
-                        <div class="categoria-overlay"></div>
-                    </a>
+                    @for ($i = 1; $i <= 3; $i++)
+                        @php
+                            $slot = $slots->get($i);
+                            $link = $slot ? route('produtos.index', ['categoria' => $slot->categoria_id]) : '#';
+                            $nome = $slot->categoria->nome ?? 'ver mais';
+                        @endphp
 
-                    <a href="#" class="categoria-card">
-                        <img src="{{ asset('assets/categoria_2.png') }}" alt="utensilios">
-                        <div class="categoria-overlay"></div>
-                    </a>
-
-                    <a href="#" class="categoria-card">
-                        <img src="{{ asset('assets/categoria_1.png') }}" alt="decorações">
-                        <div class="categoria-overlay"></div>
-                    </a>
+                        <a href="{{ $link }}" class="categoria-card">
+                            <img src="{{ asset('assets/categoria_'.$i.'.png') }}?v={{ time() }}" alt="{{ $nome }}">
+                        </a>
+                    @endfor
                 </div>
             </div>
         </section>
 
-        <section class="shoppable-secao" style="padding: 80px 5%; background-color: transparent;">
-            <div class="shoppable-container" id="shoppable-area"
-                 style="position: relative; line-height: 0; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <section class="shoppable-secao">
+            <div class="shoppable-container" id="shoppable-area" style="position: relative; line-height: 0;">
 
-                <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado" class="shoppable-main-img"
-                     id="shoppable-img" style="width: 100%; height: auto; display: block; cursor: default;">
+                <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado"
+                     class="shoppable-main-img" id="shoppable-img">
 
                 @foreach($shoppablePoints ?? [] as $point)
                     <div class="hotspot-dot"
-                         style="position: absolute; top: {{ $point->y_pos }}%; left: {{ $point->x_pos }}%; display: flex; align-items: center; gap: 10px; transform: translate(-50%, -50%); cursor: pointer; z-index: 10; text-transform: uppercase;">
+                         style="position: absolute; top: {{ $point->y_pos }}%; left: {{ $point->x_pos }}%; display: flex; align-items: center; gap: 12px; transform: translate(-50%, -50%); cursor: pointer; z-index: 10;">
 
                         <div class="hotspot-circle"
-                             style="width: 18px; height: 18px; border: 2px solid #fff; background: transparent; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.5); flex-shrink: 0;"></div>
+                             style="width: 18px; height: 18px; border: 2px #fff; background: transparent; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); flex-shrink: 0;">
+                        </div>
 
                         <span class="hotspot-label"
-                              style="color: #fff; font-size: 0.75rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); white-space: nowrap; letter-spacing: 0.5px;">
-                    {{ $point->produto->nome }}
-                </span>
+                              style="color: #fff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); white-space: nowrap; letter-spacing: 1px;">
+            {{ $point->produto->nome }}
+        </span>
 
                         <a href="{{ route('produto.show', $point->produto->id) }}"
                            class="hotspot-product-preview"
@@ -102,10 +100,11 @@
                                  style="width: 70px; height: 70px; object-fit: cover; border-radius: 2px; flex-shrink: 0;">
 
                             <div class="preview-info"
-                                 style="display: flex; flex-direction: column; justify-content: center; gap: 5px; text-align: left;">
+                                 style="display: flex; flex-direction: column; justify-content: center; gap: 15px; text-align: left;">
                                 <h4 style="font-size: 0.8rem; margin: 0; color: #3d2b1f; line-height: 1.2; font-weight: 800;">{{ $point->produto->nome }}</h4>
                                 <p style="font-size: 0.95rem; font-weight: 700; margin: 0; color: #000;">
-                                    R$ {{ number_format($point->produto->preco, 2, ',', '.') }}</p>
+                                    R$ {{ number_format($point->produto->preco, 2, ',', '.') }}
+                                </p>
                                 <span
                                     style="font-size: 0.6rem; color: #888; text-decoration: underline; margin-top: 5px;">CLIQUE PARA VER DETALHES</span>
                             </div>
@@ -123,13 +122,17 @@
                     hotspots.forEach(dot => {
                         dot.addEventListener('click', function (e) {
                             const preview = this.querySelector('.hotspot-product-preview');
+
                             if (e.target.closest('.hotspot-circle') || e.target.closest('.hotspot-label')) {
                                 if (preview.style.visibility === 'hidden' || preview.style.opacity === '0') {
                                     e.preventDefault();
-                                    document.querySelectorAll('.hotspot-product-preview').forEach(p => {
+                                    hotspots.forEach(d => {
+                                        d.classList.remove('active');
+                                        const p = d.querySelector('.hotspot-product-preview');
                                         p.style.opacity = '0';
                                         p.style.visibility = 'hidden';
                                     });
+                                    this.classList.add('active');
                                     preview.style.opacity = '1';
                                     preview.style.visibility = 'visible';
                                 }
@@ -138,7 +141,9 @@
                     });
                     document.addEventListener('click', function (e) {
                         if (!e.target.closest('.hotspot-dot')) {
-                            document.querySelectorAll('.hotspot-product-preview').forEach(p => {
+                            hotspots.forEach(dot => {
+                                dot.classList.remove('active');
+                                const p = dot.querySelector('.hotspot-product-preview');
                                 p.style.opacity = '0';
                                 p.style.visibility = 'hidden';
                             });

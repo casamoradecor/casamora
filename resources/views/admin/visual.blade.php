@@ -64,16 +64,38 @@
             <div class="categorias-container">
                 <div class="categorias-track">
                     @for ($i = 1; $i <= 3; $i++)
-                        <div class="categoria-card edit-container">
-                            <img src="{{ asset('assets/categoria_'.$i.'.png') }}" alt="categoria">
-                            <div class="edit-overlay">
-                                <form action="{{ route('admin.updateCategoria', $i) }}" method="POST" enctype="multipart/form-data">
+                        <div class="categoria-card edit-container" style="height: 300px; position: relative;">
+                            <img src="{{ asset('assets/categoria_'.$i.'.png') }}?v={{ time() }}" style="width: 100%; height: 100%; object-fit: cover;">
+
+                            <div class="edit-overlay" style="opacity: 1; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; padding: 15px; gap: 10px;">
+
+                                <form action="{{ route('admin.updateCategoria', $i) }}" method="POST" enctype="multipart/form-data" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
                                     @csrf
-                                    <label class="btn-edit-label">
-                                        <i class="fa-solid fa-camera"></i> trocar foto
+
+                                    {{-- BOTÃO 1: TROCAR APENAS A FOTO (Auto-submit) --}}
+                                    <label class="btn-edit-label" style="background: #fff; color: #000; padding: 8px; border-radius: 50px; font-size: 0.6rem; cursor: pointer; text-align: center; margin: 0;">
+                                        <i class="fa-solid fa-camera"></i> trocar foto {{ $i }}
                                         <input type="file" name="cat_img" onchange="this.form.submit()" style="display: none;">
                                     </label>
+
+                                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 5px 0;">
+
+                                    <div style="position: relative; z-index: 1001; width: 100%;">
+                                        <select name="categoria_id" required style="width: 100%; height: 35px; background: #fff; color: #000; border: 1px solid #333; cursor: pointer; display: block !important; pointer-events: all !important;">
+                                            <option value="">vincular categoria...</option>
+                                            @foreach($categorias as $cat)
+                                                <option value="{{ $cat->id }}">{{ $cat->nome }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    {{-- BOTÃO 2: SALVAR O VÍNCULO --}}
+                                    <button type="submit" class="btn-confirm"
+                                            style="background: #3d2b1f; color: #fff; border: 1px solid #fff; padding: 8px; border-radius: 50px; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase; position: relative; z-index: 10000; pointer-events: auto !important;">
+                                        salvar link {{ $i }}
+                                    </button>
                                 </form>
+
                             </div>
                         </div>
                     @endfor

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produto;
 use App\Models\Categoria;
 use App\Models\ShoppablePoint;
+use App\Models\HomeSlot;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -19,7 +20,9 @@ class HomeController extends Controller
 
         $shoppablePoints = ShoppablePoint::with('produto')->get();
 
-        return view('home', compact('produtos', 'categorias', 'shoppablePoints'));
+        $slots = HomeSlot::with('categoria')->get()->keyBy('slot_number');
+
+        return view('home', compact('produtos', 'categorias', 'shoppablePoints', 'slots'));
     }
 
     public function shop()

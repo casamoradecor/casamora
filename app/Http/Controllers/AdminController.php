@@ -7,6 +7,7 @@ use App\Models\Produto;
 use App\Models\Categoria;
 use App\Models\ShoppablePoint;
 use Illuminate\Support\Facades\Auth;
+use App\Models\HomeSlot;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -141,10 +142,11 @@ class AdminController extends Controller
     {
         if (Auth::id() !== 1) return redirect('/');
         $produtos = Produto::all();
-        $categorias = Categoria::where('status', 'ativa')->get();
+        $categorias = Categoria::all();
         $shoppablePoints = ShoppablePoint::with('produto')->get();
+        $slots = HomeSlot::all()->keyBy('slot_number');
 
-        return view('admin.visual', compact('produtos', 'categorias', 'shoppablePoints'));
+        return view('admin.visual', compact('produtos', 'categorias', 'shoppablePoints', 'slots'));
     }
 
     public function saveHotspot(Request $request)
@@ -220,8 +222,25 @@ class AdminController extends Controller
 
     public function updateCategoria(Request $request, $id)
     {
-        $request->validate(['cat_img' => 'required|image']);
-        $request->file('cat_img')->move(public_path('assets'), "categoria_{$id}.png");
-        return redirect()->back()->with('sucesso', 'CATEGORIA ATUALIZADA!');
+        // Tornamos os campos opcionais na validação para um não travar o outro
+        $request->validate([
+            'cat_img' => 'nullable|image',
+            'categoria_id' => 'nullable|exists:categorias,id'
+        ]);
+
+        // 1. Se subiu foto, salva a foto
+        if ($request->hasFile('cat_img')) {
+            $request->file('cat_img')->move(public_path('assets'), "categoria_{$id}.png");
+        }
+
+        // 2. Se selecionou categoria, salva o vínculo no banco
+        if ($request->filled('categoria_id')) {
+            \App\Models\HomeSlot::updateOrCreate(
+                ['slot_number' => $id],
+                ['categoria_id' => $request->categoria_id]
+            );
+        }
+
+        return redirect()->back()->with('sucesso', 'ALTERAÇÕES SALVAS!');
     }
 }

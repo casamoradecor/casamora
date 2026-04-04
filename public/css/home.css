@@ -212,7 +212,7 @@
 
 /* SEÇÃO CATEGORIAS */
 .categorias-secao {
-    padding: 80px 5%; /* Mantém o padding lateral de 5% para alinhar com a seção shoppable */
+    padding: 20px 5%; /* Mantém o padding lateral de 5% para alinhar com a seção shoppable */
     background-color: #F0F0F0;
 }
 
@@ -287,169 +287,86 @@
         height: 250px; /* Altura mantida em 250px para preservar a proporção horizontal no celular */
     }
 }
-
-/* SEÇÃO FOTO INTERATIVA */
 .shoppable-secao {
-  padding: 80px 5%;
-  background-color: #F0F0F0;
+    padding: 10px 5% 100px 5% !important; /* Alinha com os 5% das categorias */
+    background-color: transparent;
+    margin-top: 130px; /* Puxa para cima para colar nas categorias */
 }
 
 .shoppable-container {
-  position: relative;
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  display: block;
-}
-
-.shoppable-container::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40%;
-  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-  z-index: 1;
-  pointer-events: none;
+    position: relative;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    margin: 0 auto;
+    overflow: hidden; /* Garante que nada saia do limite da seção */
 }
 
 .shoppable-main-img {
-  width: 100%;
-  height: 80vh;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
 }
 
 .shoppable-info {
-  position: absolute;
-  bottom: 50px;
-  left: 50px;
-  color: #fff;
-  max-width: 400px;
-  z-index: 5;
-}
-
-.shoppable-info h2 {
-  font-family: var(--font-title);
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-.shoppable-info p {
-  font-size: 0.95rem;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.shop-room-btn {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #fff;
-  padding-bottom: 2px;
-  text-transform: uppercase;
-}
-
-.hotspot {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10;
+    display: none;
 }
 
 .hotspot-dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid #fff;
-  cursor: pointer;
-  position: relative;
-  outline: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.hotspot-dot::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 8px;
-  height: 8px;
-  background-color: #fff;
-  border-radius: 50%;
-  transition: transform 0.2s;
-}
-
-.hotspot.ativo .hotspot-dot::after {
-  transform: translate(-50%, -50%) scale(1);
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease;
 }
 
 .hotspot-label {
-  color: #fff;
-  font-size: 0.9rem;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-  pointer-events: none;
+    color: #fff;
+    font-family: var(--font-base);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    white-space: nowrap;
+    letter-spacing: 1px;
 }
 
-.hotspot-popover {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #2b2b2b;
-  color: #fff;
-  display: none;
-  width: 260px;
-  padding: 10px;
-  box-sizing: border-box;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  gap: 15px;
+.hotspot-product-preview {
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 0;
+    text-transform: uppercase;
 }
 
-.hotspot.ativo .hotspot-popover {
-  display: flex;
+.preview-info h4 {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #3d2b1f;
 }
 
-.hotspot-popover img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+.preview-info p {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #000;
 }
 
-.popover-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 5px 0;
+.ver-mais-link {
+    font-size: 0.6rem;
+    color: #888;
+    text-decoration: underline;
+}
+/* Garante que o ponto clicado fique por cima de todos os outros pontos e textos */
+.hotspot-dot.active {
+    z-index: 9999 !important;
 }
 
-.popover-info h4 {
-  font-family: var(--font-base);
-  font-size: 0.9rem;
-  font-weight: 400;
+/* Garante que o balão interno também tenha prioridade máxima */
+.hotspot-product-preview {
+    z-index: 10000 !important;
 }
-
-.popover-info a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.7rem;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #fff;
-  padding-bottom: 2px;
-  align-self: flex-start;
-  text-transform: uppercase;
-  transition: opacity 0.3s;
-}
-
-.popover-info a:hover {
-  opacity: 0.7;
-}
-
 @media (max-width: 768px) {
   .shoppable-info {
     bottom: 20px;
