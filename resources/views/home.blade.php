@@ -9,7 +9,6 @@
             <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <img src="{{ asset('assets/LogoMora.png') }}" alt="Casa MORÁ" class="hero-logo">
                 <p class="hero-sub">onde objetos transformam casas em moradas</p>
             </div>
         </section>

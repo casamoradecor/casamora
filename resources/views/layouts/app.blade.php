@@ -39,15 +39,19 @@
       </nav>
 
       <div class="header-actions">
-        <div class="busca-inline" id="buscaInline">
-          <input type="text" id="inputBusca" placeholder="O que você procura?">
-          <button class="icon" id="btnBusca" aria-label="buscar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-          <button class="icon" id="btnFecharBusca" aria-label="fechar" style="display: none; margin-left: 5px;">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
+          <div class="busca-inline" id="buscaInline">
+              <input type="text" id="inputBusca" placeholder="o que você procura?" autocomplete="off">
+
+              <button class="icon" id="btnBusca" aria-label="buscar">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+
+              <button class="icon" id="btnFecharBusca" aria-label="fechar" style="display: none;">
+                  <i class="fa-solid fa-xmark"></i>
+              </button>
+
+              <div id="resultadosBusca" class="resultados-busca-wrapper"></div>
+          </div>
 
         <a href="{{ Auth::check() ? route('dashboard') : route('login') }}" class="icon" aria-label="conta">
             <i class="fa-regular fa-user"></i>

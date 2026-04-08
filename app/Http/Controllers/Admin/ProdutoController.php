@@ -117,4 +117,28 @@ class ProdutoController extends Controller
         $produtos = $query->get();
         return view('produtos.index', compact('produtos', 'categorias'));
     }
+    public function apiBusca(Request $request)
+    {
+        $termo = $request->query('q');
+
+        if (strlen($termo) < 3) {
+            return response()->json([]);
+        }
+
+        $produtos = \App\Models\Produto::where('nome', 'LIKE', "%{$termo}%")
+            ->limit(6) // Limitamos para não poluir a tela
+            ->get()
+            ->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'nome' => $p->nome,
+                    'preco' => number_format($p->preco, 2, ',', '.'),
+                    'link' => route('produto.show', $p->id),
+                    // Lógica de imagem que você já usa:
+                    'imagem' => $p->imagem ? \Storage::url($p->imagem) : asset('assets/vasomora.png')
+                ];
+            });
+
+        return response()->json($produtos);
+    }
 }

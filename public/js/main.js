@@ -89,3 +89,37 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     new CarrinhoManager();
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const buscaContainer = document.getElementById('buscaInline');
+    const btnBusca = document.getElementById('btnBusca');
+    const btnFechar = document.getElementById('btnFecharBusca');
+    const inputBusca = document.getElementById('inputBusca');
+    const containerResultados = document.getElementById('resultadosBusca');
+
+    // Abrir a busca ao clicar na lupa
+    btnBusca.addEventListener('click', function(e) {
+        if (!buscaContainer.classList.contains('active')) {
+            e.preventDefault(); // Evita que o form envie vazio
+            buscaContainer.classList.add('active');
+            btnFechar.style.display = 'block';
+            inputBusca.focus(); // Já coloca o cursor para digitar
+        }
+    });
+
+    // Fechar a busca no X
+    btnFechar.addEventListener('click', function() {
+        buscaContainer.classList.remove('active');
+        btnFechar.style.display = 'none';
+        inputBusca.value = '';
+        containerResultados.style.display = 'none';
+    });
+
+    // Fechar se clicar fora do cabeçalho
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#buscaInline') && buscaContainer.classList.contains('active')) {
+            buscaContainer.classList.remove('active');
+            btnFechar.style.display = 'none';
+            containerResultados.style.display = 'none';
+        }
+    });
+});

@@ -81,37 +81,41 @@
   opacity: 0.7;
 }
 
-/* BUSCA INLINE (HEADER) */
+/* Container da busca */
 .busca-inline {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: all 0.4s ease;
 }
 
-.busca-inline input {
-  width: 0;
-  opacity: 0;
-  border: none;
-  border-bottom: 1px solid var(--color-brand);
-  background: transparent;
-  padding: 0;
-  font-family: var(--font-base);
-  font-size: 0.9rem;
-  color: var(--color-brand);
-  outline: none;
-  transition: all 0.4s ease;
-  visibility: hidden;
+/* O input começa zerado e invisível */
+#inputBusca {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid #3d2b1f; /* Linha fina estilo minimalista */
+    background: transparent;
+    transition: all 0.4s ease;
+    outline: none;
+    font-size: 0.8rem;
+    color: #3d2b1f;
 }
 
-.busca-inline input::placeholder {
-  color: rgba(59, 31, 21, 0.5);
+/* Quando a classe .active for adicionada via JS */
+.busca-inline.active #inputBusca {
+    width: 200px; /* Largura que ele vai assumir */
+    opacity: 1;
+    padding: 5px 10px;
+    margin-right: 10px;
 }
 
-.busca-inline.ativo input {
-  width: 250px;
-  opacity: 1;
-  visibility: visible;
-  padding: 5px 10px;
-  margin-right: 5px;
+/* Ajuste nos ícones */
+#btnFecharBusca {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #3d2b1f;
 }
 
 .site-nav.escondido {
