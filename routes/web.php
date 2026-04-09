@@ -22,6 +22,7 @@ use App\Http\Controllers\EnderecoController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [HomeController::class, 'shop'])->name('produtos.index');
 Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.show');
+Route::get('/api/busca-produtos', [ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
 
 /*
 |--------------------------------------------------------------------------
@@ -95,7 +96,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('admin.produto.update');
     Route::delete('/produto/{id}', [AdminController::class, 'destroyProduto'])->name('admin.produto.destroy');
     Route::post('/produtos/{id}/toggle-lancamento', [AdminController::class, 'toggleLancamento'])->name('admin.produto.toggle-lancamento');
-    Route::get('/api/busca-produtos', [App\Http\Controllers\Admin\ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
 
     // CATEGORIAS
     Route::get('/categorias', [CategoriaController::class, 'index'])->name('admin.categorias.index');

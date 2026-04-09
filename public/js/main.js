@@ -96,17 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputBusca = document.getElementById('inputBusca');
     const containerResultados = document.getElementById('resultadosBusca');
 
-    // Abrir a busca ao clicar na lupa
     btnBusca.addEventListener('click', function(e) {
         if (!buscaContainer.classList.contains('active')) {
-            e.preventDefault(); // Evita que o form envie vazio
+            e.preventDefault();
             buscaContainer.classList.add('active');
             btnFechar.style.display = 'block';
-            inputBusca.focus(); // Já coloca o cursor para digitar
+            inputBusca.focus();
         }
     });
 
-    // Fechar a busca no X
     btnFechar.addEventListener('click', function() {
         buscaContainer.classList.remove('active');
         btnFechar.style.display = 'none';
@@ -114,7 +112,39 @@ document.addEventListener('DOMContentLoaded', function() {
         containerResultados.style.display = 'none';
     });
 
-    // Fechar se clicar fora do cabeçalho
+    inputBusca.addEventListener('input', function() {
+        const query = this.value;
+
+        if (query.length >= 3) {
+            fetch(`/api/busca-produtos?q=${query}`)
+                .then(response => response.json())
+                .then(produtos => {
+                    containerResultados.innerHTML = '';
+
+                    if (produtos.length > 0) {
+                        produtos.forEach(p => {
+                            containerResultados.innerHTML += `
+                                <a href="${p.link}" class="busca-item">
+                                    <img src="${p.imagem}" alt="${p.nome}">
+                                    <div class="busca-info">
+                                        <span class="busca-nome">${p.nome}</span>
+                                        <span class="busca-ver-mais">ver mais</span>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                        containerResultados.style.display = 'block';
+                    } else {
+                        containerResultados.innerHTML = '<div style="padding:15px; font-size:0.75rem; color:#888; text-align:center;">NENHUM ITEM ENCONTRADO</div>';
+                        containerResultados.style.display = 'block';
+                    }
+                })
+                .catch(error => console.error('Erro na busca:', error));
+        } else {
+            containerResultados.style.display = 'none';
+        }
+    });
+    
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#buscaInline') && buscaContainer.classList.contains('active')) {
             buscaContainer.classList.remove('active');
