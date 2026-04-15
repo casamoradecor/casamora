@@ -249,18 +249,23 @@ class CarrinhoController extends Controller
             }
 
             // 6. Chamada Mercado Pago (Forçando URL absoluta)
+            // Dentro do método finalizarPedido, onde você faz o Http::post
             $mpResponse = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
                 ->post('https://api.mercadopago.com/checkout/preferences', [
                     'items' => $itensMp,
+                    'payer' => [
+                        'name' => Auth::user()->name,
+                        'email' => Auth::user()->email, // CAMPO ESSENCIAL
+                    ],
                     'back_urls' => [
-                        // Usamos url() para garantir que o domínio venha do .env
                         'success' => url('/pedido/sucesso/' . $pedido->id),
                         'failure' => url('/checkout'),
                         'pending' => url('/pedido/sucesso/' . $pedido->id),
                     ],
-                    //  'auto_return' => 'approved',
+                    'notification_url' => url('/webhook/mercadopago'),
                     'external_reference' => (string)$pedido->id,
                     'statement_descriptor' => 'CASA MORA',
+                    'expires' => false,
                 ]);
 
             if ($mpResponse->failed()) {
@@ -284,7 +289,7 @@ class CarrinhoController extends Controller
     public function pedidoSucesso($id)
     {
         $pedido = Pedido::findOrFail($id);
-        return view('pedidos.sucesso', compact('pedido'));
+        return view('pedidos.pedido-sucesso', compact('pedido'));
     }
 
     /**

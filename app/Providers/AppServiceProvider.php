@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-// quando for usar a url para mostrar
-// use Illuminate\Support\Facades\URL;
+// quando for usar a url para mostrar para o ngrok
+//use Illuminate\Support\Facades\URL;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -20,10 +20,10 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
-{
-    // if (app()->environment('local')) {
-    //     URL::forceScheme('https');
-    // }
-}
+    public function boot(): void
+    {
+//        if (str_contains(config('app.url'), 'ngrok-free.dev')) {
+//            URL::forceScheme('https');
+//        }
+    }
 }

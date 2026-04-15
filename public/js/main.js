@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
             containerResultados.style.display = 'none';
         }
     });
-    
+
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#buscaInline') && buscaContainer.classList.contains('active')) {
             buscaContainer.classList.remove('active');

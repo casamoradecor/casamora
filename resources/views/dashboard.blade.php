@@ -55,9 +55,10 @@
                                 <strong>R$ {{ number_format($ultimoPedido->valor_total, 2, ',', '.') }}</strong></p>
 
                             {{-- Status estilizado como TAG --}}
-                            <span class="status-tag status-{{ $ultimoPedido->status }}">
-                {{ $ultimoPedido->status == 'approved' ? 'PAGO' : 'PENDENTE' }}
-            </span>
+
+                            <span class="status-tag {{ $ultimoPedido->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
+                                {{ strtoupper($ultimoPedido->status) }}
+                            </span>
                         </div>
 
                         <a href="{{ route('pedidos.show', $ultimoPedido->id) }}" class="btn-card-action">

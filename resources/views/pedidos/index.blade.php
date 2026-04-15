@@ -45,8 +45,8 @@
                             <td><strong>#{{ $p->codigo_externo }}</strong></td>
                             <td>{{ $p->created_at->format('d/m/Y') }}</td>
                             <td>
-                            <span class="status-tag status-{{ $p->status }}">
-                                {{ $p->status == 'approved' ? 'PAGO' : 'PENDENTE' }}
+                            <span class="status-tag {{ $pedido->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
+                                {{ strtoupper($pedido->status) }}
                             </span>
                             </td>
                             <td><strong>R$ {{ number_format($p->valor_total, 2, ',', '.') }}</strong></td>
