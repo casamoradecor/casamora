@@ -38,7 +38,7 @@
 
         <main class="admin-main">
             <header class="admin-header">
-                <h1>Início</h1>
+                <h1 style="font-family: 'Poppins', sans-serif">Início</h1>
                 <div class="user-info">
                     <span>olá, <strong>{{ explode(' ', Auth::user()->name)[0] }}</strong></span>
                 </div>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="card-dashboard">
-                <h3 class="card-title">O que vamos atualizar agora?</h3>
+                <h3 class="card-title" style="font-family: 'Poppins', sans-serif">O que vamos atualizar agora?</h3>
                 <p class="card-description">
                     Escolha uma das opções rápidas abaixo ou navegue pelo menu lateral para edições detalhadas.
                 </p>
@@ -62,7 +62,7 @@
                         <i class="fa-solid fa-image"></i>
                         <h4>Visual da Home</h4>
                         <p>Troque o banner principal, a imagem do ambiente ou as categorias.</p>
-                        <a href="{{ route('admin.visual.edit') }}" class="btn-admin-primary">
+                        <a href="{{ route('admin.visual.edit') }}" class="btn-admin-primary" style="font-family: 'Poppins', sans-serif">
                             editar visual
                         </a>
                     </div>
@@ -71,7 +71,7 @@
                         <i class="fa-solid fa-box-open"></i>
                         <h4>Estoque de Produtos</h4>
                         <p>Adicione novos itens ao carrossel ou ajuste preços e quantidades.</p>
-                        <button class="btn-admin-primary">gerenciar itens</button>
+                        <button class="btn-admin-primary" style="font-family: 'Poppins', sans-serif">gerenciar itens</button>
                     </div>
                 </div>
             </div>

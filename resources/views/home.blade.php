@@ -9,7 +9,7 @@
             <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <p class="hero-sub">onde objetos transformam casas em moradas</p>
+                <p class="hero-sub" style="font-family: 'Poppins', sans-serif">onde objetos transformam casas em moradas</p>
             </div>
         </section>
 
@@ -53,7 +53,7 @@
         </section>
 
         <section class="categorias-secao">
-            <h2 class="categorias-titulo">compre por categoria</h2>
+            <h2 class="categorias-titulo" style="font-family: 'Poppins', serif">compre por categoria</h2>
 
             <div class="categorias-container">
                 <div class="categorias-track">
