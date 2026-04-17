@@ -16,19 +16,19 @@
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn-logout">SAIR DA CONTA</button>
+                <button type="submit" class="btn-logout" style="font-family: var(--font-base),sans-serif">SAIR DA CONTA</button>
             </form>
         </aside>
 
         <section class="dashboard-content">
             <header class="dashboard-header">
-                <h2>MEUS ENDEREÇOS</h2>
+                <h2 style="font-family: var(--font-title),sans-serif">MEUS ENDEREÇOS</h2>
                 <a href="{{ route('enderecos.create') }}" class="btn-add-mora">
                     <i class="fa-solid fa-plus"></i> adicionar novo endereço
                 </a>
             </header>
 
-            <p>GERENCIE SEUS ENDEREÇOS DE ENTREGA CADASTRADOS NA CASA MORÁ.</p>
+            <p style="text-transform: lowercase; padding-bottom: 30px">GERENCIE SEUS ENDEREÇOS DE ENTREGA CADASTRADOS NA CASA MORÁ.</p>
 
             @if($enderecos->isEmpty())
                 <div class="info-card">

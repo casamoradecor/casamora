@@ -18,14 +18,14 @@
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn-logout">SAIR DA CONTA</button>
+                <button type="submit" class="btn-logout" style="font-family: var(--font-base),sans-serif">SAIR DA CONTA</button>
             </form>
         </aside>
 
         <section class="dashboard-content">
-            <h2>OLÁ, {{ explode(' ', Auth::user()->name)[0] }}</h2>
+            <h2 style="font-family: var(--font-title),serif" ">OLÁ, {{ explode(' ', Auth::user()->name)[0] }}</h2>
 
-            <p style="margin-bottom: 40px; color: #555; font-size: 0.95rem;">
+            <p style="margin-bottom: 40px; color: #555; font-size: 0.95rem; font-family: var(--font-base), sans-serif">
                 A partir do painel de controle de sua conta, você pode ver seus pedidos recentes, gerenciar seus
                 endereços de entrega e faturamento e editar sua senha e detalhes da conta.
             </p>

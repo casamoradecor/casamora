@@ -16,12 +16,12 @@
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn-logout">SAIR DA CONTA</button>
+                <button type="submit" class="btn-logout" style="font-family: var(--font-base),sans-serif">SAIR DA CONTA</button>
             </form>
         </aside>
 
         <section class="dashboard-content">
-            <h2>MEUS PEDIDOS</h2>
+            <h2 style="font-family: var(--font-title), sans-serif">MEUS PEDIDOS</h2>
             <p>ACOMPANHE ABAIXO O HISTÓRICO DE TODAS AS SUAS COMPRAS REALIZADAS NA CASA MORÁ.</p>
 
             @if($pedidos->isEmpty())
@@ -45,9 +45,9 @@
                             <td><strong>#{{ $p->codigo_externo }}</strong></td>
                             <td>{{ $p->created_at->format('d/m/Y') }}</td>
                             <td>
-                            <span class="status-tag {{ $pedido->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
-                                {{ strtoupper($pedido->status) }}
-                            </span>
+                                <span class="status-tag {{ $p->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
+                    {{ strtoupper($p->status) }}
+                </span>
                             </td>
                             <td><strong>R$ {{ number_format($p->valor_total, 2, ',', '.') }}</strong></td>
                             <td style="text-align: center;">
