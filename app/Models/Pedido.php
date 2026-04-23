@@ -15,7 +15,10 @@ class Pedido extends Model
         'codigo_externo', 'nome_entrega', 'cpf_entrega', 'cep', 'endereco'
     ];
 
-    public function cliente() { return $this->belongsTo(Cliente::class); }
+    public function cliente()
+    {
+        return $this->belongsTo(User::class, 'cliente_id');
+    }
     public function itens() { return $this->hasMany(PedidoItem::class); }
     public function pagamento() { return $this->hasOne(Pagamento::class); }
     public function endereco() { return $this->belongsTo(Endereco::class); }

@@ -25,7 +25,9 @@
                 <a href="{{ route('admin.categorias.index') }}" class="nav-item">
                     <i class="fa-solid fa-layer-group"></i> categorias
                 </a>
-                <a href="#" class="nav-item"><i class="fa-solid fa-receipt"></i> vendas</a>
+                <a href="{{ route('admin.vendas.index') }}" class="nav-item">
+                    <i class="fa-solid fa-receipt"></i> vendas
+                </a>
 
                 <div class="nav-group-title">Personalização</div>
                 <a href="#" class="nav-item"><i class="fa-solid fa-palette"></i> visual da loja</a>

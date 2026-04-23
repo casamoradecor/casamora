@@ -13,6 +13,7 @@ use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnderecoController;
+use App\Http\Controllers\Admin\VendaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +112,11 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::post('/admin/shoppable/save', [AdminController::class, 'saveHotspot'])->name('admin.saveHotspot');
     Route::delete('/admin/shoppable/delete/{id}', [App\Http\Controllers\AdminController::class, 'deleteHotspot'])->name('admin.deleteHotspot');
+
+    // Gestão de Vendas (Pedidos)
+    Route::get('/vendas', [App\Http\Controllers\Admin\VendaController::class, 'index'])->name('admin.vendas.index');
+    Route::get('/vendas/{id}', [App\Http\Controllers\Admin\VendaController::class, 'show'])->name('admin.pedidos.show');
+    Route::post('/vendas/{id}/enviar', [App\Http\Controllers\Admin\VendaController::class, 'marcarComoEnviado'])->name('admin.pedidos.enviar');
 });
 
 /*

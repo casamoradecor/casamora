@@ -17,9 +17,9 @@
         <section class="dashboard-content">
             <div class="order-details-header">
                 <h2>DETALHES DO PEDIDO #{{ $pedido->id }}</h2>
-                <span class="status-tag status-{{ $pedido->status }}">
-                {{ $pedido->status == 'approved' ? 'PAGO' : 'PENDENTE' }}
-            </span>
+                <span class="status-tag {{ $pedido->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
+                    {{ $pedido->status == 'pago' ? 'PAGO' : 'PENDENTE' }}
+                </span>
             </div>
 
             <div class="info-grid">
@@ -48,7 +48,8 @@
                             <p>QUANTIDADE: {{ $item->quantidade }}</p>
                         </div>
                     </div>
-                    <p class="resultado"><strong>R$ {{ number_format($item->preco_unitario * $item->quantidade, 2, ',', '.') }}</strong>
+                    <p class="resultado">
+                        <strong>R$ {{ number_format($item->preco_unitario * $item->quantidade, 2, ',', '.') }}</strong>
                     </p>
                 </div>
             @endforeach

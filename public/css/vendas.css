@@ -1,0 +1,77 @@
+.admin-table-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Poppins', sans-serif;
+}
+
+.admin-table thead th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #888;
+    padding: 15px;
+    border-bottom: 2px solid #f4f4f4;
+    text-align: left;
+}
+
+.admin-table tbody td {
+    padding: 18px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f9f9f9;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #fcfcfc; /* Efeito de hover sutil */
+}
+
+/* Tags de Status */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.status-pago {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+/* Ajuste do Botão de Ação */
+.btn-detalhes {
+    background-color: #4B3621; /* Cor da Marca Casa MORÁ */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #4B3621;
+}
+
+.btn-detalhes:hover {
+    background-color: transparent;
+    color: #4B3621;
+}
+
+.order-number {
+    font-weight: 700;
+    color: #000;
+}
