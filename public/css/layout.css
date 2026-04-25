@@ -197,7 +197,7 @@
 .site-footer {
   background-color: var(--color-brand);
   color: #fff;
-  padding: 60px 5% 20px;
+  padding: 48px 5% 18px;
   margin-top: 50px;
 }
 
@@ -205,11 +205,11 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 40px;
+  gap: 32px;
   max-width: 1400px;
   margin: 0 auto;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 40px;
+  padding-bottom: 28px;
 }
 
 .footer-col {
@@ -219,15 +219,16 @@
 
 .footer-col h3 {
   font-family: var(--font-title);
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  font-size: 1.1rem;
+  margin-bottom: 14px;
   color: #fff;
   text-transform: uppercase;
 }
 
 .footer-col p {
   font-size: 0.85rem;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  line-height: 1.6;
   color: #ccc;
   text-transform: none;
 }
@@ -237,7 +238,7 @@
   color: #ccc;
   text-decoration: none;
   font-size: 0.85rem;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   transition: color 0.3s;
 }
 
@@ -256,7 +257,7 @@
   background: transparent;
   border: none;
   color: #fff;
-  padding: 10px 0;
+  padding: 8px 0;
   font-family: var(--font-base);
   font-size: 0.85rem;
   outline: none;
@@ -287,7 +288,7 @@
 
 .social-icons {
   display: flex;
-  gap: 40px;
+  gap: 24px;
   justify-content: center;
 }
 
@@ -303,15 +304,65 @@
 
 .footer-bottom {
   text-align: center;
-  padding-top: 20px;
+  padding-top: 16px;
   font-size: 0.75rem;
   color: #999;
   text-transform: none;
 }
 
 @media (max-width: 768px) {
+  .site-footer {
+    padding: 32px 20px 14px;
+    margin-top: 32px;
+  }
+
   .footer-inner {
     flex-direction: column;
-    gap: 30px;
+    gap: 22px;
+    padding-bottom: 20px;
+  }
+
+  .footer-col {
+    min-width: 0;
+  }
+
+  .footer-col h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .footer-col p,
+  .footer-col.links a {
+    font-size: 0.8rem;
+  }
+
+  .newsletter {
+    padding-bottom: 4px;
+  }
+
+  .news-form {
+    padding-bottom: 2px;
+  }
+
+  .news-form input {
+    padding: 6px 0;
+  }
+
+  .footer-col.social {
+    text-align: left;
+  }
+
+  .social-icons {
+    justify-content: flex-start;
+    gap: 18px;
+  }
+
+  .social-icons a {
+    font-size: 1.2rem;
+  }
+
+  .footer-bottom {
+    padding-top: 12px;
+    font-size: 0.68rem;
   }
 }

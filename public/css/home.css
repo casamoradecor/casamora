@@ -1,8 +1,9 @@
 /* HERO SECTION */
 .hero {
   position: relative;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,12 +42,14 @@
 }
 
 .hero-sub {
-  margin-top: 350px;
+  margin-top: clamp(220px, 42vh, 350px);
   color: var(--color-sub);
   font-weight: 400;
   font-size: clamp(1rem, 2vw, 1.2rem);
   z-index: 11;
   text-align: center;
+  max-width: 26rem;
+  padding: 0 16px;
 }
 
 /* SEÇÃO DESTAQUE E CARROSSEL */
@@ -198,6 +201,22 @@
 .btn-next { right: 5px; }
 
 @media (max-width: 900px) {
+  .hero {
+    min-height: 100dvh;
+  }
+
+  .hero-content {
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .hero-sub {
+    margin-top: clamp(180px, 38vh, 280px);
+    max-width: 18rem;
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
   .destaque-produtos {
     flex-direction: column;
   }
