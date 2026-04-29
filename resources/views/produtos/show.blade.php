@@ -37,23 +37,20 @@
                 </div>
 
                 <div class="wrapper-acoes-compra">
-                    <div class="descricao-produto" style="margin-top: 30px;">
-                        <h3 style="font-family: 'Poppins', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: #4a3427; margin-bottom: 10px;">
+                    <div class="descricao-produto">
+                        <h3>
                             Sobre o item
                         </h3>
-                        <div
-                            style="font-family: 'Poppins', sans-serif; font-size: 0.9rem; line-height: 1.6; color: #666; text-align: justify;">
+                        <div class="descricao-produto-texto">
                             {!! nl2br(e($produto->descricao)) !!}
                         </div>
                     </div>
 
-                    <div class="especificacoes-produto"
-                         style="margin-top: 30px; background: #fafafa; padding: 15px; border-radius: 4px;">
-                        <h3 style="font-family: 'Poppins', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #4a3427; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <div class="especificacoes-produto">
+                        <h3>
                             Especificações Técnicas
                         </h3>
-                        <div
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'Poppins', sans-serif; font-size: 0.8rem; color: #777;">
+                        <div class="especificacoes-grid">
                             <span><strong>Peso:</strong> {{ number_format($produto->peso, 3, ',', '.') }} kg</span>
                             <span><strong>Altura:</strong> {{ $produto->altura }} cm</span>
                             <span><strong>Largura:</strong> {{ $produto->largura }} cm</span>
@@ -78,16 +75,15 @@
                     </div>
                 </div>
 
-                <div class="calculadora-frete" style="margin-top: 35px; border-top: 1px solid #eee; padding-top: 25px;">
-                    <label
-                        style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #4a3427; display: block; margin-bottom: 10px;">
+                <div class="calculadora-frete">
+                    <label>
                         <i class="fa-solid fa-truck-fast"></i> Calcular Frete e Prazo
                     </label>
-                    <div class="grupo-input-frete" style="display: flex; gap: 8px;">
+                    <div class="grupo-input-frete">
                         <input type="text" id="cep-destino" placeholder="00000-000" maxlength="8"
-                               style="flex: 1; padding: 12px; border: 1px solid #ddd; outline: none; font-size: 0.85rem;">
+                               class="input-frete">
                         <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="botao-calc-frete"
-                                style="background: #4a3427; color: #fff; border: none; padding: 0 20px; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; cursor: pointer;">
+                                >
                             Calcular
                         </button>
                     </div>
@@ -98,9 +94,7 @@
             </div>
         </div>
     </div>
-    @push('scripts')
-        <script src="{{ asset('js/carrinho.js') }}"></script>
+    @push('js')
         <script src="{{ asset('js/produto-detalhe.js') }}"></script>
-        <script src="{{ asset('js/frete.js') }}"></script>
     @endpush
 @endsection

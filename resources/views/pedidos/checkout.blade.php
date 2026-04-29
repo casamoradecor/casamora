@@ -209,7 +209,7 @@
             });
         });
     </script>
-    <script src="{{ asset('js/carrinho.js') }}"></script>
-    <script src="{{ asset('js/frete.js') }}"></script>
-    <script src="{{ asset('js/checkout.js') }}"></script>
+    @push('js')
+        <script src="{{ asset('js/checkout.js') }}"></script>
+    @endpush
 @endsection

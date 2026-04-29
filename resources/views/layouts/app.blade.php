@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/carrinho.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     @stack('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -27,6 +26,11 @@
         <a href="/" class="logo">
             <img src="{{ asset('assets/ICONE RGB.png') }}" alt="Logo Casa MORÁ">
         </a>
+
+        <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-label="Abrir menu"
+                aria-controls="siteNav" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
 
         <nav class="site-nav" id="siteNav">
             <a href="/">INÍCIO</a>
@@ -58,6 +62,7 @@
 
             <div id="resultadosBusca" class="resultados-busca-wrapper"></div>
         </div>
+    </div>
 </header>
 
 @yield('content')

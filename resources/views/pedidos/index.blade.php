@@ -29,36 +29,38 @@
                     <p>VOCÊ AINDA NÃO REALIZOU NENHUM PEDIDO.</p>
                 </div>
             @else
-                <table class="tabela-pedidos">
-                    <thead>
-                    <tr>
-                        <th>PEDIDO</th>
-                        <th>DATA</th>
-                        <th>STATUS</th>
-                        <th>TOTAL</th>
-                        <th style="text-align: center;">AÇÕES</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($pedidos as $p)
+                <div class="dashboard-table-wrap">
+                    <table class="tabela-pedidos">
+                        <thead>
                         <tr>
-                            <td><strong>#{{ $p->codigo_externo }}</strong></td>
-                            <td>{{ $p->created_at->format('d/m/Y') }}</td>
-                            <td>
+                            <th>PEDIDO</th>
+                            <th>DATA</th>
+                            <th>STATUS</th>
+                            <th>TOTAL</th>
+                            <th style="text-align: center;">AÇÕES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($pedidos as $p)
+                            <tr>
+                                <td><strong>#{{ $p->codigo_externo }}</strong></td>
+                                <td>{{ $p->created_at->format('d/m/Y') }}</td>
+                                <td>
                                 <span class="status-tag {{ $p->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
                     {{ strtoupper($p->status) }}
                 </span>
-                            </td>
-                            <td><strong>R$ {{ number_format($p->valor_total, 2, ',', '.') }}</strong></td>
-                            <td style="text-align: center;">
-                                <a href="{{ route('pedidos.show', $p->id) }}" class="link-tabela">
-                                    VER DETALHES
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                                </td>
+                                <td><strong>R$ {{ number_format($p->valor_total, 2, ',', '.') }}</strong></td>
+                                <td style="text-align: center;">
+                                    <a href="{{ route('pedidos.show', $p->id) }}" class="link-tabela">
+                                        VER DETALHES
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </section>
     </main>
