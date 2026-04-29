@@ -24,6 +24,28 @@
                 </div>
                 <div style="text-align: right;">
                     <span class="status-badge status-pago" style="padding: 10px 20px; font-size: 0.8rem;">PAGAMENTO CONFIRMADO</span>
+
+                    {{-- Início do Bloco de Emissão de Etiqueta --}}
+                    @if($pedido->status == 'pago')
+                        <div style="margin-top: 15px;">
+                            <form action="{{ route('admin.pedidos.etiqueta', $pedido->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn-confirm-envio"
+                                        style="background: #D4AF37; color: white; width: 100%; cursor: pointer;">
+                                    <i class="fa-solid fa-print"></i> GERAR ETIQUETA NO MELHOR ENVIO
+                                </button>
+                            </form>
+
+                            {{-- Link para Baixar a Etiqueta após a geração bem-sucedida --}}
+                            @if(session('etiqueta_url'))
+                                <a href="{{ session('etiqueta_url') }}" target="_blank" class="btn-confirm-envio"
+                                   style="margin-top: 10px; display: block; text-align: center; background: #5B8C5A; color: white; text-decoration: none;">
+                                    <i class="fa-solid fa-download"></i> BAIXAR ETIQUETA (PDF)
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+                    {{-- Fim do Bloco --}}
                 </div>
             </header>
 
@@ -39,10 +61,13 @@
 
                 <div class="details-card">
                     <h3>Resumo Financeiro</h3>
-                    <p style="text-transform: uppercase"><strong>Subtotal:</strong> R$ {{ number_format($pedido->valor_produtos, 2, ',', '.') }}</p>
-                    <p style="text-transform: uppercase"><strong>Frete:</strong> R$ {{ number_format($pedido->valor_frete, 2, ',', '.') }}</p>
+                    <p style="text-transform: uppercase"><strong>Subtotal:</strong>
+                        R$ {{ number_format($pedido->valor_produtos, 2, ',', '.') }}</p>
+                    <p style="text-transform: uppercase"><strong>Frete:</strong>
+                        R$ {{ number_format($pedido->valor_frete, 2, ',', '.') }}</p>
                     @if($pedido->valor_desconto > 0)
-                        <p style="color: #A63D40;"><strong>Desconto:</strong> - R$ {{ number_format($pedido->valor_desconto, 2, ',', '.') }}</p>
+                        <p style="color: #A63D40;"><strong>Desconto:</strong> -
+                            R$ {{ number_format($pedido->valor_desconto, 2, ',', '.') }}</p>
                     @endif
                     <p style="font-size: 1rem; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; text-transform: uppercase">
                         <strong>Total Pago:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
@@ -51,7 +76,8 @@
             </div>
 
             <div class="items-section">
-                <h3 style="font-size: 0.75rem; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-bottom: 20px;">Itens do Pedido</h3>
+                <h3 style="font-size: 0.75rem; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-bottom: 20px;">
+                    Itens do Pedido</h3>
                 <table class="items-table">
                     <thead>
                     <tr>
@@ -71,14 +97,18 @@
                                     @endphp
                                     <img src="{{ $img }}" class="product-img" alt="{{ $item->produto->nome }}">
                                     <div>
-                                        <span style="font-weight: 600; color: #000; display: block;">{{ $item->produto->nome }}</span>
-                                        <span style="font-size: 0.75rem; color: #888;">REF: {{ str_pad($item->produto->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                        <span
+                                            style="font-weight: 600; color: #000; display: block;">{{ $item->produto->nome }}</span>
+                                        <span
+                                            style="font-size: 0.75rem; color: #888;">REF: {{ str_pad($item->produto->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td style="text-align: center; font-weight: 600;">{{ $item->quantidade }}</td>
-                            <td style="text-transform: uppercase">R$ {{ number_format($item->preco_unitario, 2, ',', '.') }}</td>
-                            <td style="text-align: right; font-weight: 700; color: #000; text-transform: uppercase">R$ {{ number_format($item->preco_unitario * $item->quantidade, 2, ',', '.') }}</td>
+                            <td style="text-transform: uppercase">
+                                R$ {{ number_format($item->preco_unitario, 2, ',', '.') }}</td>
+                            <td style="text-align: right; font-weight: 700; color: #000; text-transform: uppercase">
+                                R$ {{ number_format($item->preco_unitario * $item->quantidade, 2, ',', '.') }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -92,7 +122,8 @@
                 </div>
                 <form action="{{ route('admin.pedidos.enviar', $pedido->id) }}" method="POST" class="dispatch-form">
                     @csrf
-                    <input type="text" name="codigo_rastreio" class="dispatch-input" placeholder="Ex: BR123456789AA" required>
+                    <input type="text" name="codigo_rastreio" class="dispatch-input" placeholder="Ex: BR123456789AA"
+                           required>
                     <button type="submit" class="btn-confirm-envio">Confirmar Envio</button>
                 </form>
             </div>

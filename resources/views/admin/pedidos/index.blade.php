@@ -40,7 +40,15 @@
                             </td>
                             <td>{{ $p->created_at->format('d/m/Y H:i') }}</td>
                             <td>
-                                <span class="status-badge status-pago">Pago</span>
+                                @if($p->status == 'pago')
+                                    <span class="status-badge status-pago">Pago</span>
+                                @elseif($p->status == 'enviado')
+                                    <span class="status-badge" style="background: #4B3621; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Enviado</span>
+                                @elseif($p->status == 'pendente')
+                                    <span class="status-badge" style="background: #D4AF37; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.7rem;">Pendente</span>
+                                @else
+                                    <span class="status-badge">{{ strtoupper($p->status) }}</span>
+                                @endif
                             </td>
                             <td style="font-weight: 600; text-transform: uppercase">R$ {{ number_format($p->valor_total, 2, ',', '.') }}</td>
                             <td style="text-align: center;">

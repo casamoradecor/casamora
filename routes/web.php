@@ -117,6 +117,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/vendas', [App\Http\Controllers\Admin\VendaController::class, 'index'])->name('admin.vendas.index');
     Route::get('/vendas/{id}', [App\Http\Controllers\Admin\VendaController::class, 'show'])->name('admin.pedidos.show');
     Route::post('/vendas/{id}/enviar', [App\Http\Controllers\Admin\VendaController::class, 'marcarComoEnviado'])->name('admin.pedidos.enviar');
+    Route::post('/vendas/{id}/etiqueta', [VendaController::class, 'emitirEtiqueta'])->name('admin.pedidos.etiqueta');
 });
 
 /*
