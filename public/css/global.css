@@ -7,6 +7,11 @@
   --color-sub: #4b2b22;
   --sidebar-width: 260px;
   --border-light: #e0e0e0;
+  --container-wide: 1400px;
+  --container-base: 1200px;
+  --space-page: clamp(20px, 5vw, 72px);
+  --space-section: clamp(48px, 9vw, 140px);
+  /* Breakpoints usados no CSS: 1024, 900, 768, 600 e 480px. */
 }
 
 /* Reset Mínimo */
@@ -19,6 +24,17 @@
 html, body {
   min-height: 100%;
   width: 100%;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
 }
 
 /* Base: Texto normal Poppins */

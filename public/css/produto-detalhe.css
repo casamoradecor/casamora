@@ -1,15 +1,15 @@
 .pagina-produto-wrapper {
-    padding: 120px 0 80px;
+    padding: clamp(96px, 12vw, 120px) 0 clamp(56px, 8vw, 80px);
     background-color: #fff;
 }
 
 .container-detalhe-produto {
-    max-width: 1200px;
+    max-width: var(--container-base);
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
-    gap: 80px;
-    padding: 0 20px;
+    gap: clamp(32px, 7vw, 80px);
+    padding: 0 var(--space-page);
 }
 
 /* Lado Esquerdo: Galeria */
@@ -39,7 +39,7 @@
 .lado-info-produto h1 {
     font-family: var(--font-title);
     color: var(--color-brand);
-    font-size: 2.8rem;
+    font-size: clamp(2rem, 4vw, 2.8rem);
     line-height: 1.1;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -47,7 +47,7 @@
 
 .preco-grande-produto {
     font-family: var(--font-base);
-    font-size: 1.8rem;
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
     color: var(--color-brand);
     margin-bottom: 35px;
     text-transform: uppercase;
@@ -121,9 +121,9 @@
 
 /* Calculadora de Frete */
 .calculadora-frete {
-    margin-top: 20px;
-    padding: 20px 0;
-    border-top: 1px solid #f0f0f0;
+    margin-top: 35px;
+    padding: 25px 0 20px;
+    border-top: 1px solid #eee;
 }
 
 .calculadora-frete label {
@@ -137,25 +137,76 @@
 
 .grupo-input-frete {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .input-frete {
     flex-grow: 1;
     padding: 12px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #ddd;
     font-family: var(--font-base);
+    outline: none;
+    font-size: 0.85rem;
+    min-width: 0;
 }
 
 .botao-calc-frete {
-    background: transparent;
-    border: 1px solid var(--color-brand);
-    color: var(--color-brand);
-    padding: 10px 20px;
+    background: #4a3427;
+    border: none;
+    color: #fff;
+    padding: 0 20px;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 0.7rem;
     cursor: pointer;
+}
+
+.descricao-produto {
+    margin-top: 30px;
+}
+
+.descricao-produto h3,
+.especificacoes-produto h3 {
+    font-family: var(--font-base);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #4a3427;
+    margin-bottom: 12px;
+}
+
+.descricao-produto h3 {
+    letter-spacing: 1.5px;
+}
+
+.descricao-produto-texto {
+    font-family: var(--font-base);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #666;
+    text-align: justify;
+}
+
+.especificacoes-produto {
+    margin-top: 30px;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.especificacoes-produto h3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.especificacoes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-family: var(--font-base);
+    font-size: 0.8rem;
+    color: #777;
 }
 
 /* Selos */
@@ -226,4 +277,76 @@
 
 .mora-toast.error {
     background-color: #c94c4c;
+}
+
+@media (max-width: 1024px) {
+    .container-detalhe-produto {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 900px) {
+    .container-detalhe-produto {
+        grid-template-columns: 1fr;
+    }
+
+    .galeria-produto img {
+        max-height: 680px;
+        object-fit: contain;
+        background: #fafafa;
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina-produto-wrapper {
+        padding-top: 92px;
+    }
+
+    .container-detalhe-produto {
+        padding: 0 16px;
+        gap: 24px;
+    }
+
+    .lado-info-produto h1 {
+        line-height: 1.15;
+    }
+
+    .preco-grande-produto {
+        margin-bottom: 24px;
+    }
+
+    .wrapper-acoes-compra {
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .especificacoes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .grupo-input-frete {
+        flex-direction: column;
+    }
+
+    .botao-calc-frete {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .resultado-frete-item {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    #mora-toast-container {
+        left: 16px;
+        right: 16px;
+        top: 18px;
+    }
+
+    .mora-toast {
+        min-width: 0;
+        width: 100%;
+    }
 }

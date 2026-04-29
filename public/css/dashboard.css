@@ -4,8 +4,8 @@
 
 .dashboard-container {
     display: flex;
-    padding: 150px 10% 80px;
-    gap: 50px;
+    padding: clamp(112px, 13vw, 150px) var(--space-page) 80px;
+    gap: clamp(28px, 5vw, 50px);
     min-height: 60vh;
     background-color: #F0F0F0;
 }
@@ -34,6 +34,7 @@
 
 .dashboard-content {
     flex: 3;
+    min-width: 0;
 }
 
 .dashboard-content h2 {
@@ -46,7 +47,7 @@
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: 30px;
 }
 
@@ -190,8 +191,8 @@
 
 .order-item-info {
     display: flex;
-    gap: 20px;
     align-items: center;
+    gap: 16px;
 }
 
 .order-item img {
@@ -251,12 +252,19 @@
 
 .tabela-pedidos {
     width: 100%;
+    min-width: 640px;
     border-collapse: collapse;
     background-color: #FFFFFF; /* FUNDO BRANCO */
     border: 1px solid #DDDDDD; /* BORDA EXTERNA */
     margin-top: 20px;
     text-transform: uppercase; /* TUDO EM MAIÚSCULO */
     letter-spacing: 1px;
+}
+
+.dashboard-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tabela-pedidos th {
@@ -291,7 +299,7 @@
     border-radius: 2px;
 }
 
-.status-pending { background: #FFF4E5; color: #B8860B; }
+.status-pending, .status-pendente { background: #FFF4E5; color: #B8860B; }
 .status-approved, .status-pago { background: #E8F5E9; color: #2E7D32; }
 
 /* Link de Ver Detalhes dentro da tabela */
@@ -315,5 +323,63 @@
         flex-direction: row;
         flex-wrap: wrap;
         gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 96px 16px 56px;
+    }
+
+    .dashboard-content h2 {
+        font-size: 1.55rem;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-nav {
+        gap: 10px;
+    }
+
+    .dashboard-nav a,
+    .btn-logout {
+        font-size: 0.75rem;
+    }
+
+    .info-card {
+        padding: 22px;
+    }
+
+    .order-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .order-item-info {
+        width: 100%;
+    }
+
+    .order-summary {
+        text-align: left;
+    }
+
+    .order-summary-row {
+        justify-content: space-between;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-item-info {
+        gap: 14px;
+    }
+
+    .order-item img {
+        width: 62px;
+        height: 80px;
+    }
+
+    .tabela-pedidos th,
+    .tabela-pedidos td {
+        padding: 12px;
     }
 }

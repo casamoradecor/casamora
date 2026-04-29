@@ -157,7 +157,7 @@ class CarrinhoManager {
         }, 0);
 
         if (!itens || Object.keys(itens).length === 0) {
-            this.lista.innerHTML = '<p class="carrinho-vazio" style="text-align:center; padding: 20px; color:#888; font-size:0.85rem;">Seu carrinho está vazio.</p>';
+            this.lista.innerHTML = '<p class="carrinho-vazio">Seu carrinho está vazio.</p>';
             this.valorTotal.innerText = 'R$ 0,00';
             return;
         }
@@ -171,15 +171,15 @@ class CarrinhoManager {
             let imagemSrc = item.imagem || '/assets/vasomora.png';
 
             html += `
-                <div class="carrinho-item" style="display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; align-items: center;">
-                    <img src="${imagemSrc}" alt="${item.nome}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 4px;">
-                    <div style="flex: 1;">
-                        <h4 style="font-size: 0.75rem; font-weight: 700; margin: 0; text-transform: uppercase; color: #4a3427;">${item.nome}</h4>
-                        <p style="font-size: 0.85rem; margin: 5px 0; color: #4a3427; font-weight: bold;">R$ ${precoTotalItem}</p>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
-                            <button class="btn-diminuir" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #4a3427;">-</button>
-                            <span style="font-size: 0.8rem; font-weight: 700; color: #4a3427; width: 15px; text-align:center;">${item.quantidade}</span>
-                            <button class="btn-aumentar" data-id="${id}" style="width: 25px; height: 25px; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #4a3427;">+</button>
+                <div class="carrinho-item">
+                    <img src="${imagemSrc}" alt="${item.nome}" class="carrinho-item-img">
+                    <div class="carrinho-item-info">
+                        <h4>${item.nome}</h4>
+                        <p>R$ ${precoTotalItem}</p>
+                        <div class="carrinho-qtd">
+                            <button class="btn-diminuir" data-id="${id}">-</button>
+                            <span>${item.quantidade}</span>
+                            <button class="btn-aumentar" data-id="${id}">+</button>
                         </div>
                     </div>
                 </div>

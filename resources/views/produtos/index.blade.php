@@ -10,21 +10,18 @@
     <header class="shop-header">
         <div class="shop-filters-bar">
             <form action="{{ route('produtos.index') }}" method="GET" class="filter-form">
-                <div class="search-group"
-                     style="display: flex; align-items: center; border-bottom: 1px solid var(--color-brand); gap: 5px;">
+                <div class="search-group">
 
                     <input type="text" name="busca" id="search-input" value="{{ request('busca') }}"
                            placeholder="pesquisar na coleção..." class="search-input"
-                           style="border-bottom: none; flex: 1; padding-right: 5px;">
+                           >
 
                     @if(request('busca'))
-                        <a href="{{ route('produtos.index') }}" class="btn-clear-search" title="limpar busca"
-                           style="text-decoration: none; color: #999; font-size: 1.1rem; padding: 0 5px; line-height: 1;">
+                        <a href="{{ route('produtos.index') }}" class="btn-clear-search" title="limpar busca">
                             &times;
                         </a>
                     @endif
-                    <button type="submit" class="btn-search-icon"
-                            style="background: none; border: none; cursor: pointer; padding: 0 5px;">
+                    <button type="submit" class="btn-search-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
                              class="bi bi-search" viewBox="0 0 16 16" style="color: var(--color-brand);">
                             <path
@@ -82,18 +79,18 @@
                 </div>
                 <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
 
-                <div class="shop-card-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                <div class="shop-card-actions">
                     <button class="btn-comprar"
                             data-id="{{ $produto->id }}"
                             data-nome="{{ $produto->nome }}"
                             data-preco="{{ $produto->preco }}"
                             data-imagem="{{ $urlFinal }}"
-                            style="flex: 1; opacity: 1;">
+                            >
                         adicionar ao carrinho
                     </button>
 
                     <a href="{{ route('produto.show', $produto->id) }}" class="btn-comprar ver-mais-btn"
-                       style="flex: 1; opacity: 1; text-align: center; text-decoration: none; border: 1px solid #ddd; background: #fff; color: #333;">
+                       >
                         ver mais
                     </a>
                 </div>

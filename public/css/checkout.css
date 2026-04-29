@@ -1,11 +1,11 @@
 /* =========================================
-   PÁGINA DE CHECKOUT - CASA MORÁ
+   PÁGINA DE CHECKOUT - CASA MORÁ 
    ========================================= */
 
 .checkout-container {
     display: flex;
-    padding: 150px 10% 80px;
-    gap: 60px;
+    padding: clamp(112px, 13vw, 150px) var(--space-page) 80px;
+    gap: clamp(28px, 6vw, 60px);
     flex-wrap: wrap;
     background-color: #fff;
 }
@@ -13,6 +13,7 @@
 .checkout-form-section {
     flex: 2;
     min-width: 300px;
+    min-width: min(300px, 100%);
 }
 
 .checkout-resumo {
@@ -22,6 +23,7 @@
     padding: 40px;
     border: 1px solid #eee;
     align-self: flex-start;
+    min-width: min(300px, 100%);
 }
 
 .checkout-container h2 {
@@ -148,6 +150,10 @@
     margin-bottom: 5px;
 }
 
+.address-grid .form-group {
+    min-width: 0;
+}
+
 .flex-1 { flex: 1; }
 .flex-2 { flex: 2; }
 .flex-3 { flex: 3; }
@@ -246,6 +252,7 @@ input[readonly] {
     justify-content: space-between;
     width: 100%;
     align-items: center;
+    gap: 12px;
 }
 
 .f-nome-chk { font-weight: 700; font-size: 0.8rem; color: #4a3427; text-transform: uppercase; }
@@ -342,5 +349,70 @@ input[readonly] {
     .checkout-container {
         flex-direction: column;
         padding-top: 120px;
+    }
+
+    .checkout-resumo {
+        width: 100%;
+        align-self: stretch;
+    }
+}
+
+@media (max-width: 600px) {
+    .checkout-container {
+        padding: 96px 16px 56px;
+    }
+
+    .checkout-container h2 {
+        font-size: 1.45rem;
+        margin-bottom: 22px;
+    }
+
+    .address-grid {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .enderecos-salvos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-resumo {
+        padding: 24px 18px;
+    }
+
+    .checkout-item {
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .checkout-item img {
+        width: 70px;
+        height: 88px;
+        flex-shrink: 0;
+    }
+
+    .frete-radio-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .checkout-total-row {
+        font-size: 1.1rem;
+        gap: 16px;
+    }
+
+    .btn-confirmar {
+        padding: 16px;
+        letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-item-info {
+        min-width: 0;
+    }
+
+    .checkout-item-info h4 {
+        overflow-wrap: anywhere;
     }
 }
