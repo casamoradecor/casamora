@@ -13,8 +13,7 @@ class VendaController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedido::where('status', 'pago')
-            ->with('cliente')
+        $pedidos = Pedido::with('cliente')
             ->latest()
             ->get();
 
@@ -49,5 +48,31 @@ class VendaController extends Controller
 
         return redirect()->route('admin.vendas.index')
             ->with('sucesso', "Pedido #{$id} marcado como enviado!");
+    }
+    public function emitirEtiqueta(Request $request, $id, \App\Services\MelhorEnvioService $meService)
+    {
+        $pedido = \App\Models\Pedido::findOrFail($id);
+
+        $carrinho = $meService->adicionarAoCarrinho($pedido);
+
+        if (isset($carrinho['id'])) {
+            $orderId = $carrinho['id'];
+            $meService->finalizarCompra($orderId);
+            sleep(2);
+            $etiqueta = $meService->gerarEtiqueta($orderId);
+            if (isset($etiqueta['url'])) {
+                $pedido->update([
+                    'status' => 'enviado',
+                    'codigo_rastreio' => $etiqueta['tracking'] ?? 'Verificar no painel'
+                ]);
+                \Illuminate\Support\Facades\Mail::to($pedido->cliente->email)
+                    ->send(new \App\Mail\PedidoEnviadoMail($pedido));
+
+                return redirect()->back()
+                    ->with('sucesso', 'Etiqueta gerada e e-mail de rastreio enviado!')
+                    ->with('etiqueta_url', $etiqueta['url']);
+            }
+        }
+        return redirect()->back()->with('erro', 'Falha ao processar etiqueta. Verifique seu saldo ou os dados de endereço.');
     }
 }

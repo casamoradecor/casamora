@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class FreteController extends Controller
 {
@@ -18,19 +19,22 @@ class FreteController extends Controller
 
             $opcoesFrete = [];
             $precoSedexBase = null;
+            $token = env('MELHOR_ENVIO_TOKEN');
+            $urlBase = rtrim(env('MELHOR_ENVIO_URL'), '/');
 
-            if (env('MELHOR_ENVIO_TOKEN')) {
-                $response = Http::withToken(env('MELHOR_ENVIO_TOKEN'))
-                    ->post(env('MELHOR_ENVIO_URL') . '/me/shipment/calculate', [
+            if ($token) {
+                $response = Http::withToken($token)
+                    ->acceptJson()
+                    ->post($urlBase . '/api/v2/me/shipment/calculate', [
                         "from" => ["postal_code" => "09530401"],
                         "to"   => ["postal_code" => $cepDestino],
                         "products" => [[
                             "id" => $produto->id,
-                            "width" => $produto->largura,
-                            "height" => $produto->altura, // Usando a propriedade correta
-                            "length" => $produto->comprimento,
-                            "weight" => $produto->peso,
-                            "insurance_value" => $produto->preco,
+                            "width" => (float)$produto->largura,
+                            "height" => (float)$produto->altura,
+                            "length" => (float)$produto->comprimento,
+                            "weight" => (float)$produto->peso,
+                            "insurance_value" => (float)$produto->preco,
                             "quantity" => 1
                         ]]
                     ]);
@@ -93,31 +97,29 @@ class FreteController extends Controller
             foreach ($carrinho as $id => $item) {
                 if (!isset($item['nome']) || $item['nome'] === 'NULL') continue;
 
-                $produtoDb = \App\Models\Produto::find($id);
-
+                $produtoDb = Produto::find($id);
                 if ($produtoDb) {
                     $produtosApi[] = [
                         "id" => $produtoDb->id,
-                        "width" => $produtoDb->largura ?: 15,
-                        "height" => $produtoDb->altura ?: 15,
-                        "length" => $produtoDb->comprimento ?: 15,
-                        "weight" => $produtoDb->peso ?: 0.5,
-                        "insurance_value" => $produtoDb->preco,
-                        "quantity" => $item['quantidade']
+                        "width" => (float)($produtoDb->largura ?: 15),
+                        "height" => (float)($produtoDb->altura ?: 15),
+                        "length" => (float)($produtoDb->comprimento ?: 15),
+                        "weight" => (float)($produtoDb->peso ?: 0.5),
+                        "insurance_value" => (float)$produtoDb->preco,
+                        "quantity" => (int)$item['quantidade']
                     ];
                 }
             }
 
-            if (empty($produtosApi)) {
-                return response()->json(['error' => 'Produtos não encontrados no banco'], 404);
-            }
-
             $opcoesFrete = [];
-            $precoSedexBase = null;
+            $precoReferenciaBase = null;
+            $token = env('MELHOR_ENVIO_TOKEN');
+            $urlBase = rtrim(env('MELHOR_ENVIO_URL'), '/');
 
-            if (env('MELHOR_ENVIO_TOKEN')) {
-                $response = \Illuminate\Support\Facades\Http::withToken(env('MELHOR_ENVIO_TOKEN'))
-                    ->post(env('MELHOR_ENVIO_URL') . '/me/shipment/calculate', [
+            if ($token && !empty($produtosApi)) {
+                $response = Http::withToken($token)
+                    ->acceptJson()
+                    ->post($urlBase . '/api/v2/me/shipment/calculate', [
                         "from" => ["postal_code" => "09530401"],
                         "to"   => ["postal_code" => $cepDestino],
                         "products" => $produtosApi
@@ -126,9 +128,8 @@ class FreteController extends Controller
                 if ($response->successful()) {
                     $servicos = $response->json();
                     foreach ($servicos as $s) {
-                        // FILTRO: Apenas SEDEX
                         if (isset($s['name']) && !isset($s['error']) && str_contains(strtoupper($s['name']), 'SEDEX')) {
-                            $precoSedexBase = (float) $s['price'];
+                            $precoReferenciaBase = (float) $s['price'];
                             $opcoesFrete[] = [
                                 'nome'  => 'SEDEX',
                                 'preco' => number_format($s['price'], 2, ',', '.'),
@@ -144,7 +145,7 @@ class FreteController extends Controller
             $regioesLocais = ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
 
             if (in_array($prefixo, $regioesLocais)) {
-                $valorUber = $precoSedexBase ? ($precoSedexBase - 5) : 20.00;
+                $valorUber = $precoReferenciaBase ? ($precoReferenciaBase - 5) : 20.00;
                 if ($valorUber < 10) $valorUber = 10.00;
 
                 array_unshift($opcoesFrete, [
@@ -158,7 +159,7 @@ class FreteController extends Controller
             return response()->json($opcoesFrete);
 
         } catch (\Exception $e) {
-            \Log::error("Erro Frete Checkout: " . $e->getMessage());
+            Log::error("Erro Frete Checkout: " . $e->getMessage());
             return response()->json(['error' => 'Falha ao calcular'], 500);
         }
     }
