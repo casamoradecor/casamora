@@ -15,6 +15,9 @@
         @include('sidebar.menu_lateral')
 
         <main class="admin-main">
+            <button style="padding: 10px" class="mobile-menu-toggle" onclick="toggleAdminMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <header class="admin-header">
                 <h1>Categorias</h1>
                 <div class="user-info"><span>Painel de Controle</span></div>
@@ -128,4 +131,24 @@
 
 @push('js')
     <script src="{{ asset('js/categorias.js') }}"></script>
+    <script>
+        // Função para abrir e fechar o menu no mobile
+        function toggleAdminMenu() {
+            const sidebar = document.querySelector('.admin-sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Fecha o menu automaticamente se o usuário clicar fora dele
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.admin-sidebar');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
+
+            // Verifica se o clique foi fora da sidebar e do botão de abrir
+            if (sidebar && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 @endpush

@@ -15,6 +15,9 @@
         @include('sidebar.menu_lateral')
         <main class="admin-main">
             <header class="admin-header" style="margin-bottom: 30px;">
+                <button style="padding: 10px" class="mobile-menu-toggle" onclick="toggleAdminMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <h1 style="font-family: 'Poppins', sans-serif; font-weight: 700;">Vendas & Pedidos</h1>
                 <p style="color: #666; font-size: 0.9rem;">Gerencie as vendas confirmadas e prepare os despachos.</p>
             </header>
@@ -63,4 +66,24 @@
             </div>
         </main>
     </div>
+    <script>
+        // Função para abrir e fechar o menu no mobile
+        function toggleAdminMenu() {
+            const sidebar = document.querySelector('.admin-sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Fecha o menu automaticamente se o usuário clicar fora dele
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.admin-sidebar');
+            const toggleBtn = document.querySelector('.mobile-menu-toggle');
+
+            // Verifica se o clique foi fora da sidebar e do botão de abrir
+            if (sidebar && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 @endsection

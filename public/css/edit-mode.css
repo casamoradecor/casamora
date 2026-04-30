@@ -137,21 +137,19 @@
 .shoppable-main-img {
     width: 100%;
     height: auto;
-    object-fit: cover;
+    display: block;
     cursor: crosshair;
 }
 
 .hotspot-dot {
     position: absolute;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
+    display: block; /* Tiramos o flex daqui */
+    width: 0;
+    height: 0;
     z-index: 10;
-    text-transform: uppercase;
 }
 
+/* A bolinha agora é quem recebe o centro exato */
 .hotspot-circle {
     width: 18px;
     height: 18px;
@@ -159,16 +157,24 @@
     background: transparent !important;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    flex-shrink: 0;
+    position: absolute;
+    transform: translate(-50%, -50%); /* Centraliza apenas a bola no clique */
+    cursor: pointer;
 }
 
+/* O texto continua igual, mas sem "empurrar" a bolinha */
 .hotspot-label {
+    position: absolute;
+    left: 15px; /* Mantém o gap que você tinha */
+    top: 50%;
+    transform: translateY(-50%); /* Centraliza o texto verticalmente com a bola */
     color: #fff;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-shadow: 1px 1px 4px rgba(0,0,0,1);
     white-space: nowrap;
+    pointer-events: none;
 }
 
 .hotspot-product-preview {
@@ -322,10 +328,107 @@
     color: #fff;
 }
 
+/* =========================================
+   RESPONSIVIDADE EDITOR VISUAL (CORRIGIDA)
+   ========================================= */
+
 @media (max-width: 900px) {
-    .destaque-produtos, .categorias-track {
-        flex-direction: column;
-        grid-template-columns: 1fr;
+    /* 1. HERO SECTION */
+    .hero {
+        min-height: 100dvh;
     }
-    .hotspot-label { display: none; }
+
+    .hero-sub {
+        margin-top: clamp(150px, 35vh, 250px);
+        max-width: 280px;
+        line-height: 1.4;
+    }
+
+    /* 2. SEÇÃO DESTAQUE (IMAGEM EM CIMA COMO SOLICITADO) */
+    .destaque-produtos {
+        flex-direction: column !important; /* Força a imagem a ficar em cima */
+        padding: 40px 15px;
+        gap: 30px;
+    }
+
+    .destaque-imagem {
+        width: 100% !important;
+        height: auto;
+    }
+
+    .destaque-imagem img {
+        width: 100%;
+        height: 220px;
+        max-width: none;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .destaque-carrossel {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .carrossel-track {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto; /* Permite scroll horizontal dos produtos */
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .produto-card {
+        flex: 0 0 160px; /* Cards menores para caberem no scroll */
+    }
+
+    .produto-card img {
+        height: 180px;
+    }
+
+    /* 3. SEÇÃO CATEGORIAS */
+    .categorias-track {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .categoria-card {
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+    }
+
+    .categoria-card .edit-overlay {
+        opacity: 1; /* Overlay sempre visível no mobile para facilitar edição */
+        padding: 15px;
+    }
+
+    /* 4. SHOPPABLE (AMBIENTE COMPRÁVEL) */
+    .shoppable-secao {
+        padding: 40px 15px;
+    }
+
+    .shoppable-admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .hotspot-label {
+        display: none; /* Esconde o texto para não atrapalhar o clique no mobile */
+    }
+
+    /* 5. MODAL DE VÍNCULO */
+    .modal-content {
+        padding: 25px 20px;
+        width: 95%;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-cancel, .btn-confirm {
+        width: 100%;
+        padding: 12px;
+    }
 }

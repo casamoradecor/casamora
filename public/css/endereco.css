@@ -163,13 +163,6 @@
     margin-top: 30px;
 }
 
-/* Ajustes Mobile */
-@media (max-width: 768px) {
-    .form-row {
-        flex-direction: column;
-        gap: 20px;
-    }
-}
 
 /* --- RESTANTE DOS ESTILOS (TABELAS, MODAIS ETC) --- */
 .tabela-pedidos {
@@ -232,4 +225,173 @@
     width: 90%;
     max-width: 400px;
     text-align: center;
+}
+
+/* =========================================
+   RESPONSIVIDADE - MEUS ENDEREÇOS
+   ========================================= */
+
+@media (max-width: 900px) {
+    /* Container Principal */
+    .dashboard-container {
+        flex-direction: column;
+        padding: 80px 15px 40px;
+        gap: 30px;
+    }
+
+    /* Menu Superior (Abas) - Alinhamento do Logout Corrigido */
+    .dashboard-nav {
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #EEE;
+        flex-direction: row;
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        align-items: center; /* Alinha links e form verticalmente */
+    }
+
+    .dashboard-nav a,
+    .btn-logout {
+        font-size: 0.7rem !important;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        border: none;
+        background: transparent;
+        text-decoration: none;
+    }
+
+    .dashboard-nav form {
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .btn-logout {
+        color: #cc0000;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    /* Organização do Conteúdo (H2 -> P -> BOTÕES -> CONTEÚDO) */
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* "Desmanchamos" o header para controlar a ordem dos filhos individualmente */
+    .dashboard-header {
+        display: contents;
+    }
+
+    .dashboard-content h2 {
+        order: 1;
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-content p {
+        order: 2;
+        padding-bottom: 20px !important;
+        margin: 0;
+        text-transform: lowercase;
+    }
+
+    /* Botões de Ação (Adicionar ou Voltar) */
+    .btn-add-mora,
+    .dashboard-header .btn-pill {
+        order: 3;
+        width: fit-content;
+        min-width: 180px;
+        margin: 0 auto 30px 0;
+        padding: 12px 20px;
+        font-size: 0.7rem;
+        justify-content: center;
+        display: inline-flex;
+    }
+
+    /* --- FORMULÁRIO DE ENDEREÇO (NOVO/EDITAR) --- */
+    .address-form.info-card {
+        order: 4;
+        padding: 25px 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-row {
+        flex-direction: column; /* Coloca os campos um embaixo do outro no mobile */
+        gap: 0;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .form-group input {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .form-submit {
+        margin-top: 10px;
+    }
+
+    .btn-pill.full-width {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 15px;
+    }
+
+    /* --- TABELA DE PEDIDOS/ENDEREÇOS --- */
+    .tabela-pedidos {
+        order: 4;
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-collapse: collapse;
+    }
+
+    .tabela-pedidos thead,
+    .tabela-pedidos tbody {
+        display: table;
+        width: 100%;
+        min-width: 600px;
+        table-layout: fixed;
+    }
+
+    .tabela-pedidos tr {
+        display: table-row;
+    }
+
+    .tabela-pedidos th,
+    .tabela-pedidos td {
+        display: table-cell;
+        padding: 12px 10px;
+        font-size: 0.75rem;
+        vertical-align: middle;
+    }
+
+    /* Ajuste das larguras das colunas */
+    .tabela-pedidos th:nth-child(1), .tabela-pedidos td:nth-child(1) { width: 40%; }
+    .tabela-pedidos th:nth-child(2), .tabela-pedidos td:nth-child(2) { width: 40%; }
+    .tabela-pedidos th:nth-child(3), .tabela-pedidos td:nth-child(3) { width: 20%; }
+
+    /* Modal */
+    .modal-content {
+        width: 90%;
+        padding: 30px 15px;
+    }
 }

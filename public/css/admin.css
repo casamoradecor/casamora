@@ -232,3 +232,94 @@
 .admin-hidden {
     display: none !important;
 }
+
+/* =========================================
+   RESPONSIVIDADE ADMIN - CASA MORÁ
+   ========================================= */
+
+/* Botão de Toggle (Escondido por padrão no Desktop) */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-brand);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 15px;
+}
+
+@media (max-width: 1024px) {
+    /* 1. Ajuste do Wrapper */
+    .admin-wrapper {
+        flex-direction: column;
+    }
+
+    /* 2. Transformando a Sidebar em um Drawer (Gaveta) */
+    .admin-sidebar {
+        left: -100%; /* Escondida fora da tela */
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+        width: 280px;
+    }
+
+    /* Classe que o JS vai ativar para mostrar o menu */
+    .admin-sidebar.active {
+        left: 0;
+    }
+
+    /* 3. Ajuste do Conteúdo Principal */
+    .admin-main {
+        margin-left: 0; /* Remove a margem da sidebar */
+        padding: 30px 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 4. Header e Botão Mobile */
+    .admin-header {
+        margin-bottom: 30px;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .mobile-menu-toggle {
+        display: block; /* Aparece no mobile */
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .user-info {
+        margin-left: auto; /* Empurra o "Olá" para a direita */
+    }
+
+    /* 5. Banner de Status */
+    .status-banner {
+        padding: 15px;
+        font-size: 0.8rem;
+    }
+
+    /* 6. Grid de Opções (2 colunas -> 1 coluna) */
+    .admin-options-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card-dashboard {
+        padding: 25px 20px;
+    }
+}
+
+/* Ajustes extras para telas muito pequenas */
+@media (max-width: 480px) {
+    .user-info span {
+        display: none; /* Esconde o "olá" em telas minúsculas para não encavalar */
+    }
+
+    .user-info strong {
+        display: inline;
+        font-size: 0.8rem;
+    }
+}

@@ -195,3 +195,115 @@ header, .scrolled {
     letter-spacing: 1px;
     text-align: left;
 }
+
+@media (max-width: 900px) {
+    /* Container Principal */
+    .dashboard-container {
+        flex-direction: column;
+        padding: 80px 15px 40px;
+        gap: 30px;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+    /* Navegação Superior (Idêntica às outras telas) */
+    .dashboard-nav {
+        flex: none;
+        width: 100%;
+        max-width: none;
+        border-right: none;
+        border-bottom: 1px solid #EEE;
+        flex-direction: row;
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        align-items: center;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .dashboard-nav::-webkit-scrollbar { display: none; }
+
+    .dashboard-nav a,
+    .btn-logout {
+        font-size: 0.7rem !important;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        border: none;
+        background: transparent;
+        text-decoration: none;
+    }
+
+    .dashboard-nav form {
+        display: inline-flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .btn-logout {
+        color: #cc0000;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    /* Conteúdo Principal */
+    .dashboard-content {
+        flex: none;
+        width: 100%;
+        max-width: none;
+    }
+
+    .dashboard-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    /* Formulário */
+    .form-perfil {
+        gap: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .input-perfil {
+        font-size: 0.95rem;
+        padding: 10px 0;
+    }
+
+    /* Grade de Senha (Sempre um abaixo do outro) */
+    .password-grid {
+        grid-template-columns: 1fr; /* Força uma única coluna */
+        gap: 15px;
+        padding-top: 15px;
+    }
+
+    /* Remove o span de 2 colunas para que todos ocupem 100% */
+    .full-width {
+        grid-column: span 1;
+    }
+
+    /* Botão Salvar */
+    .btn-salvar {
+        width: 100%; /* Botão ocupa a largura toda no mobile */
+        padding: 16px;
+        font-size: 0.85rem;
+        margin-top: 20px;
+        display: block;
+    }
+
+    /* Checkbox de Alterar Senha */
+    .checkbox-container {
+        font-size: 0.75rem;
+        padding: 10px 0;
+    }
+}

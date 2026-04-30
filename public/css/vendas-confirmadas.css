@@ -168,14 +168,217 @@
     color: #fff;
 }
 
-@media (max-width: 992px) {
-    .info-grid {
-        grid-template-columns: 1fr;
+/* =========================================
+   RESPONSIVIDADE: DETALHE DO PEDIDO (SENIOR)
+   ========================================= */
+
+@media (max-width: 1024px) {
+    /* 1. ESPAÇAMENTO GERAL */
+    .admin-main {
+        padding: 20px 15px 60px;
     }
 
+    /* 2. HEADER DA PÁGINA */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem !important;
+        margin: 5px 0;
+    }
+
+    /* Ajuste do bloco da direita (Status e Botões) */
+    .page-header > div:last-child {
+        text-align: left !important;
+        width: 100%;
+    }
+
+    .status-badge {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    /* Botões de Etiqueta */
+    .btn-confirm-envio {
+        width: 100%;
+        justify-content: center;
+        padding: 18px;
+        font-size: 0.75rem;
+    }
+
+    /* 3. GRIDS DE INFORMAÇÃO (Dados de Entrega e Financeiro) */
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .details-card {
+        padding: 20px;
+    }
+
+    .details-card strong {
+        width: 110px; /* Reduz largura do label para ganhar espaço no valor */
+        font-size: 0.8rem;
+    }
+
+    .details-card p {
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column; /* No mobile, label em cima e valor embaixo se for longo */
+        gap: 2px;
+    }
+
+    /* 4. TABELA DE ITENS (O ponto crítico) */
+    .items-section {
+        padding: 20px 10px;
+        overflow-x: auto; /* Habilita scroll horizontal */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .items-table {
+        min-width: 650px; /* Garante que Nome e Subtotal não quebrem */
+    }
+
+    .items-table td {
+        padding: 15px 10px;
+        font-size: 0.8rem;
+    }
+
+    .product-img {
+        width: 45px;
+        height: 45px;
+    }
+
+    /* 5. PAINEL DE DESPACHO (Rastreio) */
     .dispatch-panel {
         flex-direction: column;
-        gap: 20px;
+        padding: 30px 20px;
+        gap: 25px;
         text-align: center;
+    }
+
+    .dispatch-info h4 {
+        font-size: 1.2rem;
+    }
+
+    .dispatch-form {
+        flex-direction: column;
+        width: 100%;
+        max-width: none;
+    }
+
+    .dispatch-input {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* 1. Ajuste Geral (Desktop e Mobile) */
+.page-header h1 {
+    margin-top: 5px;
+    margin-bottom: 25px !important; /* Espaçamento maior solicitado entre Título e 'Gerencie...' */
+    line-height: 1.2;
+}
+
+/* =========================================
+   RESPONSIVIDADE: GESTÃO DE ENVIO (FIX FINAL)
+   ========================================= */
+
+@media (max-width: 1024px) {
+    .page-header {
+        display: grid;
+        /* Coluna 1 expande | Coluna 2 ajusta ao badge */
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0;
+    }
+
+    /* Desmontamos as divs internas para o Grid controlar os filhos diretamente */
+    .page-header > div:first-child,
+    .page-header > div:last-child {
+        display: contents;
+    }
+
+    /* 1. Link Voltar (Ocupa o topo todo) */
+    .btn-back {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        margin-bottom: 20px;
+    }
+
+    /* 2. Título (Esquerda) */
+    .page-header h1 {
+        grid-column: 1;
+        grid-row: 2;
+        margin: 0 !important;
+        font-size: 1.6rem !important;
+        line-height: 1.2;
+    }
+
+    /* 3. Badge (Direita do Título) */
+    .status-badge {
+        grid-column: 2;
+        grid-row: 2;
+        width: auto !important;
+        margin: 0 !important;
+        padding: 8px 15px !important;
+        font-size: 0.65rem !important;
+        white-space: nowrap;
+        border-radius: 4px;
+    }
+
+    /* 4. Descrição (Embaixo do Título com espaçamento maior) */
+    .page-header p {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        margin-top: 35px !important; /* O espaçamento maior que solicitaste */
+        margin-bottom: 25px !important;
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    /* 5. Bloco de Botões (Gerar/Baixar Etiqueta) */
+    /* Este seletor pega o container do form e do link de download */
+    .page-header > div:last-child > div {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* Garantimos que o Form e os Botões ocupem 100% no toque */
+    .page-header form {
+        display: block;
+        width: 100%;
+    }
+
+    .btn-confirm-envio {
+        width: 100% !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px !important;
+        font-size: 0.75rem !important;
+        margin: 0 !important;
+    }
+}
+
+/* Ajuste extra para a Tabela de Itens não quebrar */
+@media (max-width: 768px) {
+    .items-section {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .items-table {
+        min-width: 600px;
     }
 }

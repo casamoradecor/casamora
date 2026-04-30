@@ -77,14 +77,14 @@
         </section>
 
         <section class="shoppable-secao">
-            <div class="shoppable-container" id="shoppable-area">
+            <div class="shoppable-container" id="shoppable-area"
+                 style="position: relative; line-height: 0; display: inline-block; width: 100%;">
 
-                <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado"
-                     class="shoppable-main-img" id="shoppable-img">
+                <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente"
+                     class="shoppable-main-img" id="shoppable-img" style="width: 100%; height: auto;">
 
                 @foreach($shoppablePoints ?? [] as $point)
-                    <div class="hotspot-dot"
-                         style="--hotspot-y: {{ $point->y_pos }}%; --hotspot-x: {{ $point->x_pos }}%;">
+                    <div class="hotspot-dot" style="top: {{ $point->y_pos }}%; left: {{ $point->x_pos }}%;">
 
                         <div class="hotspot-circle"></div>
 

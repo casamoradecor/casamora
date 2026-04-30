@@ -1,5 +1,5 @@
 /* =========================================
-   PÁGINA DE CHECKOUT - CASA MORÁ 
+   PÁGINA DE CHECKOUT - CASA MORÁ
    ========================================= */
 
 .checkout-container {
@@ -344,75 +344,135 @@ input[readonly] {
     display: block;
 }
 
-/* Responsividade */
 @media (max-width: 900px) {
     .checkout-container {
         flex-direction: column;
-        padding-top: 120px;
+        padding: 100px 15px 60px;
+        gap: 40px;
     }
 
     .checkout-resumo {
+        order: 1;
         width: 100%;
         align-self: stretch;
+        padding: 25px 20px;
+        border-radius: 4px;
+        background: #F9F9F9;
+    }
+
+    .checkout-form-section {
+        order: 2;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .checkout-container h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .enderecos-salvos-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .card-endereco {
+        padding: 18px;
+        border-radius: 4px;
+    }
+
+    .checkout-form {
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .address-grid {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 0;
+    }
+
+    .address-grid .form-group {
+        width: 100%;
+    }
+
+    .input-checkout {
+        font-size: 0.95rem;
+        padding: 10px 0;
+    }
+
+    .input-disabled {
+        padding: 12px;
+        background: #F0F0F0;
+        font-size: 0.85rem;
+    }
+
+    .checkout-item {
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    .checkout-item img {
+        width: 60px;
+        height: 75px;
+    }
+
+    .checkout-item-info h4 {
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+
+    .frete-radio-item {
+        padding: 12px;
+    }
+
+    .frete-radio-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .f-nome-chk { font-size: 0.75rem; }
+    .f-preco-chk { font-size: 0.8rem; }
+
+    /* TOTAL E BOTÃO */
+    .checkout-total-row {
+        font-size: 1.2rem;
+        padding-top: 15px;
+        margin-top: 20px;
+    }
+
+    .btn-confirmar {
+        padding: 18px;
+        font-size: 0.85rem;
+        margin-top: 20px;
+        position: sticky;
+        bottom: 0;
     }
 }
 
 @media (max-width: 600px) {
     .checkout-container {
-        padding: 96px 16px 56px;
+        padding: 90px 16px 40px;
     }
 
-    .checkout-container h2 {
-        font-size: 1.45rem;
-        margin-bottom: 22px;
+    .btn-qtd-mini {
+        width: 30px;
+        height: 30px;
     }
 
-    .address-grid {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .enderecos-salvos-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .checkout-resumo {
-        padding: 24px 18px;
-    }
-
-    .checkout-item {
-        gap: 14px;
-        align-items: flex-start;
-    }
-
-    .checkout-item img {
-        width: 70px;
-        height: 88px;
-        flex-shrink: 0;
-    }
-
-    .frete-radio-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .checkout-total-row {
-        font-size: 1.1rem;
-        gap: 16px;
-    }
-
-    .btn-confirmar {
-        padding: 16px;
-        letter-spacing: 1px;
+    .qtd-numero-mini {
+        width: 25px;
     }
 }
 
 @media (max-width: 480px) {
-    .checkout-item-info {
-        min-width: 0;
+    .checkout-total-row {
+        font-size: 1.1rem;
     }
 
-    .checkout-item-info h4 {
-        overflow-wrap: anywhere;
+    .checkout-item-price {
+        font-size: 0.9rem;
     }
 }

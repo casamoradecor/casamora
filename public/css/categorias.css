@@ -277,18 +277,78 @@ textarea.input-mora {
     text-transform: lowercase;
 }
 
-/* 7. RESPONSIVIDADE */
+/* =========================================
+   RESPONSIVIDADE: GESTÃO DE CATEGORIAS (FIX)
+   ========================================= */
+
 @media (max-width: 1024px) {
-    .categorias-grid {
-        grid-template-columns: 1fr; /* Empilha no tablet/mobile */
+    /* 1. ESTRUTURA E ESPAÇAMENTO */
+    .admin-main {
+        padding: 20px 15px 40px;
     }
 
-    .admin-main {
-        padding: 30px 20px;
+    .categorias-grid {
+        grid-template-columns: 1fr; /* Empilha os cards verticalmente */
+        gap: 25px;
+        margin-bottom: 30px; /* Espaço entre os cards e o botão final */
+    }
+
+    .categorias-form-card,
+    .categorias-table-card {
+        padding: 25px 20px;
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 2. TABELA (AJUSTE DE ALINHAMENTO) */
+    .admin-table {
+        table-layout: auto; /* Permite que as colunas se ajustem ao conteúdo */
+    }
+
+    .admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: auto; }
+    .admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 70px; }
+    .admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: 90px; }
+
+    .td-actions {
+        padding-left: 0 !important; /* Remove o padding que causava o agrupamento */
+        justify-content: flex-end;
+        gap: 15px;
+    }
+
+    /* 3. O BOTÃO DE SALVAR (AÇÃO FINAL) */
+    .categorias-footer-actions {
+        display: block;
+        width: 100%;
+        margin-top: 20px;
+        padding: 0 0 50px 0; /* Respiro extra no fim da página */
     }
 
     .btn-save-mora-final {
-        width: 100%;
+        width: 100%; /* Ocupa a largura total no mobile */
         justify-content: center;
+        padding: 20px; /* Botão mais robusto para o polegar */
+        font-size: 0.85rem;
+        border-radius: 50px;
+        box-shadow: 0 10px 20px rgba(59, 31, 21, 0.1);
+        margin: 0;
+    }
+
+    /* Ajuste para o Modal no Mobile */
+    .modal-mora-content {
+        width: 92%;
+        padding: 30px 20px;
+    }
+}
+
+/* Ajuste fino para telas muito pequenas */
+@media (max-width: 480px) {
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .status-badge {
+        padding: 4px 10px;
+        font-size: 0.6rem;
     }
 }

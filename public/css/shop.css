@@ -275,15 +275,18 @@
     min-width: 160px;
 }
 
-@media (max-width: 768px) {
+/* =========================================
+   RESPONSIVIDADE SENIOR - SHOP / COLEÇÃO
+   ========================================= */
+
+@media (max-width: 900px) {
     .shop-header {
-        padding-top: 104px;
-        padding-bottom: 28px;
+        padding: 100px var(--space-page) 30px;
     }
 
     .shop-filters-bar {
-        margin-bottom: 24px;
-        padding: 0 0 20px;
+        padding: 0 0 15px;
+        margin-bottom: 25px;
     }
 
     .filter-form {
@@ -297,29 +300,83 @@
     }
 
     .select-groups {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Selects lado a lado no tablet/mobile */
         gap: 10px;
     }
 
     .select-groups select {
         width: 100%;
         min-width: 0;
+        font-size: 0.65rem;
+        padding: 12px 10px;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
+    /* O SEGREDO DA GRADE: 2 colunas no mobile */
     .products-grid {
-        grid-template-columns: 1fr;
-        padding-left: 16px;
-        padding-right: 16px;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px 15px; /* Espaço maior vertical que horizontal */
+        padding: 10px 15px 60px;
     }
 
     .shop-card-info {
-        flex-direction: column;
-        gap: 4px;
+        flex-direction: column; /* Título em cima, preço embaixo para não esmagar */
+        gap: 5px;
+        margin-top: 10px;
     }
 
+    .shop-card-title {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        white-space: normal; /* Permite quebrar linha se o nome for grande */
+        height: 2.6em; /* Trava a altura para manter o alinhamento da grade */
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .shop-card-price {
+        font-size: 0.8rem;
+    }
+
+    .shop-card-sub {
+        font-size: 0.65rem;
+        margin-top: 2px;
+    }
+
+    /* Ajuste dos Botões na Grade Dupla */
     .shop-card-actions {
-        flex-direction: column;
+        flex-direction: column; /* Botões empilhados para caber na coluna estreita */
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .shop-card .btn-comprar {
+        padding: 10px 4px;
+        font-size: 0.6rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Badge de esgotado menor */
+    .badge-sold-out {
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        font-size: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Em telas muito pequenas (iPhone SE), reduzimos a lateral para a foto brilhar */
+    .products-grid {
+        padding: 10px 10px 40px;
+        gap: 20px 10px;
+    }
+
+    .shop-card .btn-comprar {
+        font-size: 0.55rem;
     }
 }
