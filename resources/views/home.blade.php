@@ -38,17 +38,21 @@
                         @endphp
 
                         <div class="produto-card">
-                            <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">
+                            <a href="{{ route('produto.show', $produto->id) }}" class="produto-link">
+                                <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">
+                            </a>
+
                             <div class="produto-info">
                                 <h3 class="produto-titulo">{{ $produto->nome }}</h3>
                                 <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
                             </div>
 
-                            <button class="btn-comprar"
+                            <button class="btn btn-comprar"
                                     data-id="{{ $produto->id }}"
                                     data-nome="{{ $produto->nome }}"
                                     data-preco="{{ $produto->preco }}"
-                                    data-imagem="{{ $urlFinal }}"> adicionar ao carrinho
+                                    data-imagem="{{ $urlFinal }}">
+                                adicionar ao carrinho
                             </button>
                         </div>
                     @endforeach

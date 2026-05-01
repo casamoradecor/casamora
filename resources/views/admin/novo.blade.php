@@ -106,7 +106,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-save-mora">
+                    <button type="submit" class="btn btn-marrom">
                         salvar produto
                     </button>
                 </form>

@@ -23,8 +23,8 @@
             </header>
 
             <div class="admin-header-list" style="flex-direction: row; margin-bottom: 30px;">
-                <a href="{{ route('admin.produtos.novo') }}" class="btn-add-mora">
-                    <i class="fa-solid fa-plus"></i> adicionar produto
+                <a href="{{ route('admin.produtos.novo') }}" class="btn btn-marrom">
+                    adicionar produto
                 </a>
             </div>
 
@@ -88,11 +88,11 @@
                 <strong id="nomeProdutoModal" class="modal-item-highlight"></strong>
             </p>
             <div class="actions-flex" style="justify-content: center; margin-top: 20px;">
-                <button onclick="fecharModal()" class="btn-modal btn-cancel">cancelar</button>
+                <button onclick="fecharModal()" class="btn btn-branco">cancelar</button>
                 <form id="formDelete" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn-modal btn-confirm">excluir agora</button>
+                    <button type="submit" class="btn btn-marrom">excluir agora</button>
                 </form>
             </div>
         </div>

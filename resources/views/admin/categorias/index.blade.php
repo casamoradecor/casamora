@@ -37,8 +37,8 @@
                             <textarea id="temp_descricao" class="input-mora" rows="3"
                                       placeholder="Breve resumo..."></textarea>
                         </div>
-                        <button type="button" class="btn-add-mora btn-full" onclick="adicionarNaLista()">
-                            <i class="fa-solid fa-plus"></i> incluir na lista
+                        <button type="button" class="btn btn-marrom" onclick="adicionarNaLista()">
+                            incluir na lista
                         </button>
                     </section>
 
@@ -83,8 +83,8 @@
                 </div>
 
                 <div class="categorias-footer-actions">
-                    <button type="submit" class="btn-save-mora-final">
-                        <i class="fa-solid fa-floppy-disk"></i> salvar alterações
+                    <button type="submit" class="btn btn-marrom">
+                        salvar alterações
                     </button>
                 </div>
             </form>
@@ -99,8 +99,8 @@
             <div id="excluirNomeItem" class="modal-mora-item-name"></div>
 
             <div class="modal-mora-actions">
-                <button type="button" class="btn-modal-cancel" onclick="fecharModal('modalExcluir')">cancelar</button>
-                <button type="button" class="btn-modal-execute" id="btnConfirmarExclusao">excluir agora</button>
+                <button type="button" class="btn btn-branco" onclick="fecharModal('modalExcluir')">cancelar</button>
+                <button type="button" class="btn btn-marrom" id="btnConfirmarExclusao">excluir</button>
             </div>
         </div>
     </div>
@@ -116,8 +116,8 @@
             <input type="hidden" id="edit_id">
 
             <div class="modal-mora-actions">
-                <button type="button" class="btn-modal-cancel" onclick="fecharModal('modalEditar')">cancelar</button>
-                <button type="button" class="btn-modal-execute" onclick="salvarEdicaoModal()">salvar</button>
+                <button type="button" class="btn btn-branco" onclick="fecharModal('modalEditar')">cancelar</button>
+                <button type="button" class="btn btn-marrom" onclick="salvarEdicaoModal()">salvar</button>
             </div>
         </div>
     </div>

@@ -89,8 +89,8 @@
                                     </div>
 
                                     {{-- BOTÃO 2: SALVAR O VÍNCULO --}}
-                                    <button type="submit" class="btn-confirm"
-                                            style="background: #3d2b1f; color: #fff; border: 1px solid #fff; padding: 8px; border-radius: 50px; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase; position: relative; z-index: 10000; pointer-events: auto !important;">
+                                    <button type="submit" class="btn btn-marrom"
+                                            style="background: #3d2b1f; color: #fff; border: 1px; padding: 8px; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase; position: relative; z-index: 10000; pointer-events: auto !important;">
                                         salvar link {{ $i }}
                                     </button>
                                 </form>

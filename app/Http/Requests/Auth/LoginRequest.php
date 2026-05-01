@@ -21,14 +21,21 @@ class LoginRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Por favor, informe o seu e-mail.',
+            'email.email' => 'Insira um e-mail válido.',
+            'password.required' => 'A senha é obrigatória para acessar sua conta.',
         ];
     }
 
@@ -45,7 +52,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.',
             ]);
         }
 
@@ -66,12 +73,10 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $minutos = ceil($seconds / 60);
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => "Muitas tentativas de login incorretas. Por segurança, tente novamente em {$minutos} minuto(s).",
         ]);
     }
 

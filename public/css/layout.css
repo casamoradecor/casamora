@@ -435,73 +435,95 @@
 }
 
 @media (max-width: 768px) {
-  .site-footer {
-    padding: 32px 20px 14px;
-    margin-top: 32px;
-  }
+    .site-footer {
+        padding: 32px 20px 14px;
+        margin-top: 32px;
+    }
 
-  .footer-inner {
-    flex-direction: column;
-    gap: 22px;
-    padding-bottom: 20px;
-    text-align: left;
-  }
+    /* Mudamos de Flexbox para Grid no mobile para organizar as áreas */
+    .footer-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+        grid-template-areas:
+      "news news"      /* Linha 1: Newsletter ocupa ambas as colunas */
+      "nav policies"   /* Linha 2: Navegação à esquerda, Políticas à direita */
+      "social social"; /* Linha 3: Social ocupa ambas as colunas */
+        gap: 28px 16px;
+        padding-bottom: 20px;
+        text-align: left;
+    }
 
-  .footer-col {
-    min-width: 0;
-  }
+    /* Atribuímos cada coluna do HTML à sua área no Grid */
+    .footer-col.newsletter {
+        grid-area: news;
+    }
 
-  .footer-col h3 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
+    .footer-col.links:nth-of-type(2) {
+        grid-area: nav;
+    }
 
-  .footer-col p,
-  .footer-col.links a {
-    font-size: 0.8rem;
-  }
+    .footer-col.links:nth-of-type(3) {
+        grid-area: policies;
+    }
 
-  .newsletter {
-    padding-bottom: 4px;
-  }
+    .footer-col.social {
+        grid-area: social;
+        text-align: center !important; /* Força a centralização no mobile */
+        margin-top: 10px;
+    }
 
-  .news-form {
-    padding-bottom: 2px;
-  }
+    .footer-col {
+        min-width: 0;
+    }
 
-  .news-form input {
-    padding: 6px 0;
-  }
+    .footer-col h3 {
+        font-size: 0.95rem; /* Ligeiramente menor para as duas colunas */
+        margin-bottom: 12px;
+    }
 
-  .footer-col.social {
-    text-align: left;
-  }
+    .footer-col p,
+    .footer-col.links a {
+        font-size: 0.8rem;
+    }
 
-  .social-icons {
-    justify-content: flex-start;
-    gap: 18px;
-  }
+    .newsletter {
+        padding-bottom: 4px;
+    }
 
-  .social-icons a {
-    font-size: 1.2rem;
-  }
+    .news-form {
+        padding-bottom: 2px;
+    }
 
-  .footer-bottom {
-    padding-top: 12px;
-    font-size: 0.68rem;
-  }
+    .news-form input {
+        padding: 6px 0;
+    }
+
+    /* Centraliza também os ícones dentro da coluna social */
+    .social-icons {
+        justify-content: center !important;
+        gap: 24px;
+    }
+
+    .social-icons a {
+        font-size: 1.3rem;
+    }
+
+    .footer-bottom {
+        padding-top: 16px;
+        font-size: 0.7rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .site-footer {
-    padding: 28px 16px 14px;
-  }
+    .site-footer {
+        padding: 28px 16px 14px;
+    }
 
-  .footer-inner {
-    gap: 18px;
-  }
+    .footer-inner {
+        gap: 24px 10px; /* Reduz o espaço entre colunas em telemóveis muito pequenos */
+    }
 
-  .news-form input {
-    min-width: 0;
-  }
+    .news-form input {
+        min-width: 0;
+    }
 }

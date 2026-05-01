@@ -30,14 +30,29 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-       // 1. No Validation (dentro do método store):
+        // 1. Validação com mensagens customizadas para a Casa MORÁ:
         $request->validate([
-            'name' => ['required', 'string', 'min:3', 'max:255', 'regex:/^[a-zA-Z\s]+$/'], // Apenas letras no nome
-            'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:'.User::class], // Valida se o domínio do e-mail existe
-            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()->symbols()->numbers()], // Exige símbolos e números
-            'cpf' => ['required', 'string', 'unique:'.User::class, new CpfValido], // Usa nossa regra matemática
-            'telefone' => ['required', 'string', 'regex:/^\(\d{2}\)\s\d{4,5}-\d{4}$/'], // Valida formato (00) 00000-0000
-]);
+            'name' => ['required', 'string', 'min:3', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()->min(8)->symbols()->numbers()],
+            'cpf' => ['required', 'string', 'unique:'.User::class, new CpfValido],
+            'telefone' => ['required', 'string', 'regex:/^\(\d{2}\)\s\d{4,5}-\d{4}$/'],
+        ], [
+            'name.required' => 'Por favor, informe o seu nome completo.',
+            'name.regex' => 'O nome deve conter apenas letras.',
+            'name.min' => 'O nome deve ter no mínimo 3 caracteres.',
+            'email.required' => 'O e-mail é obrigatório.',
+            'email.unique' => 'Este e-mail já foi cadastrado na Casa MORÁ.',
+            'email.email' => 'Insira um e-mail válido.',
+            'password.required' => 'A senha é obrigatória para proteger a sua conta.',
+            'password.confirmed' => 'As senhas digitadas não são iguais.',
+            'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
+            'password' => 'A senha deve conter pelo menos um número e um símbolo (ex: @, #, !).',
+            'cpf.required' => 'O CPF é obrigatório.',
+            'cpf.unique' => 'Este CPF já está cadastrado em outra conta.',
+            'telefone.required' => 'O telefone é obrigatório.',
+            'telefone.regex' => 'O número de telefone é inválido. Verifique se o formato está correto.',
+        ]);
 
         // 2. Na criação do usuário:
         $user = User::create([

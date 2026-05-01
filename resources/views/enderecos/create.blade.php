@@ -23,7 +23,7 @@
         <section class="dashboard-content">
             <header class="dashboard-header">
                 <h2>NOVO ENDEREÇO</h2>
-                <a href="{{ route('enderecos.index') }}" class="btn-pill">
+                <a href="{{ route('enderecos.index') }}" class="btn btn-ghost">
                     voltar para lista
                 </a>
             </header>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="form-submit">
-                    <button type="submit" class="btn-pill full-width">salvar endereço de entrega</button>
+                    <button type="submit" class="btn btn-marrom">salvar endereço de entrega</button>
                 </div>
             </form>
         </section>

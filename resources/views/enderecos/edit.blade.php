@@ -23,7 +23,7 @@
         <section class="dashboard-content">
             <header class="dashboard-header">
                 <h2>EDITAR ENDEREÇO</h2>
-                <a href="{{ route('enderecos.index') }}" class="btn-pill">
+                <a href="{{ route('enderecos.index') }}" class="btn btn-ghost">
                     cancelar edição
                 </a>
             </header>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="form-submit">
-                    <button type="submit" class="btn-pill full-width">atualizar endereço</button>
+                    <button type="submit" class="btn btn-marrom">atualizar endereço</button>
                 </div>
             </form>
         </section>

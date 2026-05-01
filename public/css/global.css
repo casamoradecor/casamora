@@ -78,3 +78,101 @@ button,
 .price-tag, .carrinho-total span {
     letter-spacing: 0.5px;
 }
+
+/* =========================================
+   SISTEMA DE BOTÕES - CASA MORÁ
+   ========================================= */
+
+/* 1. Classe Base (Estrutura e Tipografia) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-family: var(--font-base);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase !important; /* Adicione o !important aqui */
+    letter-spacing: 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    min-width: 120px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* 2. Botão Primário (Fundo Marrom) */
+.btn-marrom {
+    background-color: var(--color-brand);
+    color: #ffffff !important;
+    border-color: var(--color-brand);
+}
+
+.btn-marrom:hover {
+    background-color: var(--color-sub);
+    border-color: var(--color-sub);
+    transform: translateY(-2px); /* Efeito suave de flutuação */
+    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2); /* Sombra elegante */
+}
+
+.btn-comprar {
+    background-color: var(--color-brand);
+    color: #ffffff !important;
+    border-color: var(--color-brand);
+}
+
+.btn-comprar:hover {
+    background-color: var(--color-sub);
+    border-color: var(--color-sub);
+    transform: translateY(-2px); /* Efeito suave de flutuação */
+    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2); /* Sombra elegante */
+}
+
+.botao-calc-frete{
+    background-color: var(--color-brand);
+    color: #ffffff !important;
+    border-color: var(--color-brand);
+}
+
+/* 3. Botão Secundário (Fundo Branco com Borda) */
+.btn-branco {
+    background-color: #ffffff;
+    color: var(--color-brand) !important;
+    border-color: var(--color-brand);
+}
+
+.btn-branco:hover {
+    background-color: var(--color-brand);
+    color: #ffffff !important;
+}
+
+/* 4. Botão Estilizado (Ghost / Minimalista) */
+.btn-ghost {
+    background-color: transparent;
+    color: var(--color-text) !important;
+    padding: 12px 0; /* Remove padding lateral para alinhar com o texto da página */
+    min-width: auto;
+    position: relative;
+}
+
+/* Linha inferior animada do Botão Ghost */
+.btn-ghost::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 8px;
+    left: 0;
+    background-color: var(--color-brand);
+    transition: width 0.3s ease;
+}
+
+.btn-ghost:hover {
+    color: var(--color-brand) !important;
+}
+
+.btn-ghost:hover::after {
+    width: 100%; /* A linha sublinha o texto suavemente ao passar o mouse */
+}

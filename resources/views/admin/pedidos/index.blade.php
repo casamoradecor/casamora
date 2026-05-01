@@ -55,7 +55,7 @@
                             </td>
                             <td style="font-weight: 600; text-transform: uppercase">R$ {{ number_format($p->valor_total, 2, ',', '.') }}</td>
                             <td style="text-align: center;">
-                                <a href="{{ route('admin.pedidos.show', $p->id) }}" class="btn-detalhes">
+                                <a href="{{ route('admin.pedidos.show', $p->id) }}" class="btn btn-branco">
                                     Ver Detalhes
                                 </a>
                             </td>

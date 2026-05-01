@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="coluna-botoes">
-                        <button type="button" class="botao-mora-secundario" id="btn-add-carrinho"
+                        <button type="button" class="btn btn-branco" id="btn-add-carrinho"
                                 onclick="adicionarComQtd(false)"
                                 data-id="{{ $produto->id }}"
                                 data-nome="{{ $produto->nome }}"
@@ -68,7 +68,7 @@
                             adicionar ao carrinho
                         </button>
 
-                        <button type="button" class="botao-mora-primario" id="btn-finalizar-agora"
+                        <button type="button" class="btn btn-marrom" id="btn-finalizar-agora"
                                 onclick="adicionarComQtd(true)">
                             finalizar compra
                         </button>
@@ -82,7 +82,7 @@
                     <div class="grupo-input-frete">
                         <input type="text" id="cep-destino" placeholder="00000-000" maxlength="8"
                                class="input-frete">
-                        <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="botao-calc-frete"
+                        <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="btn botao-calc-frete"
                                 >
                             Calcular
                         </button>

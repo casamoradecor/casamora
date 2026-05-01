@@ -23,8 +23,8 @@
         <section class="dashboard-content">
             <header class="dashboard-header">
                 <h2 style="font-family: var(--font-title),sans-serif">MEUS ENDEREÇOS</h2>
-                <a href="{{ route('enderecos.create') }}" class="btn-add-mora">
-                    <i class="fa-solid fa-plus"></i> adicionar novo endereço
+                <a href="{{ route('enderecos.create') }}" class="btn btn-marrom">
+                     adicionar novo endereço
                 </a>
             </header>
 
@@ -78,8 +78,8 @@
                 @csrf
                 @method('DELETE')
                 <div class="modal-buttons">
-                    <button type="button" class="btn-cancel" onclick="closeDeleteModal()">CANCELAR</button>
-                    <button type="submit" class="btn-confirm">EXCLUIR</button>
+                    <button type="button" class="btn btn-branco" onclick="closeDeleteModal()">CANCELAR</button>
+                    <button type="submit" class="btn btn-marrom">EXCLUIR</button>
                 </div>
             </form>
         </div>

@@ -14,7 +14,7 @@
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: clamp(32px, 5vw, 50px) 20px;
     padding: 20px var(--space-page) 80px;
     background-color: #fff;
@@ -33,7 +33,6 @@
     object-fit: cover;
     margin-bottom: 15px;
     background-color: #f9f9f9;
-    /* TRAVA DE MOVIMENTO NA IMAGEM */
     transition: none !important;
     transform: none !important;
 }
@@ -101,54 +100,19 @@
 
 .shop-card-actions {
     display: flex;
-    gap: 10px;
+    flex-direction: row; /* A mágica acontece aqui: alinha lado a lado */
+    gap: 5px; /* Espaço reduzido para caberem melhor */
     margin-top: 15px;
-    opacity: 1;
+    width: 100%;
 }
 
-.shop-card .btn-comprar,
-.btn-ver-mais {
-    flex: 1;
-    padding: 12px 5px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: lowercase;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: var(--font-base);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: none !important;
-    transform: none !important;
-    min-width: 0;
-    text-align: center;
-}
-
-.shop-card .btn-comprar:hover,
-.btn-ver-mais:hover {
-    font-size: 0.6rem !important;
-    font-weight: 700 !important;
-    transform: none !important;
-}
-
-.shop-card .btn-comprar {
-    background: var(--color-brand);
-    color: #fff;
-    border: 1px solid var(--color-brand);
-}
-
-.btn-ver-mais {
-    background: #fff;
-    color: var(--color-brand);
-    border: 1px solid var(--color-brand);
-}
-
-.ver-mais-btn {
-    background: #fff !important;
-    color: #333 !important;
-    border: 1px solid #ddd !important;
+.shop-card-actions .btn {
+    flex: 1; /* Faz com que os dois botões tenham exatamente o mesmo tamanho */
+    padding: 10px 5px !important; /* Padding lateral mínimo para não expulsar o texto */
+    font-size: 0.58rem !important; /* Fonte levemente menor para garantir que o texto caiba */
+    white-space: nowrap !important; /* Mantém o texto numa linha só */
+    min-width: unset !important;
+    letter-spacing: 0px !important; /* Remove o espaçamento entre letras para ganhar espaço */
 }
 
 .badge-sold-out {
@@ -169,7 +133,7 @@
     max-width: var(--container-base);
     margin: 0 auto 40px;
     padding: 0 5% 20px;
-    border-bottom: 1px solid #f0f0f0; /* Linha sutil de boutique */
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .filter-form {
@@ -191,14 +155,13 @@
 
 .search-input {
     width: 100%;
-    border: none;
-    border-bottom: 1px solid var(--color-brand);
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
     padding: 8px 0;
     font-size: 0.8rem;
     font-family: var(--font-base);
     text-transform: lowercase;
-    outline: none;
-    background: transparent;
     color: var(--color-text);
     flex: 1;
     min-width: 0;
@@ -225,13 +188,8 @@
 }
 
 .btn-search-icon:hover {
-    opacity: 0.7; /* Apenas uma leve mudança de tom ao passar o mouse */
+    opacity: 0.7;
     transform: none !important;
-}
-
-/* Garante que o input não tenha a borda dupla agora que o container tem a borda */
-.search-input {
-    border: none !important;
 }
 
 .btn-clear-search {
@@ -253,22 +211,15 @@
     transform: none !important;
 }
 
-/* Garante que o input não quebre com os novos botões */
-.search-input {
-    border: none !important;
-    outline: none !important;
-    background: transparent !important;
-}
-
 .select-groups select {
     border: 1px solid #e2e2e2;
     background: #fff;
     padding: 10px 15px;
     font-size: 0.7rem;
     font-family: var(--font-base);
-    text-transform: uppercase; /* Toque de site de luxo */
+    text-transform: uppercase;
     letter-spacing: 1px;
-    border-radius: 4px; /* Casando com o seu border-radius dos botões */
+    border-radius: 4px;
     outline: none;
     cursor: pointer;
     color: #444;
@@ -301,7 +252,7 @@
 
     .select-groups {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Selects lado a lado no tablet/mobile */
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
@@ -314,15 +265,14 @@
 }
 
 @media (max-width: 650px) {
-    /* O SEGREDO DA GRADE: 2 colunas no mobile */
     .products-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 30px 15px; /* Espaço maior vertical que horizontal */
+        gap: 30px 15px;
         padding: 10px 15px 60px;
     }
 
     .shop-card-info {
-        flex-direction: column; /* Título em cima, preço embaixo para não esmagar */
+        flex-direction: column;
         gap: 5px;
         margin-top: 10px;
     }
@@ -330,8 +280,8 @@
     .shop-card-title {
         font-size: 0.75rem;
         line-height: 1.3;
-        white-space: normal; /* Permite quebrar linha se o nome for grande */
-        height: 2.6em; /* Trava a altura para manter o alinhamento da grade */
+        white-space: normal;
+        height: 2.6em;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -347,20 +297,17 @@
         margin-top: 2px;
     }
 
-    /* Ajuste dos Botões na Grade Dupla */
+    /* Ajuste dos Botões na Grade Dupla (Mobile) */
     .shop-card-actions {
-        flex-direction: column; /* Botões empilhados para caber na coluna estreita */
-        gap: 8px;
+        gap: 6px; /* Ainda mais juntinhos no celular */
         margin-top: 12px;
     }
 
-    .shop-card .btn-comprar {
-        padding: 10px 4px;
-        font-size: 0.6rem;
-        letter-spacing: 0.5px;
+    .shop-card-actions .btn {
+        padding: 8px 4px !important;
+        font-size: 0.55rem !important; /* Força a letra menor no celular */
     }
 
-    /* Badge de esgotado menor */
     .badge-sold-out {
         top: 8px;
         right: 8px;
@@ -370,13 +317,12 @@
 }
 
 @media (max-width: 400px) {
-    /* Em telas muito pequenas (iPhone SE), reduzimos a lateral para a foto brilhar */
     .products-grid {
         padding: 10px 10px 40px;
         gap: 20px 10px;
     }
 
-    .shop-card .btn-comprar {
-        font-size: 0.55rem;
+    .shop-card-actions .btn {
+        font-size: 0.5rem !important; /* Telas minúsculas */
     }
 }

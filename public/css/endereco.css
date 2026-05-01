@@ -307,9 +307,12 @@
         margin: 0;
         text-transform: lowercase;
     }
+    .btn-ghost{
+        justify-content: right;
+    }
 
     /* Botões de Ação (Adicionar ou Voltar) */
-    .btn-add-mora,
+    .btn-marrom,
     .dashboard-header .btn-pill {
         order: 3;
         width: fit-content;

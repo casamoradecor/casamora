@@ -80,7 +80,7 @@
                 <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
 
                 <div class="shop-card-actions">
-                    <button class="btn-comprar"
+                    <button class="btn btn-comprar"
                             data-id="{{ $produto->id }}"
                             data-nome="{{ $produto->nome }}"
                             data-preco="{{ $produto->preco }}"
@@ -89,8 +89,7 @@
                         adicionar ao carrinho
                     </button>
 
-                    <a href="{{ route('produto.show', $produto->id) }}" class="btn-comprar ver-mais-btn"
-                       >
+                    <a href="{{ route('produto.show', $produto->id) }}" class="btn btn-branco">
                         ver mais
                     </a>
                 </div>

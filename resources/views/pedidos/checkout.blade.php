@@ -120,7 +120,7 @@
                     <div id="lista-fretes-checkout"></div>
                 </div>
 
-                <button type="submit" class="btn-confirmar" id="btn-finalizar" disabled>
+                <button type="submit" class="btn btn-marrom" id="btn-finalizar" disabled>
                     CONFIRMAR PEDIDO
                 </button>
             </form>

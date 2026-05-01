@@ -124,7 +124,7 @@
                     @csrf
                     <input type="text" name="codigo_rastreio" class="dispatch-input" placeholder="Ex: BR123456789AA"
                            required>
-                    <button type="submit" class="btn-confirm-envio">Confirmar Envio</button>
+                    <button type="submit" class="btn btn-branco">Confirmar Envio</button>
                 </form>
             </div>
         </main>

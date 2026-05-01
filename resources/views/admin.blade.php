@@ -67,7 +67,7 @@
                         <i class="fa-solid fa-image"></i>
                         <h4>Visual da Home</h4>
                         <p>Troque o banner principal, a imagem do ambiente ou as categorias.</p>
-                        <a href="{{ route('admin.visual.edit') }}" class="btn-admin-primary" style="font-family: 'Poppins', sans-serif">
+                        <a href="{{ route('admin.visual.edit') }}" class="btn btn-marrom" style="font-family: 'Poppins', sans-serif">
                             editar visual
                         </a>
                     </div>
@@ -76,7 +76,9 @@
                         <i class="fa-solid fa-box-open"></i>
                         <h4>Estoque de Produtos</h4>
                         <p>Adicione novos itens ao carrossel ou ajuste preços e quantidades.</p>
-                        <button class="btn-admin-primary" style="font-family: 'Poppins', sans-serif">gerenciar itens</button>
+                        <a href="{{ route('admin.produtos.create') }}" class="btn btn-marrom" style="font-family: 'Poppins', sans-serif">
+                            gerenciar itens
+                        </a>
                     </div>
                 </div>
             </div>
