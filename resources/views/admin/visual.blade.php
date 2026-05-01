@@ -173,8 +173,8 @@
                         </select>
 
                         <div class="modal-buttons">
-                            <button type="button" class="btn-cancel" onclick="fecharModalHotspot()">cancelar</button>
-                            <button type="submit" class="btn-confirm">salvar ponto</button>
+                            <button type="button" class="btn btn-branco" onclick="fecharModalHotspot()">cancelar</button>
+                            <button type="submit" class="btn btn-marrom">salvar ponto</button>
                         </div>
                     </form>
                 </div>
