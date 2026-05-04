@@ -10,23 +10,33 @@
     <main class="admin-visual-editor">
 
         {{-- SEÇÃO HERO --}}
-        <section class="hero edit-container">
-            <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
-            <div class="edit-overlay">
-                <form action="{{ route('admin.uploadBanner') }}" method="POST" enctype="multipart/form-data">
+        <section class="hero-admin-wrapper" style="margin-bottom: 40px;">
+            <div class="hero edit-container" style="position: relative;">
+                <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
+                <div class="edit-overlay">
+                    <form action="{{ route('admin.uploadBanner') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <label class="btn-edit-label">
+                            <i class="fa-solid fa-camera"></i> trocar banner principal
+                            <input type="file" name="hero_img" onchange="this.form.submit()" style="display: none;">
+                        </label>
+                    </form>
+                </div>
+                <div class="hero-overlay"></div>
+            </div>
+
+            <div class="hero-text-edit" style="padding-top: 5px; text-align: center;">
+                <form action="{{ route('admin.updateHeroText') }}" method="POST">
                     @csrf
-                    <label class="btn-edit-label">
-                        <i class="fa-solid fa-camera"></i> trocar banner principal
-                        <input type="file" name="hero_img" onchange="this.form.submit()" style="display: none;">
-                    </label>
+                    <input type="text" name="hero_text"
+                           value="{{$homeConfig->hero_text}}"
+                           onchange="this.form.submit()"
+                           class="input-invisivel"
+                           style="width: 100%; text-align: center; font-family: 'Poppins'; color: #3d2b1f; border: 1px dashed #ccc; padding: 10px;">
+                    <small style="color: #888; font-size: 0.6rem;">(clique fora para salvar o texto automaticamente)</small>
                 </form>
             </div>
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <p class="hero-sub">onde objetos transformam casas em moradas</p>
-            </div>
         </section>
-
         {{-- SEÇÃO DESTAQUE --}}
         <section class="destaque-produtos">
             <div class="destaque-imagem edit-container">
@@ -43,14 +53,37 @@
             </div>
 
             <div class="destaque-carrossel">
-                <div class="carrossel-track">
+                <button class="carrossel-btn btn-prev" id="btnPrev"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="carrossel-btn btn-next" id="btnNext"><i class="fa-solid fa-chevron-right"></i></button>
+
+                <div class="carrossel-track" id="carrosselTrack">
                     @foreach($produtos as $produto)
+                        @php
+                            $caminho = $produto->imagem;
+                            if ($caminho && str_contains($caminho, 'assets')) {
+                                $urlFinal = asset(ltrim($caminho, '/'));
+                            } else {
+                                $urlFinal = $caminho ? Storage::url($caminho) : asset('assets/vasomora.png');
+                            }
+                        @endphp
+
                         <div class="produto-card">
-                            <img src="{{ Storage::url($produto->imagem) }}" alt="{{ $produto->nome }}">
+                            <a href="{{ route('produto.show', $produto->id) }}" class="produto-link">
+                                <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}">
+                            </a>
+
                             <div class="produto-info">
                                 <h3 class="produto-titulo">{{ $produto->nome }}</h3>
                                 <p class="produto-preco">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
                             </div>
+
+                            <button class="btn btn-comprar"
+                                    data-id="{{ $produto->id }}"
+                                    data-nome="{{ $produto->nome }}"
+                                    data-preco="{{ $produto->preco }}"
+                                    data-imagem="{{ $urlFinal }}">
+                                adicionar ao carrinho
+                            </button>
                         </div>
                     @endforeach
                 </div>

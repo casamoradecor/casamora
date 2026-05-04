@@ -50,7 +50,7 @@ class CarrinhoController extends Controller
         if ($totalFinal > $produto->estoque) {
             return response()->json([
                 'success' => false,
-                'message' => "Estoque insuficiente. Temos apenas {$produto->estoque} unidades."
+                'message' => "Estoque insuficiente."
             ], 400);
         }
 

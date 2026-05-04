@@ -13,11 +13,11 @@
         </a>
 
         <div class="nav-group-title">Gestão</div>
-        <a href="{{ route('admin.produtos.create') }}" class="nav-item {{ request()->routeIs('admin.produtos.*') ? 'active' : '' }}">
-            <i class="fa-solid fa-box"></i> produtos
-        </a>
         <a href="{{ route('admin.categorias.index') }}" class="nav-item {{ request()->routeIs('admin.categorias.*') ? 'active' : '' }}">
             <i class="fa-solid fa-layer-group"></i> categorias
+        </a>
+        <a href="{{ route('admin.produtos.create') }}" class="nav-item {{ request()->routeIs('admin.produtos.*') ? 'active' : '' }}">
+            <i class="fa-solid fa-box"></i> produtos
         </a>
         <a href="{{ route('admin.vendas.index') }}" class="nav-item">
             <i class="fa-solid fa-receipt"></i> vendas

@@ -118,6 +118,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/sobre-nos/texto', [SobreNosController::class, 'updateTexto'])->name('admin.sobre.updateTexto');
     Route::post('/sobre-nos/foto/{id}', [SobreNosController::class, 'updateFoto'])->name('admin.sobre.updateFoto');
 
+    Route::post('/home/update-hero-text', [AdminController::class, 'updateHeroText'])->name('admin.updateHeroText');
+
     // Gestão de Vendas (Pedidos)
     Route::get('/vendas', [App\Http\Controllers\Admin\VendaController::class, 'index'])->name('admin.vendas.index');
     Route::get('/vendas/{id}', [App\Http\Controllers\Admin\VendaController::class, 'show'])->name('admin.pedidos.show');

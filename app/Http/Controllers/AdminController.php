@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Models\HomeConfig;
 use App\Models\ShoppablePoint;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HomeSlot;
@@ -145,8 +146,9 @@ class AdminController extends Controller
         $categorias = Categoria::all();
         $shoppablePoints = ShoppablePoint::with('produto')->get();
         $slots = HomeSlot::all()->keyBy('slot_number');
+        $homeConfig = HomeConfig::first() ?? new HomeConfig();
 
-        return view('admin.visual', compact('produtos', 'categorias', 'shoppablePoints', 'slots'));
+        return view('admin.visual', compact('produtos', 'categorias', 'shoppablePoints', 'slots','homeConfig'));
     }
 
     public function saveHotspot(Request $request)
@@ -242,5 +244,18 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('sucesso', 'ALTERAÇÕES SALVAS!');
+    }
+    public function updateHeroText(Request $request)
+    {
+        $request->validate([
+            'hero_text' => 'required|string|max:255'
+        ]);
+
+        \App\Models\HomeConfig::updateOrCreate(
+            ['id' => 1],
+            ['hero_text' => $request->hero_text]
+        );
+
+        return redirect()->back()->with('sucesso', 'TEXTO ATUALIZADO COM SUCESSO!');
     }
 }

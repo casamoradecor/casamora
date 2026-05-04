@@ -12,10 +12,12 @@
         <section class="hero">
             <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
             <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <p class="hero-sub">onde objetos transformam casas em moradas</p>
-            </div>
         </section>
+        <div class="hero-content">
+            <p class="hero-sub" style="margin: 0; color: #3d2b1f; font-family: 'Poppins';">
+                {{ $homeConfig->hero_text ?? 'onde objetos transformam casas em moradas' }}
+            </p>
+        </div>
 
         <section class="destaque-produtos">
             <div class="destaque-imagem">
@@ -133,6 +135,34 @@
                         if (!e.target.closest('.hotspot-dot')) {
                             hotspots.forEach(dot => dot.classList.remove('active'));
                         }
+                    });
+                });
+                document.addEventListener('DOMContentLoaded', function () {
+                    const track = document.getElementById('carrosselTrack');
+                    const btnPrev = document.getElementById('btnPrev');
+                    const btnNext = document.getElementById('btnNext');
+
+                    function checkOverflow() {
+                        if (!track || !btnPrev || !btnNext) return;
+                        const hasOverflow = track.scrollWidth > track.clientWidth;
+
+                        if (hasOverflow) {
+                            btnPrev.classList.add('show');
+                            btnNext.classList.add('show');
+                        } else {
+                            btnPrev.classList.remove('show');
+                            btnNext.classList.remove('show');
+                        }
+                    }
+                    checkOverflow();
+
+                    window.addEventListener('resize', checkOverflow);
+                    btnNext.addEventListener('click', () => {
+                        track.scrollBy({ left: 300, behavior: 'smooth' });
+                    });
+
+                    btnPrev.addEventListener('click', () => {
+                        track.scrollBy({ left: -300, behavior: 'smooth' });
                     });
                 });
             </script>
