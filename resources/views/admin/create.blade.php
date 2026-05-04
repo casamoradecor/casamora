@@ -18,7 +18,7 @@
                 <button class="mobile-menu-toggle" onclick="toggleAdminMenu()">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <h1>Produtos</h1>
+                <h1 style="font-family: 'Poppins', serif">Produtos</h1>
                 <span class="header-info-label">Gestão de Estoque</span>
             </header>
 

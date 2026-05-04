@@ -45,15 +45,18 @@
         </nav>
 
         <div class="header-actions" style="position: relative;">
-            <div class="busca-inline" id="buscaInline">
-                <input type="text" id="inputBusca" placeholder="o que você procura?" autocomplete="off">
-                <button class="icon" id="btnBusca">
+            <form action="{{ route('produtos.index') }}" method="GET" class="busca-inline" id="buscaInline">
+
+                <input type="text" name="busca" id="inputBusca" placeholder="o que você procura?" autocomplete="off">
+
+                <button type="submit" class="icon" id="btnBusca">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
-                <button class="icon" id="btnFecharBusca" style="display: none;">
+
+                <button type="button" class="icon" id="btnFecharBusca" style="display: none;">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-            </div>
+            </form>
 
             <a href="{{ Auth::check() ? route('dashboard') : route('login') }}" class="icon" aria-label="conta">
                 <i class="fa-regular fa-user"></i>
@@ -71,7 +74,7 @@
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-col newsletter">
-                <h3>Assine nossa Newsletter</h3>
+                <h3 style="font-family: 'Poppins', sans-serif">Assine nossa Newsletter</h3>
                 <p>Receba novidades e ofertas exclusivas da Casa MORÁ.</p>
                 <form class="news-form" onsubmit="event.preventDefault();">
                     <input type="email" placeholder="Seu melhor e-mail" required>
@@ -80,7 +83,7 @@
             </div>
 
             <div class="footer-col links">
-                <h3>Navegação</h3>
+                <h3 style="font-family: 'Poppins', sans-serif">Navegação</h3>
                 <a href="/">Início</a>
                 <a href="{{ route('produtos.index') }}">Produtos</a>
                 <a href="{{ route('sobre.nos') }}">Sobre nós</a>
@@ -88,14 +91,14 @@
             </div>
 
             <div class="footer-col links">
-                <h3>Políticas</h3>
+                <h3 style="font-family: 'Poppins', sans-serif">Políticas</h3>
                 <a href="#">Trocas e Devoluções</a>
                 <a href="#">Política de Privacidade</a>
                 <a href="#">Termos de Uso</a>
             </div>
 
             <div class="footer-col social">
-                <h3>Siga a Casa MORÁ</h3>
+                <h3 style="font-family: 'Poppins', sans-serif">Siga a Casa MORÁ</h3>
                 <div class="social-icons">
                     <a href="https://www.instagram.com/casamora.decora/" aria-label="Instagram"><i
                             class="fa-brands fa-instagram"></i></a>

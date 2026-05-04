@@ -23,7 +23,7 @@
         </aside>
 
         <section class="dashboard-content">
-            <h2 style="font-family: var(--font-title),serif">OLÁ, {{ explode(' ', Auth::user()->name)[0] }}</h2>
+            <h2 style="font-family: 'Poppins', serif">OLÁ, {{ explode(' ', Auth::user()->name)[0] }}</h2>
 
             <p style="margin-bottom: 40px; color: #555; font-size: 0.95rem; font-family: var(--font-base), sans-serif">
                 A partir do painel de controle de sua conta, você pode ver seus pedidos recentes, gerenciar seus
@@ -66,7 +66,7 @@
                         </a>
                     @else
                         <p>VOCÊ AINDA NÃO REALIZOU NENHUM PEDIDO.</p>
-                        <a href="{{ route('home') }}" class="btn-card-action">
+                        <a href="{{ route('produtos.index') }}" class="btn-card-action">
                             VER PRODUTOS
                         </a>
                     @endif

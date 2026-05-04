@@ -12,12 +12,13 @@
         <section class="hero">
             <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
             <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <p class="hero-sub" style="margin: 0; color: #3d2b1f; font-family: 'Poppins';">
+                    {{ $homeConfig->hero_text ?? 'onde objetos transformam casas em moradas' }}
+                </p>
+            </div>
         </section>
-        <div class="hero-content">
-            <p class="hero-sub" style="margin: 0; color: #3d2b1f; font-family: 'Poppins';">
-                {{ $homeConfig->hero_text ?? 'onde objetos transformam casas em moradas' }}
-            </p>
-        </div>
 
         <section class="destaque-produtos">
             <div class="destaque-imagem">

@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             <header class="admin-header">
-                <h1>Categorias</h1>
+                <h1 style="font-family: 'Poppins', serif; font-weight: bold">Categorias</h1>
                 <div class="user-info"><span>Painel de Controle</span></div>
             </header>
 
@@ -27,7 +27,7 @@
                 @csrf
                 <div class="categorias-grid">
                     <section class="categorias-form-card">
-                        <h3 class="categorias-title">incluir na lista</h3>
+                        <h3 class="categorias-title" style="font-family: 'Poppins', serif">incluir na lista</h3>
                         <div class="form-group">
                             <label class="label-mora">nome da categoria</label>
                             <input type="text" id="temp_nome" class="input-mora" placeholder="Ex: vasos de cerâmica">
@@ -43,7 +43,7 @@
                     </section>
 
                     <section class="categorias-table-card">
-                        <h3 class="categorias-title">categorias ativas</h3>
+                        <h3 class="categorias-title" style="font-family: 'Poppins', serif">categorias ativas</h3>
                         <table class="admin-table">
                             <thead>
                             <tr>

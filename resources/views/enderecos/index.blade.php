@@ -22,7 +22,7 @@
 
         <section class="dashboard-content">
             <header class="dashboard-header">
-                <h2 style="font-family: var(--font-title),sans-serif">MEUS ENDEREÇOS</h2>
+                <h2 style="font-family: 'Poppins', serif">MEUS ENDEREÇOS</h2>
                 <a href="{{ route('enderecos.create') }}" class="btn btn-marrom">
                      adicionar novo endereço
                 </a>

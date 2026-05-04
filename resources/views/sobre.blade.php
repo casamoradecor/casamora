@@ -9,7 +9,7 @@
     <main class="sobre-nos-page">
         <div class="container">
             <h1 class="sobre-titulo">
-                {{ $conteudo->titulo_header ?? 'Sobre Nós' }}
+                {{ $conteudo->titulo_header ?? 'Quem Somos?' }}
             </h1>
 
             <section class="secao-zigzag">

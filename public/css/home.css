@@ -20,21 +20,22 @@
 }
 
 .hero-content {
+    position: absolute;
+    bottom: clamp(30px, 5vh, 60px);
+    left: 0;
     width: 100%;
-    padding-top: 15px;
     text-align: center;
-    overflow: hidden;
+    z-index: 10;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .hero-sub {
-    margin-top: clamp(220px, 42vh, 350px);
     color: var(--color-sub);
     font-weight: 400;
     font-size: clamp(1rem, 2vw, 1.2rem);
-    z-index: 11;
     text-align: center;
     max-width: none;
-    padding: 0 16px;
     display: inline-block;
 }
 
@@ -187,7 +188,6 @@
   }
 
   .hero-sub {
-    margin-top: clamp(180px, 38vh, 280px);
     max-width: none;
     font-size: 0.88rem;
     line-height: 1.35;
@@ -223,7 +223,7 @@
 }
 
 .categorias-titulo {
-    font-family: var(--font-base), sans-serif;
+    font-family: var(--font-base);
     color: var(--color-brand);
     font-size: 2rem;
     margin-bottom: 40px;

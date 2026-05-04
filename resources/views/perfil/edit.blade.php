@@ -19,7 +19,7 @@
     </aside>
 
     <section class="dashboard-content">
-        <h2>MEU PERFIL</h2>
+        <h2 style="font-family: 'Poppins', serif">MEU PERFIL</h2>
 
         @if(session('sucesso'))
             <p style="color: green; font-weight: bold;">✓ {{ session('sucesso') }}</p>

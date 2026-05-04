@@ -11,13 +11,11 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* CLASSE ESPECIAL PARA A HOME */
 .site-header.header-transparent {
     background-color: transparent;
     box-shadow: none;
 }
 
-/* QUANDO SCROLLAR NA HOME, ELE VOLTA A SER BRANCO */
 .site-header.header-transparent.scrolled {
     background-color: #ffffff;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -100,7 +98,6 @@
   opacity: 0.7;
 }
 
-/* Container da busca */
 .busca-inline {
     display: flex;
     align-items: center;
@@ -108,13 +105,12 @@
     transition: all 0.4s ease;
 }
 
-/* O input começa zerado e invisível */
 #inputBusca {
     width: 0;
     opacity: 0;
     padding: 0;
     border: none;
-    border-bottom: 1px solid #3d2b1f; /* Linha fina estilo minimalista */
+    border-bottom: 1px solid #3d2b1f;
     background: transparent;
     transition: all 0.4s ease;
     outline: none;
@@ -122,16 +118,15 @@
     color: #3d2b1f;
 }
 
-/* Quando a classe .active for adicionada via JS */
 .busca-inline.active #inputBusca {
-    width: 200px; /* Largura que ele vai assumir */
+    width: 200px;
     opacity: 1;
     padding: 5px 10px;
     margin-right: 10px;
 }
 
-/* Ajuste nos ícones */
 #btnFecharBusca {
+    padding-left: 10px;
     cursor: pointer;
     font-size: 0.9rem;
     color: #3d2b1f;
@@ -145,7 +140,7 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     border-radius: 4px;
     margin-top: 10px;
-    display: none; /* Escondido até ter 3 letras */
+    display: none;
     z-index: 9999;
     overflow: hidden;
     max-height: min(420px, calc(100vh - 120px));
@@ -197,7 +192,7 @@
   display: none !important;
 }
 
-/* RESPONSIVIDADE HEADER */
+
 @media (max-width: 768px) {
   .site-header {
     padding: 0;
@@ -342,7 +337,7 @@
 }
 
 .footer-col h3 {
-  font-family: var(--font-title);
+  font-family: var(--font-title),sans-serif;
   font-size: 1.1rem;
   margin-bottom: 14px;
   color: #fff;
@@ -439,21 +434,18 @@
         padding: 32px 20px 14px;
         margin-top: 32px;
     }
-
-    /* Mudamos de Flexbox para Grid no mobile para organizar as áreas */
     .footer-inner {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+        grid-template-columns: 1fr 1fr;
         grid-template-areas:
-      "news news"      /* Linha 1: Newsletter ocupa ambas as colunas */
-      "nav policies"   /* Linha 2: Navegação à esquerda, Políticas à direita */
-      "social social"; /* Linha 3: Social ocupa ambas as colunas */
+      "news news"
+      "nav policies"
+      "social social";
         gap: 28px 16px;
         padding-bottom: 20px;
         text-align: left;
     }
 
-    /* Atribuímos cada coluna do HTML à sua área no Grid */
     .footer-col.newsletter {
         grid-area: news;
     }
@@ -468,7 +460,7 @@
 
     .footer-col.social {
         grid-area: social;
-        text-align: center !important; /* Força a centralização no mobile */
+        text-align: center !important;
         margin-top: 10px;
     }
 
@@ -477,7 +469,7 @@
     }
 
     .footer-col h3 {
-        font-size: 0.95rem; /* Ligeiramente menor para as duas colunas */
+        font-size: 0.95rem;
         margin-bottom: 12px;
     }
 
@@ -498,7 +490,6 @@
         padding: 6px 0;
     }
 
-    /* Centraliza também os ícones dentro da coluna social */
     .social-icons {
         justify-content: center !important;
         gap: 24px;
@@ -520,7 +511,7 @@
     }
 
     .footer-inner {
-        gap: 24px 10px; /* Reduz o espaço entre colunas em telemóveis muito pequenos */
+        gap: 24px 10px;
     }
 
     .news-form input {

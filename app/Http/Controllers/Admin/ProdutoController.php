@@ -99,7 +99,13 @@ class ProdutoController extends Controller
         $query = Produto::with('categoria');
 
         if ($request->filled('busca')) {
-            $query->where('nome', 'LIKE', '%' . $request->busca . '%');
+            $busca = $request->busca;
+            $query->where(function ($q) use ($busca) {
+                $q->where('nome', 'LIKE', '%' . $busca . '%')
+                    ->orWhereHas('categoria', function ($qCategoria) use ($busca) {
+                        $qCategoria->where('nome', 'LIKE', '%' . $busca . '%');
+                    });
+            });
         }
 
         if ($request->filled('categoria')) {
@@ -125,8 +131,14 @@ class ProdutoController extends Controller
             return response()->json([]);
         }
 
-        $produtos = \App\Models\Produto::where('nome', 'LIKE', "%{$termo}%")
-            ->limit(6) // Limitamos para não poluir a tela
+        $produtos = \App\Models\Produto::with('categoria')
+            ->where(function ($q) use ($termo) {
+                $q->where('nome', 'LIKE', "%{$termo}%")
+                    ->orWhereHas('categoria', function ($qCategoria) use ($termo) {
+                        $qCategoria->where('nome', 'LIKE', "%{$termo}%");
+                    });
+            })
+            ->limit(6)
             ->get()
             ->map(function($p) {
                 return [
@@ -134,7 +146,6 @@ class ProdutoController extends Controller
                     'nome' => $p->nome,
                     'preco' => number_format($p->preco, 2, ',', '.'),
                     'link' => route('produto.show', $p->id),
-                    // Lógica de imagem que você já usa:
                     'imagem' => $p->imagem ? \Storage::url($p->imagem) : asset('assets/vasomora.png')
                 ];
             });

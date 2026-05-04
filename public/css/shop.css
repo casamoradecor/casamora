@@ -1,15 +1,21 @@
 .shop-header {
     padding: clamp(110px, 12vw, 140px) var(--space-page) 40px;
     text-align: center;
-    background-color: #fff;
+    /*background-color: #fff;*/
 }
 
 .shop-header h1 {
-    font-family: var(--font-title);
+    font-family: var(--font-title), sans-serif;
     color: var(--color-brand);
     font-size: 2.5rem;
     text-transform: lowercase;
     margin: 0;
+}
+.products-grid-container {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 60px;
 }
 
 .products-grid {
@@ -17,7 +23,42 @@
     grid-template-columns: repeat(5, 1fr);
     gap: clamp(32px, 5vw, 50px) 20px;
     padding: 20px var(--space-page) 80px;
-    background-color: #fff;
+    width: 100%;
+    /*background-color: #fff;*/
+}
+.empty-state-search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 1;
+    padding: 60px 20px;
+    gap: 20px;
+}
+
+.empty-state-search p {
+    font-family: var(--font-base), sans-serif;
+    color: var(--color-sub);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.empty-state-search .btn-marrom {
+    background-color: #3d2b1f;
+    color: #fff;
+    padding: 10px 24px;
+    text-decoration: none;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: background 0.3s ease;
+}
+
+.empty-state-search .btn-marrom:hover {
+    background-color: #2a1d15;
 }
 
 .shop-card {

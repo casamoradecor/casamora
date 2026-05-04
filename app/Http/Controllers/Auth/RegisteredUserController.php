@@ -32,14 +32,14 @@ class RegisteredUserController extends Controller
     {
         // 1. Validação com mensagens customizadas para a Casa MORÁ:
         $request->validate([
-            'name' => ['required', 'string', 'min:3', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'name' => ['required', 'string', 'min:3', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()->min(8)->symbols()->numbers()],
             'cpf' => ['required', 'string', 'unique:'.User::class, new CpfValido],
             'telefone' => ['required', 'string', 'regex:/^\(\d{2}\)\s\d{4,5}-\d{4}$/'],
         ], [
             'name.required' => 'Por favor, informe o seu nome completo.',
-            'name.regex' => 'O nome deve conter apenas letras.',
+            'name.regex' => 'O nome deve conter apenas letras e espaços.',
             'name.min' => 'O nome deve ter no mínimo 3 caracteres.',
             'email.required' => 'O e-mail é obrigatório.',
             'email.unique' => 'Este e-mail já foi cadastrado na Casa MORÁ.',

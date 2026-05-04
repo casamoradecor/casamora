@@ -21,7 +21,7 @@
         </aside>
 
         <section class="dashboard-content">
-            <h2 style="font-family: var(--font-title), sans-serif">MEUS PEDIDOS</h2>
+            <h2 style="font-family: 'Poppins', serif">MEUS PEDIDOS</h2>
             <p>ACOMPANHE ABAIXO O HISTÓRICO DE TODAS AS SUAS COMPRAS REALIZADAS NA CASA MORÁ.</p>
 
             @if($pedidos->isEmpty())

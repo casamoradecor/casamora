@@ -1,4 +1,6 @@
-
+*{
+    text-transform: none !important;
+}
 .secao-zigzag {
     display: flex;
     align-items: center;
@@ -44,7 +46,7 @@
     text-align: left;
     margin-bottom: 60px;
     font-family: 'Poppins', sans-serif;
-    text-transform: uppercase;
+    text-transform: uppercase !important;
     letter-spacing: 4px;
     color: #3d2b1f;
     font-weight: 600;

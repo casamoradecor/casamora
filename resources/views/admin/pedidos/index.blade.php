@@ -18,7 +18,7 @@
                 <button style="padding: 10px" class="mobile-menu-toggle" onclick="toggleAdminMenu()">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <h1 style="font-family: 'Poppins', sans-serif; font-weight: 700;">Vendas & Pedidos</h1>
+                <h1 style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 2.2rem; color: var(--color-brand); margin: 0;">Vendas & Pedidos</h1>
                 <p style="color: #666; font-size: 0.9rem;">Gerencie as vendas confirmadas e prepare os despachos.</p>
             </header>
 

@@ -52,48 +52,56 @@
         </div>
     </header>
 
-    <main class="products-grid">
-        @foreach($produtos as $produto)
-            @php
-                $caminho = $produto->imagem;
-                if ($caminho && str_contains($caminho, 'assets')) {
-                    $urlFinal = asset(ltrim($caminho, '/'));
-                } else {
-                    $urlFinal = $caminho ? Storage::url($caminho) : asset('assets/vasomora.png');
-                }
-            @endphp
-
-            <div class="shop-card">
-                @if($produto->estoque <= 0)
-                    <span class="badge-sold-out">esgotado</span>
-                @endif
-                <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
-                    <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}" class="shop-card-image">
-                </a>
-
-                <div class="shop-card-info">
-                    <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
-                        <h3 class="shop-card-title">{{ $produto->nome }}</h3>
-                    </a>
-                    <span class="shop-card-price">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
-                </div>
-                <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
-
-                <div class="shop-card-actions">
-                    <button class="btn btn-comprar"
-                            data-id="{{ $produto->id }}"
-                            data-nome="{{ $produto->nome }}"
-                            data-preco="{{ $produto->preco }}"
-                            data-imagem="{{ $urlFinal }}"
-                            >
-                        adicionar ao carrinho
-                    </button>
-
-                    <a href="{{ route('produto.show', $produto->id) }}" class="btn btn-branco">
-                        ver mais
-                    </a>
-                </div>
+    <main class="products-grid-container">
+        @if($produtos->isEmpty())
+            <div class="empty-state-search">
+                <p>Infelizmente não temos nada disponível para a sua busca.</p>
+                <a href="{{ route('produtos.index') }}" class="btn btn-marrom">ver todas as coleções</a>
             </div>
-        @endforeach
+        @else
+            <div class="products-grid">
+                @foreach($produtos as $produto)
+                    @php
+                        $caminho = $produto->imagem;
+                        if ($caminho && str_contains($caminho, 'assets')) {
+                            $urlFinal = asset(ltrim($caminho, '/'));
+                        } else {
+                            $urlFinal = $caminho ? Storage::url($caminho) : asset('assets/vasomora.png');
+                        }
+                    @endphp
+
+                    <div class="shop-card">
+                        @if($produto->estoque <= 0)
+                            <span class="badge-sold-out">esgotado</span>
+                        @endif
+                        <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
+                            <img src="{{ $urlFinal }}" alt="{{ $produto->nome }}" class="shop-card-image">
+                        </a>
+
+                        <div class="shop-card-info">
+                            <a href="{{ route('produto.show', $produto->id) }}" class="shop-product-link">
+                                <h3 class="shop-card-title">{{ $produto->nome }}</h3>
+                            </a>
+                            <span class="shop-card-price">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
+                        </div>
+                        <span class="shop-card-sub">{{ $produto->categoria->nome ?? 'coleção morada' }}</span>
+
+                        <div class="shop-card-actions">
+                            <button class="btn btn-comprar"
+                                    data-id="{{ $produto->id }}"
+                                    data-nome="{{ $produto->nome }}"
+                                    data-preco="{{ $produto->preco }}"
+                                    data-imagem="{{ $urlFinal }}">
+                                adicionar ao carrinho
+                            </button>
+
+                            <a href="{{ route('produto.show', $produto->id) }}" class="btn btn-branco">
+                                ver mais
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </main>
 @endsection

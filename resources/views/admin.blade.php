@@ -48,7 +48,7 @@
                 <button class="mobile-menu-toggle" onclick="toggleAdminMenu()">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <h1 style="font-family: 'Poppins', sans-serif">Início</h1>
+                <h1 style="font-family: 'Poppins', sans-serif; font-size: 35.2px; font-weight: bold">Início</h1>
                 <div class="user-info">
                     <span>olá, <strong>{{ explode(' ', Auth::user()->name)[0] }}</strong></span>
                 </div>

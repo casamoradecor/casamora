@@ -80,7 +80,7 @@
                         <i class="fa-solid fa-truck-fast"></i> Calcular Frete e Prazo
                     </label>
                     <div class="grupo-input-frete">
-                        <input type="text" id="cep-destino" placeholder="00000-000" maxlength="8"
+                        <input type="text" id="cep-destino" placeholder="00000-000" maxlength="9"
                                class="input-frete">
                         <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="btn botao-calc-frete"
                                 >
@@ -96,5 +96,19 @@
     </div>
     @push('js')
         <script src="{{ asset('js/produto-detalhe.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const cepInput = document.getElementById('cep-destino');
+
+                if (cepInput) {
+                    cepInput.addEventListener('input', function(e) {
+                        let valor = e.target.value.replace(/\D/g, '');
+                        if (valor.length > 5) {
+                            valor = valor.replace(/^(\d{5})(\d)/, '$1-$2');
+                        }
+                        e.target.value = valor;
+                    });
+                }
+            });</script>
     @endpush
 @endsection
