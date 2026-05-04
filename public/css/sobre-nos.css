@@ -1,0 +1,142 @@
+
+.secao-zigzag {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 40px;
+}
+
+.flex-reverse {
+    flex-direction: row-reverse;
+}
+
+.img-container, .sobre-img-container {
+    flex: 1;
+    position: relative;
+    height: auto;
+    border-radius: 8px;
+    overflow: visible;
+}
+
+.img-container img, .sobre-img-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.text-container, .sobre-text-container {
+    flex: 1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.shadow-right { box-shadow: 20px 20px 0px #f4f1ee; }
+.shadow-left { box-shadow: -20px 20px 0px #f4f1ee; }
+
+/* ==========================================================================
+   PÁGINA PÚBLICA (CLIENTE)
+   ========================================================================== */
+.sobre-nos-page {
+    padding: 100px 40px;
+}
+
+.sobre-titulo {
+    text-align: left;
+    margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #3d2b1f;
+    font-weight: 600;
+    font-size: 2.2rem;
+}
+
+.sobre-text-container p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+    text-align: justify;
+}
+
+/* ==========================================================================
+   AMBIENTE ADMIN (VISUAL EDITOR)
+   ========================================================================== */
+.admin-visual-editor {
+    padding: 40px;
+}
+
+.label-sessao {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.admin-actions-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 40px 0;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+
+@media (max-width: 992px) {
+    /* Admin */
+    .admin-visual-editor {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    /* Estrutura Zig-Zag vira Pilha */
+    .secao-zigzag, .flex-reverse {
+        flex-direction: column !important;
+        gap: 30px;
+        padding: 20px 0;
+    }
+
+    .img-container, .sobre-img-container {
+        height: 300px;
+        width: 100%;
+    }
+
+    /* Ajuste de Sombras no Mobile */
+    .shadow-right { box-shadow: 10px 10px 0px #f4f1ee; }
+    .shadow-left { box-shadow: -10px 10px 0px #f4f1ee; }
+
+    .sobre-nos-page {
+        padding-top: 100px;
+    }
+
+    .sobre-titulo {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    .sobre-text-container p {
+        font-size: 0.95rem;
+        text-align: left;
+    }
+    .admin-actions-footer{
+        justify-content: center;
+
+    }
+    .admin-visual-editor .text-container {
+        width: 100%;
+        padding: 0;
+    }
+
+    .admin-visual-editor .input-mora {
+        width: 100% !important;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+
+    .admin-visual-editor .img-container {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
