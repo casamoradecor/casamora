@@ -30,7 +30,12 @@
                 </a>
 
                 <div class="nav-group-title">Personalização</div>
-                <a href="#" class="nav-item"><i class="fa-solid fa-palette"></i> visual da loja</a>
+                <a href="{{ route('admin.visual.edit') }}" class="nav-item {{ request()->routeIs('admin.visual.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-palette"></i> visual da loja
+                </a>
+                <a href="{{ route('admin.sobre.edit') }}" class="nav-item {{ request()->routeIs('admin.sobre.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-address-card"></i> sobre nós
+                </a>
             </nav>
 
             <div class="sidebar-footer">

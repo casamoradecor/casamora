@@ -14,6 +14,7 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\Admin\VendaController;
+use App\Http\Controllers\Admin\SobreNosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [HomeController::class, 'shop'])->name('produtos.index');
 Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.show');
 Route::get('/api/busca-produtos', [ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
+Route::get('/sobre-nos', [App\Http\Controllers\Admin\SobreNosController::class, 'show'])->name('sobre.nos');
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +114,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::post('/admin/shoppable/save', [AdminController::class, 'saveHotspot'])->name('admin.saveHotspot');
     Route::delete('/admin/shoppable/delete/{id}', [App\Http\Controllers\AdminController::class, 'deleteHotspot'])->name('admin.deleteHotspot');
+    Route::get('/sobre-nos/editar', [SobreNosController::class, 'edit'])->name('admin.sobre.edit');
+    Route::post('/sobre-nos/texto', [SobreNosController::class, 'updateTexto'])->name('admin.sobre.updateTexto');
+    Route::post('/sobre-nos/foto/{id}', [SobreNosController::class, 'updateFoto'])->name('admin.sobre.updateFoto');
 
     // Gestão de Vendas (Pedidos)
     Route::get('/vendas', [App\Http\Controllers\Admin\VendaController::class, 'index'])->name('admin.vendas.index');

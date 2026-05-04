@@ -41,7 +41,7 @@
                 @endif
             @endauth
             <a href="{{ route('produtos.index') }}">PRODUTOS</a>
-            <a href="#">CONTATO</a>
+            <a href="{{ route('sobre.nos') }}">SOBRE NÓS</a>
         </nav>
 
         <div class="header-actions" style="position: relative;">
@@ -83,7 +83,7 @@
                 <h3>Navegação</h3>
                 <a href="/">Início</a>
                 <a href="{{ route('produtos.index') }}">Produtos</a>
-                <a href="#">Sobre Nós</a>
+                <a href="{{ route('sobre.nos') }}">Sobre nós</a>
                 <a href="#">Contato</a>
             </div>
 
