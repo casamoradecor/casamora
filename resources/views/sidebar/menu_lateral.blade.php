@@ -11,6 +11,9 @@
         <a href="#" class="nav-item">
             <i class="fa-solid fa-chart-line"></i> estatísticas
         </a>
+        <a href="{{ route('admin.newsletter.index') }}" class="nav-item {{ request()->routeIs('admin.newsletter.*') ? 'active' : '' }}">
+            <i class="fa-solid fa-envelope"></i> newsletter
+        </a>
 
         <div class="nav-group-title">Gestão</div>
         <a href="{{ route('admin.categorias.index') }}" class="nav-item {{ request()->routeIs('admin.categorias.*') ? 'active' : '' }}">

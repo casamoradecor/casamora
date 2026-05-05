@@ -15,6 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\Admin\VendaController;
 use App\Http\Controllers\Admin\SobreNosController;
+use App\Http\Controllers\NewsletterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,7 @@ Route::get('/produtos', [HomeController::class, 'shop'])->name('produtos.index')
 Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.show');
 Route::get('/api/busca-produtos', [ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
 Route::get('/sobre-nos', [App\Http\Controllers\Admin\SobreNosController::class, 'show'])->name('sobre.nos');
+Route::post('/newsletter/subscribe', [App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +127,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/vendas/{id}', [App\Http\Controllers\Admin\VendaController::class, 'show'])->name('admin.pedidos.show');
     Route::post('/vendas/{id}/enviar', [App\Http\Controllers\Admin\VendaController::class, 'marcarComoEnviado'])->name('admin.pedidos.enviar');
     Route::post('/vendas/{id}/etiqueta', [VendaController::class, 'emitirEtiqueta'])->name('admin.pedidos.etiqueta');
+
+    Route::get('/newsletter', [App\Http\Controllers\NewsletterController::class, 'adminIndex'])->name('admin.newsletter.index');
+    Route::post('/newsletter/enviar', [App\Http\Controllers\NewsletterController::class, 'enviarEmail'])->name('admin.newsletter.enviar');
+    Route::delete('/newsletter/{id}', [App\Http\Controllers\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
 });
 
 /*
