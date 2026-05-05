@@ -85,7 +85,7 @@ Route::get('/produtos', [ProdutoController::class, 'vitrine'])->name('produtos.i
 | PAINEL ADMINISTRATIVO (AdminController)
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Acesso e Dashboard Principal
     Route::get('/acessar', [AdminController::class, 'validarAcesso'])->name('admin.access');
     Route::get('/editar', [AdminController::class, 'index'])->name('admin.index');
