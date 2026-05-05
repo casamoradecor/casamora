@@ -18,7 +18,7 @@ class FreteController extends Controller
             if (!$produto) return response()->json(['error' => 'Produto não encontrado'], 404);
 
             $opcoesFrete = [];
-            $precoSedexBase = null;
+            $precoReferenciaBase = null;
             $token = env('MELHOR_ENVIO_TOKEN');
             $urlBase = rtrim(env('MELHOR_ENVIO_URL'), '/');
 
@@ -42,14 +42,17 @@ class FreteController extends Controller
                 if ($response->successful()) {
                     $servicos = $response->json();
                     foreach ($servicos as $s) {
-                        // FILTRO: Apenas SEDEX
-                        if (isset($s['name']) && !isset($s['error']) && str_contains(strtoupper($s['name']), 'SEDEX')) {
-                            $precoSedexBase = (float) $s['price'];
+                        if (isset($s['name']) && !isset($s['error'])) {
+                            if ($precoReferenciaBase === null) {
+                                $precoReferenciaBase = (float) $s['price'];
+                            }
+
                             $opcoesFrete[] = [
-                                'nome'  => 'SEDEX',
+                                'id'    => $s['id'],
+                                'nome'  => $s['name'],
                                 'preco' => number_format($s['price'], 2, ',', '.'),
                                 'prazo' => $s['delivery_range']['max'] . ' dias úteis',
-                                'icone' => 'fa-truck'
+                                'icone' => 'fa-truck' // Ícone padrão para todas
                             ];
                         }
                     }
@@ -60,9 +63,10 @@ class FreteController extends Controller
             $regioesLocais = ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
 
             if (in_array($prefixo, $regioesLocais)) {
-                $valorUber = $precoSedexBase ? ($precoSedexBase - 5) : 20.00;
+                $valorUber = $precoReferenciaBase ? ($precoReferenciaBase - 5) : 20.00;
                 if ($valorUber < 10) $valorUber = 10.00;
                 array_unshift($opcoesFrete, [
+                    'id'    => 99,
                     'nome'  => 'Entrega Flash (Uber/Mora)',
                     'preco' => number_format($valorUber, 2, ',', '.'),
                     'prazo' => 'Até 24h',
@@ -128,10 +132,15 @@ class FreteController extends Controller
                 if ($response->successful()) {
                     $servicos = $response->json();
                     foreach ($servicos as $s) {
-                        if (isset($s['name']) && !isset($s['error']) && str_contains(strtoupper($s['name']), 'SEDEX')) {
-                            $precoReferenciaBase = (float) $s['price'];
+                        if (isset($s['name']) && !isset($s['error'])) {
+
+                            if ($precoReferenciaBase === null) {
+                                $precoReferenciaBase = (float) $s['price'];
+                            }
+
                             $opcoesFrete[] = [
-                                'nome'  => 'SEDEX',
+                                'id'    => $s['id'],
+                                'nome'  => $s['name'],
                                 'preco' => number_format($s['price'], 2, ',', '.'),
                                 'prazo' => $s['delivery_range']['max'] . ' dias úteis',
                                 'icone' => 'fa-truck'
@@ -149,6 +158,7 @@ class FreteController extends Controller
                 if ($valorUber < 10) $valorUber = 10.00;
 
                 array_unshift($opcoesFrete, [
+                    'id'    => 99,
                     'nome'  => 'Entrega Flash (Uber/Mora)',
                     'preco' => number_format($valorUber, 2, ',', '.'),
                     'prazo' => 'Até 24h',

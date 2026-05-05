@@ -15,7 +15,6 @@
             align-items: center;
             justify-content: center;
             font-family: 'Poppins', sans-serif;
-            background-color: #fdfdfd; /* Fundo leve para estética clean */
         }
 
         .status-icon {

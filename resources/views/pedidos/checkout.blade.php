@@ -66,6 +66,7 @@
                 {{-- Inputs ocultos para o Frete --}}
                 <input type="hidden" name="frete_escolhido" id="frete_escolhido_input" required>
                 <input type="hidden" name="valor_frete" id="valor_frete_input" value="0">
+                <input type="hidden" name="servico_frete_id" id="servico_frete_id_input" required>
 
                 <div class="form-group">
                     <label>Nome para Entrega</label>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/vendas-confirmadas.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 @endpush
 
 @section('content')
@@ -25,7 +24,6 @@
                 <div style="text-align: right;">
                     <span class="status-badge status-pago" style="padding: 10px 20px; font-size: 0.8rem;">PAGAMENTO CONFIRMADO</span>
 
-                    {{-- Início do Bloco de Emissão de Etiqueta --}}
                     @if($pedido->status == 'pago')
                         <div style="margin-top: 15px;">
                             <form action="{{ route('admin.pedidos.etiqueta', $pedido->id) }}" method="POST">
@@ -35,14 +33,15 @@
                                     <i class="fa-solid fa-print"></i> GERAR ETIQUETA NO MELHOR ENVIO
                                 </button>
                             </form>
+                        </div>
+                    @endif
 
-                            {{-- Link para Baixar a Etiqueta após a geração bem-sucedida --}}
-                            @if(session('etiqueta_url'))
-                                <a href="{{ session('etiqueta_url') }}" target="_blank" class="btn-confirm-envio"
-                                   style="margin-top: 10px; display: block; text-align: center; background: #5B8C5A; color: white; text-decoration: none;">
-                                    <i class="fa-solid fa-download"></i> BAIXAR ETIQUETA (PDF)
-                                </a>
-                            @endif
+                    @if(session('etiqueta_url'))
+                        <div style="margin-top: 10px;">
+                            <a href="{{ session('etiqueta_url') }}" target="_blank" class="btn-confirm-envio"
+                               style="display: block; text-align: center; background: #5B8C5A; color: white; text-decoration: none;">
+                                <i class="fa-solid fa-download"></i> BAIXAR ETIQUETA (PDF)
+                            </a>
                         </div>
                     @endif
                     {{-- Fim do Bloco --}}
@@ -115,18 +114,31 @@
                 </table>
             </div>
 
-            <div class="dispatch-panel">
-                <div class="dispatch-info">
-                    <h4>Pronto para despachar?</h4>
-                    <p>Insira o código de rastreamento para notificar o cliente.</p>
+            {{-- INÍCIO DA ÚNICA ALTERAÇÃO - APENAS O FORMULÁRIO DE RASTREIO --}}
+            @if(!empty($pedido->codigo_rastreio))
+                <div class="dispatch-panel" style="border-left: 4px solid #5B8C5A; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center; padding: 20px; border-radius: 8px;">
+                    <div class="dispatch-info">
+                        <h4 style="color: #5B8C5A; margin-bottom: 5px; font-size: 1.2rem;"><i class="fa-solid fa-circle-check"></i> Pedido Despachado</h4>
+                        <p style="margin: 0; color: #666;">O código de rastreamento foi salvo com sucesso.</p>
+                    </div>
+                    <div style="text-align: right; background: #fff; padding: 10px 20px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        <span style="display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600;">Código de Rastreio</span>
+                        <strong style="font-size: 1.2rem; color: #4B3621; letter-spacing: 1px;">{{ $pedido->codigo_rastreio }}</strong>
+                    </div>
                 </div>
-                <form action="{{ route('admin.pedidos.enviar', $pedido->id) }}" method="POST" class="dispatch-form">
-                    @csrf
-                    <input type="text" name="codigo_rastreio" class="dispatch-input" placeholder="Ex: BR123456789AA"
-                           required>
-                    <button type="submit" class="btn btn-branco">Confirmar Envio</button>
-                </form>
-            </div>
+            @else
+                <div class="dispatch-panel">
+                    <div class="dispatch-info">
+                        <h4>Pronto para despachar?</h4>
+                        <p>Insira o código de rastreamento para notificar o cliente.</p>
+                    </div>
+                    <form action="{{ route('admin.pedidos.enviar', $pedido->id) }}" method="POST" class="dispatch-form">
+                        @csrf
+                        <input type="text" name="codigo_rastreio" class="dispatch-input" placeholder="Ex: BR123456789AA" required>
+                        <button type="submit" class="btn btn-branco">Confirmar Envio</button>
+                    </form>
+                </div>
+            @endif
         </main>
     </div>
 @endsection

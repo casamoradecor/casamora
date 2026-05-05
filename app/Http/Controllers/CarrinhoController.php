@@ -218,6 +218,8 @@ class CarrinhoController extends Controller
                 'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
                 'cep' => preg_replace('/\D/', '', $request->cep),
                 'endereco' => $enderecoTexto,
+                'servico_frete_id' => $request->servico_frete_id,
+                'metodo_envio' => $request->frete_escolhido,
             ]);
 
             // 4. Criar Itens do Pedido

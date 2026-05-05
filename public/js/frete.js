@@ -56,10 +56,12 @@ function buscarFreteCheckout(cep, subtotalBase) {
 
             data.forEach(opcao => {
                 const precoFloat = parseFloat(opcao.preco.replace('.', '').replace(',', '.'));
+
+                // NOVO: Inserimos o '${opcao.id}' dentro da chamada da função selecionarFrete
                 listaFretes.innerHTML += `
                     <label class="frete-radio-item">
                         <input type="radio" name="frete_radio" value="${opcao.nome}"
-                            onchange="selecionarFrete(${precoFloat}, '${opcao.nome}', ${subtotalBase})" required>
+                            onchange="selecionarFrete(${precoFloat}, '${opcao.nome}', '${opcao.id}', ${subtotalBase})" required>
                         <div class="frete-radio-content">
                             <div style="display: flex; flex-direction: column;">
                                 <span class="f-nome-chk">${opcao.nome}</span>
@@ -76,9 +78,14 @@ function buscarFreteCheckout(cep, subtotalBase) {
         });
 }
 
-function selecionarFrete(valor, nome, subtotalBase) {
+// NOVO: Adicionamos o parâmetro 'id' que está sendo enviado pelo onchange
+function selecionarFrete(valor, nome, id, subtotalBase) {
     document.getElementById('frete_escolhido_input').value = nome;
     document.getElementById('valor_frete_input').value = valor;
+
+    // NOVO: Guarda o ID no input oculto para enviarmos ao Banco de Dados!
+    document.getElementById('servico_frete_id_input').value = id;
+
     document.getElementById('valor-frete-display').innerText = `R$ ${valor.toFixed(2).replace('.', ',')}`;
 
     const total = subtotalBase + valor;
@@ -87,18 +94,15 @@ function selecionarFrete(valor, nome, subtotalBase) {
 }
 
 /**
- * NOVO: Listener automático para o campo de CEP no Checkout
- * Isso garante que tanto digitando quanto selecionando o card, o frete seja buscado.
+ * Listener automático para o campo de CEP no Checkout
  */
 document.addEventListener('DOMContentLoaded', function() {
     const inputCepCheckout = document.getElementById('cep');
 
     if (inputCepCheckout) {
-        // 'input' captura tanto digitação quanto o dispatchEvent dos cards
         inputCepCheckout.addEventListener('input', function() {
             const cep = this.value.replace(/\D/g, '');
             if (cep.length === 8) {
-                // window.subtotalBase é definido no script do seu Blade
                 buscarFreteCheckout(cep, window.subtotalBase);
             }
         });

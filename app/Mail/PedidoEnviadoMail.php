@@ -44,8 +44,8 @@ public function envelope(): Envelope
 public function content(): Content
 {
     return new Content(
-        markdown: 'emails.pedido-enviado',
-        );
+        view: 'email.pedido-enviado',
+    );
     }
 
 /**

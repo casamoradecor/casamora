@@ -19,7 +19,12 @@ class MelhorEnvioService
     public function adicionarAoCarrinho(Pedido $pedido)
     {
         $produtosParaEnvio = [];
-        $volumes = [];
+        $pesoTotalItens = 0;
+        $maiorAltura = 20;
+        $maiorLargura = 20;
+        $maiorComprimento = 20;
+        $pesoDaEmbalagem = 0.3;
+
         foreach ($pedido->itens as $item) {
             $produto = $item->produto;
             $produtosParaEnvio[] = [
@@ -27,17 +32,23 @@ class MelhorEnvioService
                 'quantity' => $item->quantidade,
                 'unitary_value' => $item->preco_unitario
             ];
-
-            $volumes[] = [
-                'width'  => (float) $produto->largura,
-                'height' => (float) $produto->altura,
-                'length' => (float) $produto->comprimento,
-                'weight' => (float) $produto->peso
-            ];
+            $pesoTotalItens += ((float) $produto->peso * $item->quantidade);
+            if ((float) $produto->altura > $maiorAltura) $maiorAltura = (float) $produto->altura;
+            if ((float) $produto->largura > $maiorLargura) $maiorLargura = (float) $produto->largura;
+            if ((float) $produto->comprimento > $maiorComprimento) $maiorComprimento = (float) $produto->comprimento;
         }
+        $pesoFinal = $pesoTotalItens + $pesoDaEmbalagem;
+        $volumes = [
+            [
+                'width'  => $maiorLargura,
+                'height' => $maiorAltura,
+                'length' => $maiorComprimento,
+                'weight' => $pesoFinal
+            ]
+        ];
 
         $payload = [
-            'service' => 3,
+            'service' => $pedido->servico_frete_id,
             'agency'  => 4862,
             'from' => [
                 'name'    => 'Kathia Gonzalez',

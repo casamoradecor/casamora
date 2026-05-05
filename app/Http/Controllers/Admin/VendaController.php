@@ -40,14 +40,20 @@ class VendaController extends Controller
             'codigo_rastreio' => 'required|string|max:255'
         ]);
 
-        $pedido = Pedido::findOrFail($id);
+        $pedido = Pedido::with('cliente')->findOrFail($id);
+
         $pedido->update([
             'status' => 'enviado',
             'codigo_rastreio' => $request->codigo_rastreio
         ]);
 
+        if ($pedido->cliente && $pedido->cliente->email) {
+            \Illuminate\Support\Facades\Mail::to($pedido->cliente->email)
+                ->send(new \App\Mail\PedidoEnviadoMail($pedido));
+        }
+
         return redirect()->route('admin.vendas.index')
-            ->with('sucesso', "Pedido #{$id} marcado como enviado!");
+            ->with('sucesso', "Pedido #{$id} marcado como enviado e e-mail disparado!");
     }
     public function emitirEtiqueta(Request $request, $id, \App\Services\MelhorEnvioService $meService)
     {
@@ -60,19 +66,14 @@ class VendaController extends Controller
             $meService->finalizarCompra($orderId);
             sleep(2);
             $etiqueta = $meService->gerarEtiqueta($orderId);
-            if (isset($etiqueta['url'])) {
-                $pedido->update([
-                    'status' => 'enviado',
-                    'codigo_rastreio' => $etiqueta['tracking'] ?? 'Verificar no painel'
-                ]);
-                \Illuminate\Support\Facades\Mail::to($pedido->cliente->email)
-                    ->send(new \App\Mail\PedidoEnviadoMail($pedido));
 
+            if (isset($etiqueta['url'])) {
                 return redirect()->back()
-                    ->with('sucesso', 'Etiqueta gerada e e-mail de rastreio enviado!')
+                    ->with('sucesso', 'Etiqueta gerada com sucesso! Você já pode baixar o PDF.')
                     ->with('etiqueta_url', $etiqueta['url']);
             }
         }
+
         return redirect()->back()->with('erro', 'Falha ao processar etiqueta. Verifique seu saldo ou os dados de endereço.');
     }
 }

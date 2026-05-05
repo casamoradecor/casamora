@@ -12,7 +12,8 @@ class Pedido extends Model
     protected $fillable = [
         'cliente_id', 'endereco_id', 'valor_produtos', 'valor_frete',
         'valor_desconto', 'valor_total', 'status', 'payment_id',
-        'codigo_externo', 'nome_entrega', 'cpf_entrega', 'cep', 'endereco'
+        'codigo_externo', 'nome_entrega', 'cpf_entrega', 'cep', 'endereco','codigo_rastreio','servico_frete_id',
+        'metodo_envio',
     ];
 
     public function cliente()
