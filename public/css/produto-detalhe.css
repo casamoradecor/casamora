@@ -348,6 +348,9 @@
     white-space: nowrap;
     text-transform: uppercase;
 }
+.btn-branco{
+    margin-top: auto;
+}
 
 
 .btn-comprar-relacionado {
@@ -416,7 +419,7 @@
         object-fit: cover;
     }
 
-    
+
     .preco-grande-produto {
         order: 4;
         margin-bottom: 20px;

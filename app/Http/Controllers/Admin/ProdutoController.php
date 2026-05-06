@@ -24,28 +24,26 @@ class ProdutoController extends Controller
     {
         $produto = Produto::with('categoria')->findOrFail($id);
 
-        // --- APENAS PARA TESTE AGORA ---
-        // Remove o cache antigo para a IA rodar de novo com as novas regras
-        // Cache::forget("ai_recomendacoes_produto_{$id}");
+        $idsRecomendados = Cache::remember("ai_recomendacoes_v2_produto_{$id}", 86400, function () use ($produto, $id) {
 
-        $idsRecomendados = Cache::remember("ai_recomendacoes_produto_{$id}", 86400, function () use ($produto) {
-
-            // Pegamos uma amostra menor para a IA não se perder
             $catalogo = Produto::where('id', '!=', $produto->id)
                 ->inRandomOrder()
-                ->take(20)
-                ->get(['id', 'nome', 'categoria_id']);
+                ->take(30)
+                ->get(['id', 'nome']);
 
             $textoCatalogo = $catalogo->map(fn($p) => "ID:{$p->id} - {$p->nome}")->implode(", ");
 
-            $prompt = "Aja como designer da Casa MORÁ. O cliente está vendo: {$produto->nome}. "
-                . "Desta lista de IDs: [{$textoCatalogo}], escolha EXATAMENTE os 3 que melhor combinam. "
-                . "Responda APENAS os IDs separados por vírgula. Exemplo: 1,2,3";
-
-            $apiKey = env('GROQ_API_KEY');
+            $prompt = "Você é um renomado Designer de Interiores e Curador de Estilo da 'Casa MORÁ'.\n\n"
+                . "CONTEXTO: O cliente está interessado no produto '{$produto->nome}' da categoria '" . ($produto->categoria->nome) . "'.\n\n"
+                . "SUA MISSÃO: Selecione exatamente 3 produtos da lista abaixo que melhor COMPLEMENTEM este item para criar um ambiente sofisticado e completo.\n\n"
+                . "REGRAS CRUCAIS DE CURADORIA:\n"
+                . "1. DIVERSIDADE DE CATEGORIAS: Evite sugerir produtos da mesma categoria '" . ($produto->categoria->nome) . "'. Priorize itens que o cliente usaria JUNTO com o atual (ex: se ele vê uma mesa, sugira um vaso, um tapete ou uma cadeira).\n"
+                . "2. ESTILO E HARMONIA: Os itens escolhidos devem ter a mesma linguagem visual (material, cor e proposta de design) do produto principal.\n"
+                . "3. LISTA DE CANDIDATOS: [{$textoCatalogo}]\n\n"
+                . "SAÍDA OBRIGATÓRIA: Responda APENAS os 3 IDs numéricos separados por vírgula. Não escreva explicações, nem saudações. Exemplo: 7,15,22";
 
             try {
-                $response = Http::timeout(10)->withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
+                $response = Http::timeout(8)->withToken(env('GROQ_API_KEY'))->post('https://api.groq.com/openai/v1/chat/completions', [
                     'model' => 'llama-3.3-70b-versatile',
                     'messages' => [['role' => 'user', 'content' => $prompt]],
                     'temperature' => 0.1
@@ -54,11 +52,13 @@ class ProdutoController extends Controller
                 if ($response->successful()) {
                     $texto = $response->json()['choices'][0]['message']['content'] ?? '';
                     preg_match_all('/\d+/', $texto, $matches);
-                    return array_slice($matches[0], 0, 3); // Garante que só pegamos 3 IDs
-                }
-            } catch (\Exception $e) { }
+                    $ids = array_slice($matches[0], 0, 3);
 
-            // PLANO B: Se a IA falhar, pega só 3 da mesma categoria
+                    if (count($ids) === 3) return $ids;
+                }
+            } catch (\Exception $e) {
+            }
+
             return Produto::where('categoria_id', $produto->categoria_id)
                 ->where('id', '!=', $id)
                 ->take(3)
@@ -66,8 +66,13 @@ class ProdutoController extends Controller
                 ->toArray();
         });
 
-        // Busca os 3 produtos finais
-        $produtosRelacionados = Produto::whereIn('id', $idsRecomendados)->take(3)->get();
+        $produtosRelacionados = collect();
+        if (!empty($idsRecomendados)) {
+            $ordemSql = implode(',', $idsRecomendados);
+            $produtosRelacionados = Produto::whereIn('id', $idsRecomendados)
+                ->orderByRaw("FIELD(id, {$ordemSql})")
+                ->get();
+        }
 
         return view('produtos.show', compact('produto', 'produtosRelacionados'));
     }
