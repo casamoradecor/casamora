@@ -131,6 +131,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/newsletter', [App\Http\Controllers\NewsletterController::class, 'adminIndex'])->name('admin.newsletter.index');
     Route::post('/newsletter/enviar', [App\Http\Controllers\NewsletterController::class, 'enviarEmail'])->name('admin.newsletter.enviar');
     Route::delete('/newsletter/{id}', [App\Http\Controllers\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    Route::post('/newsletter/gerar-ia', [App\Http\Controllers\NewsletterController::class, 'gerarComIA'])
+        ->name('admin.newsletter.gerar-ia');
 });
 
 /*
