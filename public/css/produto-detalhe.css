@@ -150,17 +150,7 @@
     min-width: 0;
 }
 
-.botao-calc-frete {
-    background: #4a3427;
-    border: none;
-    color: #fff;
-    padding: 0 20px;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.7rem;
-    cursor: pointer;
-    font-family: var(--font-base);
-}
+
 
 .descricao-produto {
     margin-top: 30px;
@@ -279,6 +269,107 @@
 .mora-toast.error {
     background-color: #c94c4c;
 }
+.related-products-section {
+    margin-top: 80px;
+    border-top: 1px solid #eee;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 100%;
+}
+
+.destaque-carrossel {
+    width: 100%;
+    position: relative;
+}
+
+.carrossel-track {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none; scrollbar-width: none;
+    justify-content: center;
+}
+
+.carrossel-track::-webkit-scrollbar { display: none; }
+
+.produto-card {
+    flex: 0 0 clamp(220px, 24vw, 280px);
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.produto-card img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid #4B3621;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 0;
+    transition: opacity 0.3s ease;
+}
+
+.produto-card:hover img {
+    opacity: 0.8;
+}
+
+
+.produto-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.produto-titulo {
+    color: #4B3621;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin: 0;
+    flex: 1;
+    text-transform: uppercase;
+}
+
+.produto-preco {
+    color: #4B3621;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+
+.btn-comprar-relacionado {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #4B3621;
+    color: #4B3621;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.btn-comprar-relacionado:hover {
+    background: #4B3621;
+    color: #fff;
+}
 
 @media (max-width: 900px) {
     .pagina-produto-wrapper {
@@ -325,7 +416,7 @@
         object-fit: cover;
     }
 
-    /* 4. PREÇO */
+    
     .preco-grande-produto {
         order: 4;
         margin-bottom: 20px;
@@ -333,7 +424,7 @@
         font-weight: 600;
     }
 
-    /* 5. SELETOR DE QTD (O ponto de partida da compra) */
+
     .seletor-quantidade {
         order: 5;
         margin-bottom: 25px;
@@ -343,7 +434,7 @@
         border: 1px solid #ddd;
     }
 
-    /* 6. WRAPPER DE AÇÕES (Agora com a info ANTES dos botões) */
+
     .wrapper-acoes-compra {
         order: 6;
         display: flex;
@@ -351,19 +442,18 @@
         gap: 20px;
     }
 
-    /* Sobre o item agora vem primeiro no bloco */
     .descricao-produto {
         order: 1;
         margin-top: 0;
     }
 
-    /* Especificações vem logo em seguida */
+
     .especificacoes-produto {
         order: 2;
         margin-top: 0;
     }
 
-    /* Botões de compra finalizam o bloco de informações */
+
     .coluna-botoes {
         order: 3;
         gap: 12px;
@@ -378,24 +468,12 @@
         padding: 20px;
         border: 1px solid #eee;
     }
-    .botao-calc-frete {
-        background-color: var(--color-brand);
-        border: none;
-        color: #fff;
-        width: 100%;
-        padding: 14px;
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 0.7rem;
-        cursor: pointer;
-    }
 
-    /* Estilização Interna Mobile */
     .descricao-produto-texto {
         font-size: 0.85rem;
         line-height: 1.7;
         color: #555;
-        text-align: left; /* No mobile, alinhar à esquerda é mais legível que o justify */
+        text-align: left;
     }
 
     .especificacoes-grid {
@@ -411,6 +489,13 @@
     .botao-qtd {
         padding: 8px 15px;
     }
+    .carrossel-track {
+        justify-content: flex-start;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .produto-titulo { font-size: 0.75rem; }
+    .produto-preco { font-size: 0.85rem; }
 }
 
 @media (max-width: 480px) {

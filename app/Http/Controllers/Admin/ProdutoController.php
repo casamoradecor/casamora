@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Models\ProdutoVisualizacao;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class ProdutoController extends Controller
 {
@@ -19,7 +23,53 @@ class ProdutoController extends Controller
     public function show($id)
     {
         $produto = Produto::with('categoria')->findOrFail($id);
-        return view('produtos.show', compact('produto'));
+
+        // --- APENAS PARA TESTE AGORA ---
+        // Remove o cache antigo para a IA rodar de novo com as novas regras
+        // Cache::forget("ai_recomendacoes_produto_{$id}");
+
+        $idsRecomendados = Cache::remember("ai_recomendacoes_produto_{$id}", 86400, function () use ($produto) {
+
+            // Pegamos uma amostra menor para a IA não se perder
+            $catalogo = Produto::where('id', '!=', $produto->id)
+                ->inRandomOrder()
+                ->take(20)
+                ->get(['id', 'nome', 'categoria_id']);
+
+            $textoCatalogo = $catalogo->map(fn($p) => "ID:{$p->id} - {$p->nome}")->implode(", ");
+
+            $prompt = "Aja como designer da Casa MORÁ. O cliente está vendo: {$produto->nome}. "
+                . "Desta lista de IDs: [{$textoCatalogo}], escolha EXATAMENTE os 3 que melhor combinam. "
+                . "Responda APENAS os IDs separados por vírgula. Exemplo: 1,2,3";
+
+            $apiKey = env('GROQ_API_KEY');
+
+            try {
+                $response = Http::timeout(10)->withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model' => 'llama-3.3-70b-versatile',
+                    'messages' => [['role' => 'user', 'content' => $prompt]],
+                    'temperature' => 0.1
+                ]);
+
+                if ($response->successful()) {
+                    $texto = $response->json()['choices'][0]['message']['content'] ?? '';
+                    preg_match_all('/\d+/', $texto, $matches);
+                    return array_slice($matches[0], 0, 3); // Garante que só pegamos 3 IDs
+                }
+            } catch (\Exception $e) { }
+
+            // PLANO B: Se a IA falhar, pega só 3 da mesma categoria
+            return Produto::where('categoria_id', $produto->categoria_id)
+                ->where('id', '!=', $id)
+                ->take(3)
+                ->pluck('id')
+                ->toArray();
+        });
+
+        // Busca os 3 produtos finais
+        $produtosRelacionados = Produto::whereIn('id', $idsRecomendados)->take(3)->get();
+
+        return view('produtos.show', compact('produto', 'produtosRelacionados'));
     }
 
     public function create()

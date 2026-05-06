@@ -82,8 +82,9 @@
                     <div class="grupo-input-frete">
                         <input type="text" id="cep-destino" placeholder="00000-000" maxlength="9"
                                class="input-frete">
-                        <button type="button" onclick="calcularFreteProduto({{ $produto->id }})" class="btn botao-calc-frete"
-                                >
+                        <button type="button" onclick="calcularFreteProduto({{ $produto->id }})"
+                                class="btn botao-calc-frete"
+                        >
                             Calcular
                         </button>
                     </div>
@@ -92,16 +93,52 @@
                 </div>
 
             </div>
-        </div>
+        </div> @if(isset($produtosRelacionados) && $produtosRelacionados->count() > 0)
+            <div class="related-products-section">
+                <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+                    <h3 style="text-align: center; margin-bottom: 40px; text-transform: uppercase; font-size: 1.1rem; letter-spacing: 2px; color: #4B3621; font-family: 'Poppins', sans-serif;">
+                        Produtos relacionados comprados pelos clientes
+                    </h3>
+
+                    <div class="destaque-carrossel">
+                        <div class="carrossel-track">
+                            @foreach($produtosRelacionados as $relacionado)
+                                @php
+                                    $imgRelacionado = $relacionado->imagem;
+                                    $urlRelacionado = ($imgRelacionado && str_contains($imgRelacionado, 'assets'))
+                                        ? asset(ltrim($imgRelacionado, '/'))
+                                        : ($imgRelacionado ? Storage::url($imgRelacionado) : asset('assets/vasomora.png'));
+                                @endphp
+
+                                <div class="produto-card">
+                                    <a href="{{ route('produto.show', $relacionado->id) }}" style="text-decoration: none;">
+                                        <img src="{{ $urlRelacionado }}" alt="{{ $relacionado->nome }}">
+                                    </a>
+
+                                    <div class="produto-info">
+                                        <h3 class="produto-titulo">{{ $relacionado->nome }}</h3>
+                                        <p class="produto-preco">R$ {{ number_format($relacionado->preco, 2, ',', '.') }}</p>
+                                    </div>
+
+                                    <a href="{{ route('produto.show', $relacionado->id) }}" class="btn btn-branco">
+                                        ver mais
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
     @push('js')
         <script src="{{ asset('js/produto-detalhe.js') }}"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const cepInput = document.getElementById('cep-destino');
 
                 if (cepInput) {
-                    cepInput.addEventListener('input', function(e) {
+                    cepInput.addEventListener('input', function (e) {
                         let valor = e.target.value.replace(/\D/g, '');
                         if (valor.length > 5) {
                             valor = valor.replace(/^(\d{5})(\d)/, '$1-$2');
