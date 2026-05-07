@@ -78,52 +78,51 @@
     </div>
 
     <div id="modalEmail" class="modal-overlay">
-        <div class="modal-box" style="max-width: 1000px; width: 95%;">
-            <h2 style="font-family: 'Poppins', serif; text-align: center; margin-bottom: 20px;">
+        <div class="modal-box modal-newsletter-box">
+            <h2 class="modal-newsletter-title">
                 CRIAR NEWSLETTER INTELIGENTE <i class="fa-solid fa-wand-magic-sparkles" style="color: #D4AF37;"></i>
             </h2>
 
-            <form action="{{ route('admin.newsletter.enviar') }}" method="POST">
+            <form action="{{ route('admin.newsletter.enviar') }}" method="POST" class="modal-newsletter-form">
                 @csrf
-                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
 
-                    <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px;">
+                <div class="modal-email-content">
 
-                        <div style="background: #fdfaf8; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
-                            <label style="font-size: 0.7rem; font-weight: 800; color: #4B3621;">O QUE A IA DEVE ESCREVER?</label>
-                            <textarea id="promptIA" rows="3" placeholder="Ex: Crie um e-mail curto e elegante avisando sobre 20% de desconto em poltronas de couro..." style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: sans-serif; resize: vertical;"></textarea>
+                    <div class="modal-email-col modal-email-inputs">
 
-                            <button type="button" id="btnGerarIA" onclick="gerarComIA()" class="btn btn-marrom" style="width: 100%; margin-top: 10px">
+                        <div class="ia-block">
+                            <label>O QUE A IA DEVE ESCREVER?</label>
+                            <textarea id="promptIA" rows="3" placeholder="Ex: Crie um e-mail curto e elegante avisando sobre 20% de desconto em poltronas de couro..."></textarea>
+                            <button type="button" id="btnGerarIA" onclick="gerarComIA()" class="btn btn-marrom">
                                 <i class="fa-solid fa-robot"></i> GERAR CONTEÚDO COM IA
                             </button>
                         </div>
 
-                        <div>
-                            <label style="font-size: 0.7rem; font-weight: 800; color: #888;">ASSUNTO DO E-MAIL</label>
-                            <input type="text" name="assunto" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px;">
+                        <div class="input-block">
+                            <label>ASSUNTO DO E-MAIL</label>
+                            <input type="text" name="assunto" required>
                         </div>
 
-                        <div style="flex-grow: 1; display: flex; flex-direction: column;">
-                            <label style="font-size: 0.7rem; font-weight: 800; color: #888;">CONTEÚDO (HTML PERMITIDO)</label>
-                            <textarea name="conteudo" id="conteudoEmail" rows="8" required style="width: 100%; flex-grow: 1; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: sans-serif; resize: vertical;"></textarea>
+                        <div class="input-block content-block">
+                            <label>CONTEÚDO (HTML PERMITIDO)</label>
+                            <textarea name="conteudo" id="conteudoEmail" rows="8" required></textarea>
                         </div>
                     </div>
 
-                    <div style="flex: 1; min-width: 300px; background: #f4f4f4; border-radius: 8px; padding: 10px; display: flex; flex-direction: column;">
-                        <label style="font-size: 0.7rem; font-weight: 800; color: #888; text-align: center; margin-bottom: 10px;">PRÉ-VISUALIZAÇÃO AO VIVO</label>
-                        <iframe id="previewIframe" style="width: 100%; flex-grow: 1; min-height: 400px; border: 1px solid #ddd; background: white; border-radius: 4px;"></iframe>
+                    <div class="modal-email-col modal-email-preview">
+                        <label>PRÉ-VISUALIZAÇÃO AO VIVO</label>
+                        <iframe id="previewIframe"></iframe>
                     </div>
 
                 </div>
 
-                <div class="actions-flex" style="justify-content: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <div class="actions-flex modal-newsletter-actions">
                     <button type="button" onclick="fecharModalEmail()" class="btn btn-branco">CANCELAR</button>
                     <button type="submit" class="btn btn-marrom">DISPARAR AGORA</button>
                 </div>
             </form>
         </div>
     </div>
-
     <div id="modalDelete" class="modal-overlay">
         <div class="modal-box">
             <h2>confirmar remoção</h2>
@@ -173,42 +172,64 @@
         });
     </script>
     <script>
-        // Lógica da Pré-visualização ao vivo
         const textareaConteudo = document.getElementById('conteudoEmail');
         const iframePreview = document.getElementById('previewIframe');
+        let isSyncing = false;
 
-        // Sempre que o usuário (ou a IA) digitar algo no campo de conteúdo, atualiza o iframe
-        textareaConteudo.addEventListener('input', atualizarPreview);
-
-        function atualizarPreview() {
-            const htmlUsuario = textareaConteudo.value;
-
-            // Simula a casca do seu template de e-mail para o preview ser fiel
+        function inicializarIframe() {
+            const doc = iframePreview.contentWindow.document;
             const estruturaEmail = `
                 <!DOCTYPE html>
                 <html>
-                <body style="background-color: #fdfaf8; font-family: 'Poppins', sans-serif; padding: 20px; margin: 0;">
+                <body style="background-color: #fdfaf8; font-family: 'Poppins', sans-serif; padding: 20px; margin: 0; cursor: text;">
                     <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #eee;">
-                        <h1 style="text-align: center; color: #4B3621; letter-spacing: 3px; font-size: 24px; margin-top: 0;">CASA MORÁ</h1>
-                        <div style="line-height: 1.6; color: #555; font-size: 14px;">
-                            ${htmlUsuario ? htmlUsuario : '<p style="color: #aaa; text-align: center;">O conteúdo do seu e-mail aparecerá aqui...</p>'}
+                        <h1 style="text-align: center; color: #4B3621; letter-spacing: 3px; font-size: 24px; margin-top: 0; user-select: none;">CASA MORÁ</h1>
+
+                        <div id="editor-visual" contenteditable="true" style="line-height: 1.6; color: #555; font-size: 14px; min-height: 200px; outline: none;">
+                            ${textareaConteudo.value || '<p style="color: #aaa; text-align: center;">Clique aqui e comece a digitar o seu e-mail, ou peça para a IA gerar...</p>'}
                         </div>
                     </div>
                 </body>
                 </html>
             `;
-
-            // Escreve o HTML dentro do iframe
-            const doc = iframePreview.contentWindow.document;
             doc.open();
             doc.write(estruturaEmail);
             doc.close();
+
+            const editorVisual = doc.getElementById('editor-visual');
+            editorVisual.addEventListener('input', function() {
+                if (!isSyncing) {
+                    isSyncing = true;
+                    textareaConteudo.value = editorVisual.innerHTML;
+                    isSyncing = false;
+                }
+            });
+
+            editorVisual.addEventListener('focus', function() {
+                if(this.innerHTML.includes('Clique aqui e comece a digitar')) {
+                    this.innerHTML = '';
+                }
+            });
         }
 
-        // Abre o modal e já limpa/atualiza o preview
+        textareaConteudo.addEventListener('input', function() {
+            if (!isSyncing) {
+                isSyncing = true;
+                const doc = iframePreview.contentWindow.document;
+                const editorVisual = doc.getElementById('editor-visual');
+                if (editorVisual) {
+                    editorVisual.innerHTML = textareaConteudo.value;
+                }
+                isSyncing = false;
+            }
+        });
+
         function abrirModalEmail() {
             document.getElementById('modalEmail').style.display = 'flex';
-            atualizarPreview();
+            const doc = iframePreview.contentWindow.document;
+            if (!doc.getElementById('editor-visual')) {
+                inicializarIframe();
+            }
         }
 
         function fecharModalEmail() {
@@ -228,7 +249,6 @@
             btn.disabled = true;
 
             try {
-
                 const response = await fetch("{{ route('admin.newsletter.gerar-ia') }}", {
                     method: 'POST',
                     headers: {
@@ -241,6 +261,11 @@
                 const data = await response.json();
 
                 if (data.sucesso) {
+                    const inputAssunto = document.querySelector('input[name="assunto"]');
+                    if (inputAssunto && data.assunto) {
+                        inputAssunto.value = data.assunto;
+                    }
+
                     textareaConteudo.value = data.conteudo;
 
                     textareaConteudo.dispatchEvent(new Event('input'));
