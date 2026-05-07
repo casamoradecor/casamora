@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use App\Http\Requests\ProdutoStoreRequest;
+use App\Http\Requests\ProdutoUpdateRequest;
 
 class ProdutoController extends Controller
 {
@@ -83,31 +85,14 @@ class ProdutoController extends Controller
         return view('admin.novo', compact('categorias'));
     }
 
-    public function store(Request $request)
+    public function store(ProdutoStoreRequest $request)
     {
-        $request->validate([
-            'codigo' => 'required|unique:produtos,codigo|max:50',
-            'nome' => 'required|max:255',
-            'preco' => 'required',
-            'categoria_id' => 'required|exists:categorias,id',
-            'imagem' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'peso' => 'required|numeric',
-            'largura' => 'required|integer',
-            'altura' => 'required|integer',
-            'comprimento' => 'required|integer',
-            'estoque' => 'required|integer',
-            'descricao' => 'nullable'
-        ]);
-
-        $dados = $request->all();
-
-        $preco = str_replace(',', '.', $request->preco);
-        $dados['preco'] = (float) $preco;
+        $dados = $request->validated();
 
         $dados['lancamento'] = $request->has('lancamento');
 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            $dados['imagem'] = $request->imagem->store('produtos', 'public');
+            $dados['imagem'] = $request->file('imagem')->store('produtos', 'public');
         }
 
         Produto::create($dados);
@@ -121,33 +106,25 @@ class ProdutoController extends Controller
         return view('admin.editar', compact('produto', 'categorias'));
     }
 
-    public function update(Request $request, $id)
+    public function update(ProdutoUpdateRequest $request, $id)
     {
         $produto = Produto::findOrFail($id);
-
-        $request->validate([
-            'codigo' => 'required|max:50|unique:produtos,codigo,' . $id,
-            'nome' => 'required|max:255',
-            'preco' => 'required',
-            'categoria_id' => 'required|exists:categorias,id',
-            'estoque' => 'required|integer',
-        ]);
-
-        $dados = $request->all();
-        $preco = str_replace(',', '.', $request->preco);
-        $dados['preco'] = (float) $preco;
+        $dados = $request->validated();
 
         $dados['lancamento'] = $request->has('lancamento');
 
-        if ($request->hasFile('imagem')) {
-            if ($produto->imagem) Storage::disk('public')->delete($produto->imagem);
-            $dados['imagem'] = $request->imagem->store('produtos', 'public');
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+
+            if ($produto->imagem) {
+                Storage::disk('public')->delete($produto->imagem);
+            }
+
+            $dados['imagem'] = $request->file('imagem')->store('produtos', 'public');
         }
 
         $produto->update($dados);
         return redirect()->route('admin.produtos.create')->with('success', 'ITEM ATUALIZADO!');
     }
-
     public function vitrine(Request $request)
     {
         $categorias = Categoria::all();

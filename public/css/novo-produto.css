@@ -48,7 +48,7 @@
     font-weight: 800;
     margin-bottom: 10px;
     color: var(--color-brand);
-    text-transform: uppercase;
+    text-transform: uppercase !important;
     margin-top: 10px;
 }
 
@@ -174,6 +174,51 @@
     background-color: var(--color-sub);
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(59, 31, 21, 0.2);
+}
+.modal-mora-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+.modal-mora-content {
+    background: #FAFAFA;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #E0DCD3;
+}
+
+.modal-mora-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-resumo-linha {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.modal-resumo-linha strong {
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+.modal-mora-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 5px;
 }
 
 @media (max-width: 1024px) {
