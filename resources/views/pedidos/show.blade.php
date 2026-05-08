@@ -15,11 +15,20 @@
         </aside>
 
         <section class="dashboard-content">
-            <div class="order-details-header">
-                <h2>DETALHES DO PEDIDO #{{ $pedido->id }}</h2>
-                <span class="status-tag {{ $pedido->status == 'pago' ? 'status-pago' : 'status-pendente' }}">
-                    {{ $pedido->status == 'pago' ? 'PAGO' : 'PENDENTE' }}
-                </span>
+            <div class="order-details-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="font-family: 'Poppins', serif; margin-bottom: 5px;">DETALHES DO PEDIDO #{{ $pedido->id }}</h2>
+                    <span class="status-tag status-{{ strtolower($pedido->status) }}">
+                        {{ strtoupper($pedido->status) }}
+                    </span>
+                </div>
+                @if(strtolower($pedido->status) == 'pendente')
+                    <div class="container-btn-retomar">
+                        <a href="{{ route('checkout', $pedido->id) }}" class="btn btn-branco">
+                            RETOMAR COMPRA
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <div class="info-grid">

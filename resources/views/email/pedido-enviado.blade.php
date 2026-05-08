@@ -1,112 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seu Pedido foi Enviado - Casa MORÁ</title>
     <style>
-        /* Importando a fonte Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            color: #333333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .header {
-            background-color: #4B3621;
-            padding: 30px;
-            text-align: center;
-            color: #ffffff;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        .content {
-            padding: 40px 30px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .tracking-box {
-            background-color: #fafafa;
-            border-left: 4px solid #D4AF37;
-            padding: 20px;
-            margin: 25px 0;
-            font-size: 18px;
-            font-weight: 600;
-            text-align: center;
-            letter-spacing: 1px;
-            border-radius: 0 4px 4px 0;
-        }
-        .tracking-code {
-            display: block;
-            font-size: 22px;
-            color: #4B3621;
-            margin-top: 5px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 14px 30px;
-            background-color: #5B8C5A;
-            color: #ffffff !important;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-            margin-top: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-        }
-        .footer {
-            background-color: #f1f1f1;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #888888;
+        
+        /* Estilos básicos para mobile */
+        @media only screen and (max-width: 600px) {
+            .container { width: 100% !important; padding: 15px !important; }
+            .content { padding: 20px !important; }
+            .tracking-code { font-size: 18px !important; }
+            .btn-action { width: 100% !important; box-sizing: border-box; text-align: center; }
         }
     </style>
 </head>
-<body>
-<div class="container">
-    <div class="header">
-        <h1>CASA MORÁ</h1>
-    </div>
+<body style="background-color: #fdfaf8; font-family: 'Poppins', Arial, sans-serif; margin: 0; padding: 20px;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td align="center">
+                <div class="container" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    
+                    <div class="content" style="padding: 40px 30px;">
+                        <h1 style="text-align: center; color: #4B3621; letter-spacing: 3px; margin: 0 0 30px 0; font-size: 24px; text-transform: uppercase;">CASA MORÁ</h1>
 
-    <div class="content">
-        <p>Olá, <strong>{{ explode(' ', $pedido->cliente->name ?? 'Cliente')[0] }}</strong>!</p>
-        <p>Temos ótimas notícias! O seu pedido <strong>#{{ $pedido->id }}</strong> foi embalado com muito carinho, acabou de ser despachado e já está a caminho do seu endereço.</p>
+                        <div style="line-height: 1.6; color: #555; font-size: 15px;">
+                            <p>Olá, <strong>{{ explode(' ', $pedido->cliente->name ?? 'Cliente')[0] }}</strong>!</p>
+                            <p>Temos ótimas notícias! O seu pedido <strong>#{{ $pedido->id }}</strong> foi embalado com muito carinho e já está a caminho do seu endereço.</p>
 
-        <div class="tracking-box">
-            <span style="font-size: 14px; color: #666; text-transform: uppercase;">Código de Rastreamento</span>
-            <span class="tracking-code">{{ $pedido->codigo_rastreio }}</span>
-        </div>
+                            <div style="background-color: #fdfaf8; border-left: 4px solid #4B3621; padding: 20px; margin: 25px 0; text-align: center; border-radius: 0 4px 4px 0;">
+                                <span style="font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Código de Rastreamento</span>
+                                <span class="tracking-code" style="display: block; font-size: 22px; color: #4B3621; font-weight: bold; margin-top: 5px;">{{ $pedido->codigo_rastreio }}</span>
+                            </div>
 
-        <p style="text-align: center;">
-            <a href="{{ url('/meus-pedidos') }}" class="btn">Acompanhar meu Pedido</a>
-        </p>
+                            <p style="text-align: center; margin-top: 30px;">
+                                <a href="{{ url('/meus-pedidos') }}" class="btn-action" style="background: #4B3621; color: #ffffff; padding: 15px 25px; text-decoration: none; font-size: 13px; display: inline-block; border-radius: 4px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">ACOMPANHAR MEU PEDIDO</a>
+                            </p>
 
-        <p style="margin-top: 30px;">Agradecemos por escolher a Casa MORÁ para decorar o seu lar. Se tiver qualquer dúvida, estamos à disposição!</p>
+                            <p style="margin-top: 40px;">Agradecemos por escolher a Casa MORÁ. Se tiver qualquer dúvida, estamos à disposição!</p>
 
-        <p>Com carinho,<br><strong>Equipe Casa MORÁ</strong></p>
-    </div>
+                            <p style="margin-bottom: 0;">Com carinho,<br><strong>Equipe Casa MORÁ</strong></p>
+                        </div>
+                    </div>
 
-    <div class="footer">
-        &copy; {{ date('Y') }} Casa MORÁ. Todos os direitos reservados.
-    </div>
-</div>
+                    <div style="text-align: center; background: #fafafa; padding: 20px; border-top: 1px solid #eee;">
+                        <a href="{{ url('/') }}" style="color: #4B3621; font-weight: bold; text-decoration: none; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">VISITAR LOJA COMPLETA</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
