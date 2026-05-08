@@ -76,10 +76,18 @@
             <div class="footer-col newsletter">
                 <h3 style="font-family: 'Poppins', sans-serif">Assine nossa Newsletter</h3>
                 <p>Receba novidades e ofertas exclusivas da Casa MORÁ.</p>
-                <form class="news-form" onsubmit="event.preventDefault();">
-                    <input type="email" placeholder="Seu melhor e-mail" required>
+
+                <form action="{{ route('newsletter.subscribe') }}" method="POST" class="news-form">
+                    @csrf
+                    <input type="email" name="email" placeholder="Seu melhor e-mail" required>
                     <button type="submit" aria-label="Enviar"><i class="fa-solid fa-arrow-right"></i></button>
                 </form>
+
+                @if(session('sucesso_newsletter'))
+                    <p style="color: #5B8C5A; font-size: 0.85rem; margin-top: 10px; font-family: 'Poppins', sans-serif;">
+                        <i class="fa-solid fa-check"></i> {{ session('sucesso_newsletter') }}
+                    </p>
+                @endif
             </div>
 
             <div class="footer-col links">
