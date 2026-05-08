@@ -144,6 +144,30 @@
 
 <div class="carrinho-overlay" id="carrinhoOverlay"></div>
 
+<div class="whatsapp-container" id="whatsapp-container">
+    <button class="whatsapp-close" id="btn-fechar-whatsapp" aria-label="Fechar WhatsApp">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+
+    <a href="https://api.whatsapp.com/send?phone=5511915167878&text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20a%20Casa%20Mor%C3%A1!" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const whatsappContainer = document.getElementById('whatsapp-container');
+        const btnFechar = document.getElementById('btn-fechar-whatsapp');
+        if (sessionStorage.getItem('whatsappFechado')) {
+            whatsappContainer.style.display = 'none';
+        }
+        btnFechar.addEventListener('click', function () {
+            whatsappContainer.style.display = 'none';
+            sessionStorage.setItem('whatsappFechado', 'true');
+        });
+    });
+</script>
+
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/carrinho.js') }}"></script>
 <script src="{{ asset('js/frete.js') }}"></script>
