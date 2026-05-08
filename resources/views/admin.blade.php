@@ -42,7 +42,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a href="/" class="nav-item nav-item-back"><i class="fa-solid fa-arrow-left"></i> voltar ao site</a>
+                <a href="/" class="nav-item nav-item-back" style="text-transform: lowercase;"><i class="fa-solid fa-arrow-left"></i> voltar ao site</a>
             </div>
         </aside>
 

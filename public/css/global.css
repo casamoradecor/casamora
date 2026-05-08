@@ -11,7 +11,6 @@
   --container-base: 1200px;
   --space-page: clamp(20px, 5vw, 72px);
   --space-section: clamp(48px, 9vw, 140px);
-  /* Breakpoints usados no CSS: 1024, 900, 768, 600 e 480px. */
 }
 
 /* Reset Mínimo */
@@ -44,14 +43,14 @@ body {
   color: var(--color-text);
   overflow-x: hidden;
   background-color: #F0F0F0;
-  text-transform: lowercase; /* Aplica minúsculo em todo o site */
+  text-transform: lowercase;
 }
 
 /* =========================================
    EXCEÇÕES (Onde o texto NÃO fica minúsculo)
    ========================================= */
 
-/* Menu (Header), Rodapé, Inputs e Navegação do Dashboard */
+
 header,
 header *,
 footer,
@@ -66,7 +65,7 @@ button,
 .dashboard-nav * {
     text-transform: none !important;
 }
-/* Forçar MAIÚSCULO apenas no carrinho e na sidebar */
+
 .carrinho-container,
 .carrinho-container *,
 .carrinho-sidebar,
@@ -74,7 +73,7 @@ button,
     text-transform: uppercase !important;
 }
 
-/* Ajuste fino: caso queira que as unidades (R$) fiquem com espaçamento melhor */
+
 .price-tag, .carrinho-total span {
     letter-spacing: 0.5px;
 }
@@ -83,7 +82,7 @@ button,
    SISTEMA DE BOTÕES - CASA MORÁ
    ========================================= */
 
-/* 1. Classe Base (Estrutura e Tipografia) */
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -92,7 +91,7 @@ button,
     font-family: var(--font-base);
     font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase !important; /* Adicione o !important aqui */
+    text-transform: uppercase !important;
     letter-spacing: 1px;
     border-radius: 4px;
     cursor: pointer;
@@ -103,7 +102,7 @@ button,
     transition: all 0.3s ease;
 }
 
-/* 2. Botão Primário (Fundo Marrom) */
+
 .btn-marrom {
     background-color: var(--color-brand);
     color: #ffffff !important;
@@ -113,8 +112,8 @@ button,
 .btn-marrom:hover {
     background-color: var(--color-sub);
     border-color: var(--color-sub);
-    transform: translateY(-2px); /* Efeito suave de flutuação */
-    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2); /* Sombra elegante */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2);
 }
 
 .btn-comprar {
@@ -126,8 +125,8 @@ button,
 .btn-comprar:hover {
     background-color: var(--color-sub);
     border-color: var(--color-sub);
-    transform: translateY(-2px); /* Efeito suave de flutuação */
-    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2); /* Sombra elegante */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 31, 21, 0.2);
 }
 
 .botao-calc-frete{
@@ -136,7 +135,7 @@ button,
     border-color: var(--color-brand);
 }
 
-/* 3. Botão Secundário (Fundo Branco com Borda) */
+
 .btn-branco {
     background-color: #ffffff;
     color: var(--color-brand) !important;
@@ -148,16 +147,16 @@ button,
     color: #ffffff !important;
 }
 
-/* 4. Botão Estilizado (Ghost / Minimalista) */
+
 .btn-ghost {
     background-color: transparent;
     color: var(--color-text) !important;
-    padding: 12px 0; /* Remove padding lateral para alinhar com o texto da página */
+    padding: 12px 0;
     min-width: auto;
     position: relative;
 }
 
-/* Linha inferior animada do Botão Ghost */
+
 .btn-ghost::after {
     content: '';
     position: absolute;
@@ -174,5 +173,63 @@ button,
 }
 
 .btn-ghost:hover::after {
-    width: 100%; /* A linha sublinha o texto suavemente ao passar o mouse */
+    width: 100%;
+}
+
+.whatsapp-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+}
+
+
+.whatsapp-close {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    background: #ffffff;
+    color: #999999;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10000;
+    padding: 0;
+}
+
+.whatsapp-close:hover {
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+    background: #f9f9f9;
+    transform: scale(1.1);
+}
+
+
+.btn-whatsapp {
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: #FFF;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-whatsapp:hover {
+    transform: scale(1.05); 
+    background-color: #20B858;
+    color: #FFF;
 }

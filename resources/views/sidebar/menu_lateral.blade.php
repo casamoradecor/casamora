@@ -36,7 +36,7 @@
     </nav>
 
     <div class="sidebar-footer">
-        <a href="/" class="nav-item nav-item-back">
+        <a href="/" class="nav-item nav-item-back" style="text-transform: lowercase !important;">
             <i class="fa-solid fa-arrow-left"></i> voltar ao site
         </a>
     </div>
