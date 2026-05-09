@@ -58,7 +58,7 @@ Route::get('/frete/calcular-carrinho', [FreteController::class, 'calcularCarrinh
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CarrinhoController::class, 'checkout'])->name('checkout');
+    Route::get('/checkout/{id?}', [CarrinhoController::class, 'checkout'])->name('checkout');
     Route::post('/finalizar-pedido', [CarrinhoController::class, 'finalizarPedido'])->name('pedido.finalizar');
 });
 

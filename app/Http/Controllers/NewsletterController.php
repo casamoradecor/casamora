@@ -44,31 +44,39 @@ class NewsletterController extends Controller
 
         $promptUsuario = $request->prompt;
 
-        $promptCompleto = "Aja como um redator de marketing da 'Casa MORÁ', uma loja de móveis e decoração elegante e premium. "
-            . "Escreva o conteúdo de um e-mail marketing baseado no seguinte pedido: '{$promptUsuario}'. "
-            . "O retorno deve ser ESTRITAMENTE o código HTML (use tags <h2>, <p>, <strong>, <br> para estilizar). "
-            . "NÃO inclua as tags <html>, <head> ou <body>. NÃO use formatação markdown (como ```html). "
-            . "Apenas o miolo do e-mail.";
+        $promptCompleto = "Aja como o Diretor de Marketing da 'Casa MORÁ', uma loja de decorações elegante e premium. "
+            . "Crie uma newsletter baseada neste pedido: '{$promptUsuario}'. "
+            . "REGRAS OBRIGATÓRIAS:\n"
+            . "1. Crie um ASSUNTO de e-mail altamente chamativo e elegante (máximo 60 caracteres).\n"
+            . "2. Escreva o CONTEÚDO em HTML limpo, usando tags como <h2>, <p>, <strong> e <br>. NÃO inclua as tags <html>, <head> ou <body>.\n"
+            . "3. RESPONDA EXATAMENTE NO FORMATO JSON ABAIXO, sem blocos de código markdown, sem explicações:\n"
+            . '{"assunto": "Seu assunto aqui", "conteudo": "Seu html aqui"}';
 
         $apiKey = env('GROQ_API_KEY');
 
-        $response = Http::withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
+        $response = Http::timeout(15)->withToken($apiKey)->post('https://api.groq.com/openai/v1/chat/completions', [
             'model' => 'llama-3.3-70b-versatile',
             'messages' => [
-                ['role' => 'system', 'content' => 'Você é um assistente especialista em marketing de luxo.'],
+                ['role' => 'system', 'content' => 'Você é um assistente especialista em marketing de luxo que responde ESTRITAMENTE em JSON limpo.'],
                 ['role' => 'user', 'content' => $promptCompleto]
-            ]
+            ],
+            'temperature' => 0.7,
+            'response_format' => ['type' => 'json_object']
         ]);
 
         if ($response->successful()) {
             $dados = $response->json();
-            $textoGerado = $dados['choices'][0]['message']['content'] ?? '';
+            $textoGerado = $dados['choices'][0]['message']['content'] ?? '{}';
+            $textoGerado = str_replace(['```json', '```html', '```'], '', $textoGerado);
+            $dadosIA = json_decode(trim($textoGerado), true);
 
-            $textoGerado = str_replace(['```html', '```'], '', $textoGerado);
+            $assunto = $dadosIA['assunto'] ?? 'Casa MORÁ: Novidades exclusivas para você';
+            $conteudo = $dadosIA['conteudo'] ?? '';
 
             return response()->json([
                 'sucesso' => true,
-                'conteudo' => trim($textoGerado)
+                'assunto' => $assunto,
+                'conteudo' => $conteudo
             ]);
         }
 

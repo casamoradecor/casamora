@@ -140,16 +140,43 @@ class CarrinhoController extends Controller
     /**
      * Exibe a tela de Checkout
      */
-    public function checkout()
+    public function checkout($id = null)
     {
+        if ($id) {
+            $pedido = Pedido::with('itens.produto')->findOrFail($id);
+            if ($pedido->cliente_id != Auth::id()) {
+                return redirect()->route('home')->with('erro', 'Acesso negado.');
+            }
+            $novoCarrinho = [];
+            foreach ($pedido->itens as $item) {
+                $produto = $item->produto;
+
+                $caminho = $produto->imagem;
+                $urlFinal = ($caminho && str_contains($caminho, 'assets'))
+                    ? asset(ltrim($caminho, '/'))
+                    : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
+
+                $novoCarrinho[$produto->id] = [
+                    "id" => $produto->id,
+                    "nome" => $produto->nome,
+                    "quantidade" => $item->quantidade,
+                    "preco" => $item->preco_unitario,
+                    "imagem" => $urlFinal
+                ];
+            }
+
+            session()->put('carrinho', $novoCarrinho);
+        }
+
         $carrinho = session()->get('carrinho', []);
-        if (empty($carrinho)) return redirect()->route('home');
+
+        if (empty($carrinho)) {
+            return redirect()->route('home');
+        }
 
         $total = $this->calcularTotal($carrinho);
-        return view('pedidos.checkout', compact('carrinho', 'total'));
-    }
-
-    /**
+        return view('pedidos.checkout', compact('carrinho', 'total', 'id'));
+    }    /**
      * PROCESSO DE FINALIZAÇÃO E INTEGRAÇÃO MERCADO PAGO
      */
     public function finalizarPedido(Request $request)
@@ -205,8 +232,7 @@ class CarrinhoController extends Controller
 
             $valorFrete = (float)$request->valor_frete;
 
-            // 3. Criar o Pedido
-            $pedido = Pedido::create([
+            $dadosPedido = [
                 'cliente_id' => $userId,
                 'endereco_id' => $enderecoDb->id,
                 'valor_produtos' => $valorProdutos,
@@ -220,7 +246,18 @@ class CarrinhoController extends Controller
                 'endereco' => $enderecoTexto,
                 'servico_frete_id' => $request->servico_frete_id,
                 'metodo_envio' => $request->frete_escolhido,
-            ]);
+            ];
+
+            if ($request->pedido_id) {
+                $pedido = Pedido::findOrFail($request->pedido_id);
+                $pedido->update($dadosPedido);
+
+                PedidoItem::where('pedido_id', $pedido->id)->delete();
+                Pagamento::where('pedido_id', $pedido->id)->where('status', 'pending')->delete();
+            } else {
+                $dadosPedido['codigo_externo'] = 'MOR-' . time();
+                $pedido = Pedido::create($dadosPedido);
+            }
 
             // 4. Criar Itens do Pedido
             foreach ($carrinho as $id => $detalhes) {

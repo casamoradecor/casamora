@@ -137,20 +137,29 @@
     text-transform: uppercase;
 }
 
-/* Cores por Status */
+
 .status-pending {
-    background-color: #FDF4E3; /* Creme/Amarelo bem claro */
-    color: #B28900;            /* Dourado escuro */
+    background-color: #FDF4E3;
+    color: #B28900;
     border: 1px solid #F5E6BE;
 }
 
 .status-approved, .status-pago {
-    background-color: #E8F5E9; /* Verde claro */
-    color: #2E7D32;            /* Verde escuro */
+    background-color: #E8F5E9;
+    color: #2E7D32;
     border: 1px solid #C8E6C9;
 }
 
-/* Ajuste do Título do Card para não ficar colado */
+.status-enviado {
+    background-color: #4B3621;
+    color: white;
+}
+
+.status-cancelado {
+    background-color: #A63D40;
+    color: white;
+}
+
 .card-content p {
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -404,4 +413,31 @@
         font-size: 0.65rem;
         white-space: nowrap;
     }
+
+    .container-btn-retomar {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        text-align: left;
+        margin-top: 10px;
+    }
+
+
+    .btn-branco {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+
+    .order-details-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
+

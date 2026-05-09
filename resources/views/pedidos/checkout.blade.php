@@ -62,6 +62,7 @@
 
             <form action="{{ route('pedido.finalizar') }}" method="POST" class="checkout-form" id="form-checkout">
                 @csrf
+                <input type="hidden" name="pedido_id" value="{{ $id ?? '' }}">
 
                 {{-- Inputs ocultos para o Frete --}}
                 <input type="hidden" name="frete_escolhido" id="frete_escolhido_input" required>
