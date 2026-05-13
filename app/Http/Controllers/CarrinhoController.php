@@ -149,8 +149,34 @@ class CarrinhoController extends Controller
     /**
      * Exibe a tela de Checkout
      */
-    public function checkout()
+    public function checkout($id = null)
     {
+        if ($id) {
+            $pedido = Pedido::with('itens.produto')
+                ->where('cliente_id', Auth::id())
+                ->findOrFail($id);
+
+            $novoCarrinho = [];
+
+            foreach ($pedido->itens as $item) {
+                $produto = $item->produto;
+
+                if (!$produto) {
+                    continue;
+                }
+
+                $novoCarrinho[$produto->id] = [
+                    'id' => $produto->id,
+                    'nome' => $produto->nome,
+                    'quantidade' => $item->quantidade,
+                    'preco' => $item->preco_unitario,
+                    'imagem' => $this->resolverImagemProduto($produto),
+                ];
+            }
+
+            session()->put('carrinho', $novoCarrinho);
+        }
+
         $resumo = $this->montarResumoCarrinho(session()->get('carrinho', []), true);
 
         if (empty($resumo['itens'])) {
@@ -162,6 +188,7 @@ class CarrinhoController extends Controller
             'total' => $resumo['total'],
             'subtotal' => $resumo['subtotal'],
             'desconto' => $resumo['desconto'],
+            'id' => $id,
         ]);
     }
 
@@ -235,7 +262,7 @@ class CarrinhoController extends Controller
             $valorFrete = (float) $freteSelecionado['valor'];
             $valorTotal = $resumo['total'] + $valorFrete;
 
-            $pedido = Pedido::create([
+            $dadosPedido = [
                 'cliente_id' => $user->id,
                 'endereco_id' => $enderecoDb->id,
                 'valor_produtos' => $resumo['subtotal'],
@@ -250,7 +277,20 @@ class CarrinhoController extends Controller
                 'endereco' => $enderecoTexto,
                 'servico_frete_id' => (string) $freteSelecionado['id'],
                 'metodo_envio' => $freteSelecionado['nome'],
-            ]);
+            ];
+
+            if ($request->filled('pedido_id')) {
+                $pedido = Pedido::where('cliente_id', $user->id)
+                    ->where('status', 'pendente')
+                    ->findOrFail($request->pedido_id);
+
+                $pedido->update($dadosPedido);
+
+                PedidoItem::where('pedido_id', $pedido->id)->delete();
+                Pagamento::where('pedido_id', $pedido->id)->where('status', 'pending')->delete();
+            } else {
+                $pedido = Pedido::create($dadosPedido);
+            }
 
             foreach ($resumo['itens'] as $id => $item) {
                 PedidoItem::create([
@@ -401,3 +441,4 @@ class CarrinhoController extends Controller
             : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
     }
 }
+

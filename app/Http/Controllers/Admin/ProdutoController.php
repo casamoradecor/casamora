@@ -39,7 +39,7 @@ class ProdutoController extends Controller
                 . "CONTEXTO: O cliente está interessado no produto '{$produto->nome}' da categoria '" . ($produto->categoria->nome) . "'.\n\n"
                 . "SUA MISSÃO: Selecione exatamente 3 produtos da lista abaixo que melhor COMPLEMENTEM este item para criar um ambiente sofisticado e completo.\n\n"
                 . "REGRAS CRUCAIS DE CURADORIA:\n"
-                . "1. DIVERSIDADE DE CATEGORIAS: Evite sugerir produtos da mesma categoria '" . ($produto->categoria->nome) . "'. Priorize itens que o cliente usaria JUNTO com o atual (ex: se ele vê uma mesa, sugira um vaso, um tapete ou uma cadeira).\n"
+                . "1. DIVERSIDADE DE CATEGORIAS: Evite sugerir produtos da mesma categoria '" . ($produto->categoria->nome) . "'. Priorize itens que o cliente usaria JUNTO com o atual (ex: se ele vê uma mesa, sugira um vaso, um outro vaso com características parecidas ou um quadro).\n"
                 . "2. ESTILO E HARMONIA: Os itens escolhidos devem ter a mesma linguagem visual (material, cor e proposta de design) do produto principal.\n"
                 . "3. LISTA DE CANDIDATOS: [{$textoCatalogo}]\n\n"
                 . "SAÍDA OBRIGATÓRIA: Responda APENAS os 3 IDs numéricos separados por vírgula. Não escreva explicações, nem saudações. Exemplo: 7,15,22";
