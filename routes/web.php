@@ -27,7 +27,6 @@ Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.s
 Route::get('/api/busca-produtos', [ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
 Route::get('/sobre-nos', [SobreNosController::class, 'show'])->name('sobre.nos');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
-
 /*
 |--------------------------------------------------------------------------
 | CARRINHO DE COMPRAS & WEBHOOK

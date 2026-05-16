@@ -441,4 +441,3 @@ class CarrinhoController extends Controller
             : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
     }
 }
-
