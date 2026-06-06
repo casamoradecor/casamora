@@ -16,6 +16,7 @@ use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\Admin\VendaController;
 use App\Http\Controllers\Admin\SobreNosController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\Admin\EstatisticaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Rota para a vitrine pública (onde estão os filtros)
 Route::get('/produtos', [ProdutoController::class, 'vitrine'])->name('produtos.index');
 
+Route::get('/politica-de-privacidade', function () {
+    return view('institucional.privacidade');
+})->name('institucional.privacidade');
+
+Route::get('/trocas-e-devolucoes', function () {
+    return view('institucional.trocas');
+})->name('institucional.trocas');
+
+Route::get('/termos-de-uso', function () {
+    return view('institucional.termos');
+})->name('institucional.termos');
+
 /*
 |--------------------------------------------------------------------------
 | PAINEL ADMINISTRATIVO (AdminController)
@@ -113,6 +126,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::post('/destaque', [AdminController::class, 'updateDestaque'])->name('admin.updateDestaque');
     Route::post('/shoppable', [AdminController::class, 'updateShoppable'])->name('admin.updateShoppable');
     Route::post('/categoria/{id}', [AdminController::class, 'updateCategoria'])->name('admin.updateCategoria');
+    Route::get('/estatisticas', [AdminController::class, 'estatisticas'])->name('admin.estatisticas.index');
 
     Route::post('/admin/shoppable/save', [AdminController::class, 'saveHotspot'])->name('admin.saveHotspot');
     Route::delete('/admin/shoppable/delete/{id}', [App\Http\Controllers\AdminController::class, 'deleteHotspot'])->name('admin.deleteHotspot');

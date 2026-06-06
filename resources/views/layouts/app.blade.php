@@ -95,14 +95,13 @@
                 <a href="/">Início</a>
                 <a href="{{ route('produtos.index') }}">Produtos</a>
                 <a href="{{ route('sobre.nos') }}">Sobre nós</a>
-                <a href="#">Contato</a>
             </div>
 
             <div class="footer-col links">
                 <h3 style="font-family: 'Poppins', sans-serif">Políticas</h3>
-                <a href="#">Trocas e Devoluções</a>
-                <a href="#">Política de Privacidade</a>
-                <a href="#">Termos de Uso</a>
+                <a href="{{ route('institucional.trocas') }}">Trocas e Devoluções</a>
+                <a href="{{ route('institucional.privacidade') }}">Política de Privacidade</a>
+                <a href="{{ route('institucional.termos') }}">Termos de Uso</a>
             </div>
 
             <div class="footer-col social">
