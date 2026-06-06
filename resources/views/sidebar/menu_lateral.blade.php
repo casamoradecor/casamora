@@ -8,7 +8,7 @@
         <a href="{{ route('admin.index') }}" class="nav-item {{ request()->routeIs('admin.index') ? 'active' : '' }}">
             <i class="fa-solid fa-house"></i> início
         </a>
-        <a href="#" class="nav-item">
+        <a href="{{ route('admin.estatisticas.index') }}" class="nav-item">
             <i class="fa-solid fa-chart-line"></i> estatísticas
         </a>
         <a href="{{ route('admin.newsletter.index') }}" class="nav-item {{ request()->routeIs('admin.newsletter.*') ? 'active' : '' }}">

@@ -18,7 +18,7 @@
 
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> início</a>
-                <a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> estatísticas</a>
+                <a href="{{ route('admin.estatisticas.index') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i> estatísticas</a>
                 <a href="{{ route('admin.newsletter.index') }}" class="nav-item {{ request()->routeIs('admin.newsletter.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-envelope"></i> newsletter
                 </a>
