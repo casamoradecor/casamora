@@ -10,6 +10,10 @@ use App\Models\ShoppablePoint;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HomeSlot;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Models\Newsletter;
+use App\Models\Visita;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -31,6 +35,43 @@ class AdminController extends Controller
     {
         if (Auth::id() !== 1) return redirect('/');
         return view('admin');
+    }
+
+    public function estatisticas()
+    {
+        if (Auth::id() !== 1) return redirect('/');
+
+        // 1. Total de Usuários
+        $totalUsuarios = User::count();
+
+        // 2. Total da Newsletter (Ativos)
+        $totalNewsletter = Newsletter::where('active', true)->count();
+
+        // 3. Acessos do Site
+        $totalVisitas = Visita::count();
+
+        // 4. Produtos Mais Vendidos
+        $produtosMaisVendidos = DB::table('pedido_itens')
+            ->join('pedidos', 'pedido_itens.pedido_id', '=', 'pedidos.id')
+            ->join('produtos', 'pedido_itens.produto_id', '=', 'produtos.id')
+            ->whereIn('pedidos.status', ['pago', 'enviado'])
+            ->select('produtos.nome', DB::raw('SUM(pedido_itens.quantidade) as total_vendido'))
+            ->groupBy('produtos.id', 'produtos.nome')
+            ->orderByDesc('total_vendido')
+            ->take(5)
+            ->get();
+
+        // Arrays para o Chart.js
+        $labelsProdutos = $produtosMaisVendidos->pluck('nome');
+        $dadosProdutos = $produtosMaisVendidos->pluck('total_vendido');
+
+        return view('admin.estatisticas.index', compact(
+            'totalUsuarios',
+            'totalNewsletter',
+            'totalVisitas',
+            'labelsProdutos',
+            'dadosProdutos'
+        ));
     }
 
     /**

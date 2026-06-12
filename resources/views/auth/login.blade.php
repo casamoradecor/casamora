@@ -14,7 +14,7 @@
     <main class="login-page">
         <div class="login-split">
             <div class="login-image">
-                <img src="{{ asset('assets/vasomora.png') }}" alt="Ambiente Casa MORÁ">
+                <img src="{{ asset('assets/Embalagem.png') }}" alt="Ambiente Casa MORÁ">
             </div>
 
             <div class="login-content">
