@@ -21,9 +21,14 @@ return [
 
     'csp' => [
         'enabled' => (bool) env('SECURITY_CSP_ENABLED', true),
+        'form_action' => env('SECURITY_CSP_FORM_ACTION', "'self'"),
+        'form_action_extra' => array_values(array_filter(array_map(
+            static fn (string $value): string => trim($value),
+            explode(',', (string) env('SECURITY_CSP_FORM_ACTION_EXTRA', ''))
+        ))),
         'policy' => env(
             'SECURITY_CSP_POLICY',
-            "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; ".
+            "default-src 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'; ".
             "img-src 'self' data: https: blob:; ".
             "script-src 'self' 'unsafe-inline'; ".
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://fonts.bunny.net; ".

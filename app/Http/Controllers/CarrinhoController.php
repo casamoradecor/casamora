@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -334,8 +335,13 @@ class CarrinhoController extends Controller
                 ];
             }
 
-            $mpResponse = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
-                ->post('https://api.mercadopago.com/checkout/preferences', [
+            $mpConfig = config('services.mercadopago');
+
+            $mpResponse = Http::withToken($mpConfig['token'])
+                ->acceptJson()
+                ->connectTimeout($mpConfig['connect_timeout'])
+                ->timeout($mpConfig['timeout'])
+                ->post(rtrim($mpConfig['base_url'], '/') . '/checkout/preferences', [
                     'items' => $itensMp,
                     'payer' => [
                         'name' => $user->name,
@@ -346,14 +352,21 @@ class CarrinhoController extends Controller
                         'failure' => url('/checkout'),
                         'pending' => url('/pedido/sucesso/' . $pedido->id),
                     ],
-                    'notification_url' => url('/webhook/mercadopago'),
+                    'notification_url' => url('/webhook/mercadopago?source_news=webhooks'),
                     'external_reference' => (string) $pedido->id,
                     'statement_descriptor' => 'CASA MORA',
                     'expires' => false,
                 ]);
 
             if ($mpResponse->failed()) {
-                throw new \Exception('Erro ao comunicar com Mercado Pago: ' . $mpResponse->body());
+                Log::error('Falha ao criar preferencia no Mercado Pago.', [
+                    'pedido_id' => $pedido->id,
+                    'user_id' => $user->id,
+                    'status' => $mpResponse->status(),
+                    'response' => $mpResponse->json(),
+                ]);
+
+                throw new \RuntimeException('Nao foi possivel iniciar o pagamento no momento.');
             }
 
             DB::commit();
@@ -371,7 +384,15 @@ class CarrinhoController extends Controller
                 DB::rollBack();
             }
 
-            return redirect()->back()->withInput()->with('erro', $e->getMessage());
+            Log::error('Falha ao finalizar pedido.', [
+                'user_id' => Auth::id(),
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('erro', 'Nao foi possivel concluir seu pedido agora. Tente novamente.');
         }
     }
 

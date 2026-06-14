@@ -46,7 +46,7 @@ class SecurityHeaders
 
         // Define uma CSP padrao para reduzir impacto de XSS e carregamento de recursos indevidos.
         if (config('security.csp.enabled', true) && !$headers->has('Content-Security-Policy')) {
-            $headers->set('Content-Security-Policy', config('security.csp.policy'));
+            $headers->set('Content-Security-Policy', $this->buildContentSecurityPolicy());
         }
 
         // HSTS so deve ser enviado em HTTPS real; em HTTP/local ele pode atrapalhar o ambiente de desenvolvimento.
@@ -67,5 +67,35 @@ class SecurityHeaders
         }
 
         return $response;
+    }
+
+    private function buildContentSecurityPolicy(): string
+    {
+        $policy = (string) config('security.csp.policy', '');
+        $formAction = $this->buildFormActionDirectiveValue();
+
+        if ($policy === '') {
+            return "default-src 'self'; base-uri 'self'; form-action {$formAction}; frame-ancestors 'self'; object-src 'none'";
+        }
+
+        return preg_replace(
+            '/base-uri\s+\'self\';/i',
+            "base-uri 'self'; form-action {$formAction};",
+            $policy,
+            1
+        ) ?? $policy;
+    }
+
+    private function buildFormActionDirectiveValue(): string
+    {
+        $sources = [(string) config('security.csp.form_action', "'self'")];
+
+        foreach (config('security.csp.form_action_extra', []) as $source) {
+            if (is_string($source) && $source !== '') {
+                $sources[] = $source;
+            }
+        }
+
+        return implode(' ', array_unique($sources));
     }
 }

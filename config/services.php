@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'mercadopago' => [
+        'token' => env('MERCADOPAGO_ACCESS_TOKEN'),
+        'webhook_secret' => env('MERCADOPAGO_WEBHOOK_SECRET'),
+        'base_url' => env('MERCADOPAGO_BASE_URL', 'https://api.mercadopago.com'),
+        'timeout' => (int) env('MERCADOPAGO_TIMEOUT', 15),
+        'connect_timeout' => (int) env('MERCADOPAGO_CONNECT_TIMEOUT', 5),
+    ],
+
 ];
