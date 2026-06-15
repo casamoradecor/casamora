@@ -244,21 +244,21 @@ class AdminController extends Controller
 
     public function uploadBanner(Request $request)
     {
-        $request->validate(['hero_img' => 'required|image']);
+        $request->validate(['hero_img' => 'required|image|mimes:jpeg,png,jpg,webp|max:4096']);
         $request->file('hero_img')->move(public_path('assets'), 'hero_banner.png');
         return redirect()->back()->with('sucesso', 'BANNER ATUALIZADO!');
     }
 
     public function updateDestaque(Request $request)
     {
-        $request->validate(['destaque_img' => 'required|image']);
+        $request->validate(['destaque_img' => 'required|image|mimes:jpeg,png,jpg,webp|max:4096']);
         $request->file('destaque_img')->move(public_path('assets'), 'destaque_home.png');
         return redirect()->back()->with('sucesso', 'DESTAQUE ATUALIZADO!');
     }
 
     public function updateShoppable(Request $request)
     {
-        $request->validate(['shoppable_img' => 'required|image']);
+        $request->validate(['shoppable_img' => 'required|image|mimes:jpeg,png,jpg,webp|max:4096']);
         $request->file('shoppable_img')->move(public_path('assets'), 'shoppable_main.png');
         return redirect()->back()->with('sucesso', 'AMBIENTE ATUALIZADO!');
     }
@@ -267,7 +267,7 @@ class AdminController extends Controller
     {
         // Tornamos os campos opcionais na validação para um não travar o outro
         $request->validate([
-            'cat_img' => 'nullable|image',
+            'cat_img' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'categoria_id' => 'nullable|exists:categorias,id'
         ]);
 
