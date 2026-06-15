@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules; // Certifique-se de que isso está aqui
@@ -56,8 +57,22 @@ class NewPasswordController extends Controller
         );
 
         return $status == Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
+            ? redirect()->route('login')->with('status', 'Sua senha foi redefinida com sucesso. Voce ja pode entrar com a nova senha.')
             : back()->withInput($request->only('email'))
-                ->withErrors(['email' => __($status)]);
+                ->withErrors(['email' => $this->mensagemErroResetSenha($status, (string) $request->input('email'))]);
+    }
+
+    private function mensagemErroResetSenha(string $status, string $email): string
+    {
+        Log::warning('Falha ao redefinir senha.', [
+            'email' => $email,
+            'status' => $status,
+        ]);
+
+        return match ($status) {
+            Password::INVALID_TOKEN => 'O link de redefinicao de senha e invalido ou expirou. Solicite um novo link e tente novamente.',
+            Password::INVALID_USER => 'Nao foi possivel validar a solicitacao de redefinicao de senha.',
+            default => 'Nao foi possivel redefinir a senha agora. Tente novamente.',
+        };
     }
 }
