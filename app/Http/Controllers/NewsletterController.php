@@ -7,6 +7,7 @@ use App\Models\Newsletter;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Http;
 use App\Mail\NewsletterMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class NewsletterController extends Controller
@@ -80,9 +81,14 @@ class NewsletterController extends Controller
             ]);
         }
 
+        Log::error('Falha ao gerar newsletter com IA.', [
+            'status' => $response->status(),
+            'response' => $response->json() ?? $response->body(),
+        ]);
+
         return response()->json([
             'sucesso' => false,
-            'erro' => 'Detalhe do erro Groq: ' . $response->body()
+            'erro' => 'Nao foi possivel gerar o conteudo agora. Tente novamente em instantes.'
         ], 500);
     }
 

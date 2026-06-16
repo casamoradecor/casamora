@@ -2,28 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Produto;
-use App\Models\Pedido;
-use App\Models\PedidoItem;
 use App\Models\Endereco;
 use App\Models\Pagamento;
-use Illuminate\Support\Facades\DB;
+use App\Models\Pedido;
+use App\Models\PedidoItem;
+use App\Models\Produto;
+use App\Services\MelhorEnvioService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class CarrinhoController extends Controller
 {
+    public function index()
+    {
+        return view('pedidos.carrinho');
+    }
+
     /**
      * Retorna os dados atuais do carrinho para o JS (Sidebar)
      */
     public function listar()
     {
-        $carrinho = session()->get('carrinho', []);
+        $resumo = $this->montarResumoCarrinho(session()->get('carrinho', []), true);
+
         return response()->json([
-            'itens' => $carrinho,
-            'total' => $this->calcularTotal($carrinho)
+            'itens' => $resumo['itens'],
+            'subtotal' => $resumo['subtotal'],
+            'desconto' => $resumo['desconto'],
+            'total' => $resumo['total'],
         ]);
     }
 
@@ -39,44 +50,43 @@ class CarrinhoController extends Controller
         $produto = Produto::find($request->produto_id);
 
         if (!$produto) {
-            return response()->json(['success' => false, 'message' => 'Produto não encontrado'], 404);
+            return response()->json(['success' => false, 'message' => 'Produto nao encontrado'], 404);
         }
 
-        $quantidadeSolicitada = (int)$request->input('quantidade', 1);
+        $quantidadeSolicitada = (int) $request->input('quantidade', 1);
         $carrinho = session()->get('carrinho', []);
-        $quantidadeJaNoCarrinho = isset($carrinho[$produto->id]) ? $carrinho[$produto->id]['quantidade'] : 0;
+        $quantidadeJaNoCarrinho = isset($carrinho[$produto->id]) ? (int) $carrinho[$produto->id]['quantidade'] : 0;
         $totalFinal = $quantidadeJaNoCarrinho + $quantidadeSolicitada;
+
+        if ($quantidadeSolicitada <= 0) {
+            return response()->json(['success' => false, 'message' => 'Quantidade invalida'], 400);
+        }
 
         if ($totalFinal > $produto->estoque) {
             return response()->json([
                 'success' => false,
-                'message' => "Estoque insuficiente."
+                'message' => 'Estoque insuficiente.',
             ], 400);
         }
-
-        $caminho = $produto->imagem;
-        $urlFinal = ($caminho && str_contains($caminho, 'assets'))
-            ? asset(ltrim($caminho, '/'))
-            : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
 
         if (isset($carrinho[$produto->id])) {
             $carrinho[$produto->id]['quantidade'] += $quantidadeSolicitada;
         } else {
             $carrinho[$produto->id] = [
-                "id" => $produto->id,
-                "nome" => $produto->nome,
-                "quantidade" => $quantidadeSolicitada,
-                "preco" => $produto->preco,
-                "imagem" => $urlFinal
+                'id' => $produto->id,
+                'nome' => $produto->nome,
+                'quantidade' => $quantidadeSolicitada,
+                'preco' => $produto->preco,
+                'imagem' => $this->resolverImagemProduto($produto),
             ];
         }
 
-        session()->put('carrinho', $carrinho);
+        $resumo = $this->montarResumoCarrinho($carrinho, true);
 
         return response()->json([
             'success' => true,
-            'itens' => $carrinho,
-            'total' => $this->calcularTotal($carrinho)
+            'itens' => $resumo['itens'],
+            'total' => $resumo['total'],
         ]);
     }
 
@@ -85,25 +95,23 @@ class CarrinhoController extends Controller
         $id = $request->produto_id;
         $carrinho = session()->get('carrinho', []);
 
-        if (isset($carrinho[$id])) {
-            // Se a quantidade for maior que 1, apenas diminui
-            if ($carrinho[$id]['quantidade'] > 1) {
-                $carrinho[$id]['quantidade']--;
-            } else {
-                // Se for a última unidade, remove do carrinho
-                unset($carrinho[$id]);
-            }
-
-            session()->put('carrinho', $carrinho);
-
-            return response()->json([
-                'success' => true,
-                'itens' => $carrinho,
-                'total' => $this->calcularTotal($carrinho)
-            ]);
+        if (!isset($carrinho[$id])) {
+            return response()->json(['success' => false, 'message' => 'PRODUTO NAO ENCONTRADO'], 404);
         }
 
-        return response()->json(['success' => false, 'message' => 'PRODUTO NÃO ENCONTRADO'], 404);
+        if ($carrinho[$id]['quantidade'] > 1) {
+            $carrinho[$id]['quantidade']--;
+        } else {
+            unset($carrinho[$id]);
+        }
+
+        $resumo = $this->montarResumoCarrinho($carrinho, true);
+
+        return response()->json([
+            'success' => true,
+            'itens' => $resumo['itens'],
+            'total' => $resumo['total'],
+        ]);
     }
 
     /**
@@ -112,29 +120,31 @@ class CarrinhoController extends Controller
     public function atualizarQtd(Request $request)
     {
         $id = $request->produto_id;
-        $variacao = (int)$request->variacao;
+        $variacao = (int) $request->variacao;
         $carrinho = session()->get('carrinho', []);
 
-        if (isset($carrinho[$id])) {
-            $novaQuantidade = $carrinho[$id]['quantidade'] + $variacao;
-
-            if ($novaQuantidade <= 0) {
-                unset($carrinho[$id]);
-            } else {
-                if ($variacao > 0) {
-                    $produto = Produto::find($id);
-                    if ($produto && $novaQuantidade > $produto->estoque) {
-                        return response()->json(['error' => 'Estoque insuficiente'], 400);
-                    }
-                }
-                $carrinho[$id]['quantidade'] = $novaQuantidade;
-            }
-
-            session()->put('carrinho', $carrinho);
-            return response()->json(['success' => true]);
+        if (!isset($carrinho[$id])) {
+            return response()->json(['error' => 'Produto nao encontrado'], 404);
         }
 
-        return response()->json(['error' => 'Produto não encontrado'], 404);
+        $novaQuantidade = (int) $carrinho[$id]['quantidade'] + $variacao;
+
+        if ($novaQuantidade <= 0) {
+            unset($carrinho[$id]);
+        } else {
+            if ($variacao > 0) {
+                $produto = Produto::find($id);
+                if ($produto && $novaQuantidade > $produto->estoque) {
+                    return response()->json(['error' => 'Estoque insuficiente'], 400);
+                }
+            }
+
+            $carrinho[$id]['quantidade'] = $novaQuantidade;
+        }
+
+        $this->montarResumoCarrinho($carrinho, true);
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -143,63 +153,92 @@ class CarrinhoController extends Controller
     public function checkout($id = null)
     {
         if ($id) {
-            $pedido = Pedido::with('itens.produto')->findOrFail($id);
-            if ($pedido->cliente_id != Auth::id()) {
-                return redirect()->route('home')->with('erro', 'Acesso negado.');
-            }
+            $pedido = Pedido::with('itens.produto')
+                ->where('cliente_id', Auth::id())
+                ->findOrFail($id);
+
             $novoCarrinho = [];
+
             foreach ($pedido->itens as $item) {
                 $produto = $item->produto;
 
-                $caminho = $produto->imagem;
-                $urlFinal = ($caminho && str_contains($caminho, 'assets'))
-                    ? asset(ltrim($caminho, '/'))
-                    : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
+                if (!$produto) {
+                    continue;
+                }
 
                 $novoCarrinho[$produto->id] = [
-                    "id" => $produto->id,
-                    "nome" => $produto->nome,
-                    "quantidade" => $item->quantidade,
-                    "preco" => $item->preco_unitario,
-                    "imagem" => $urlFinal
+                    'id' => $produto->id,
+                    'nome' => $produto->nome,
+                    'quantidade' => $item->quantidade,
+                    'preco' => $item->preco_unitario,
+                    'imagem' => $this->resolverImagemProduto($produto),
                 ];
             }
 
             session()->put('carrinho', $novoCarrinho);
         }
 
-        $carrinho = session()->get('carrinho', []);
+        $resumo = $this->montarResumoCarrinho(session()->get('carrinho', []), true);
 
-        if (empty($carrinho)) {
+        if (empty($resumo['itens'])) {
             return redirect()->route('home');
         }
 
-        $total = $this->calcularTotal($carrinho);
-        return view('pedidos.checkout', compact('carrinho', 'total', 'id'));
-    }    /**
-     * PROCESSO DE FINALIZAÇÃO E INTEGRAÇÃO MERCADO PAGO
+        return view('pedidos.checkout', [
+            'carrinho' => $resumo['itens'],
+            'total' => $resumo['total'],
+            'subtotal' => $resumo['subtotal'],
+            'desconto' => $resumo['desconto'],
+            'id' => $id,
+        ]);
+    }
+
+    /**
+     * PROCESSO DE FINALIZACAO E INTEGRACAO MERCADO PAGO
      */
-    public function finalizarPedido(Request $request)
+    public function finalizarPedido(Request $request, MelhorEnvioService $melhorEnvio)
     {
-        $carrinho = session()->get('carrinho', []);
-        if (empty($carrinho)) return redirect()->route('home')->with('erro', 'Carrinho vazio.');
+        $carrinhoSessao = session()->get('carrinho', []);
+        $resumo = $this->montarResumoCarrinho($carrinhoSessao, true);
+
+        if (empty($resumo['itens'])) {
+            return redirect()->route('home')->with('erro', 'Carrinho vazio.');
+        }
 
         $request->validate([
-            'cep' => 'required', 'rua' => 'required', 'numero' => 'required',
-            'bairro' => 'required', 'cidade' => 'required', 'estado' => 'required',
-            'frete_escolhido' => 'required', 'valor_frete' => 'required',
+            'cep' => 'required',
+            'rua' => 'required',
+            'numero' => 'required',
+            'bairro' => 'required',
+            'cidade' => 'required',
+            'estado' => 'required',
+            'frete_escolhido' => 'required',
+            'servico_frete_id' => 'required',
         ]);
 
-        DB::beginTransaction();
         try {
-            $userId = Auth::id();
+            $cepDestino = preg_replace('/\D/', '', $request->cep);
+            $freteSelecionado = $melhorEnvio->obterOpcaoCarrinhoPorId(
+                $cepDestino,
+                $carrinhoSessao,
+                (string) $request->servico_frete_id
+            );
+
+            if (!$freteSelecionado) {
+                throw ValidationException::withMessages([
+                    'frete_escolhido' => 'A opcao de frete informada e invalida ou expirou.',
+                ]);
+            }
+
+            DB::beginTransaction();
+
+            $user = Auth::user();
             $enderecoTexto = "{$request->rua}, {$request->numero} - {$request->bairro}, {$request->cidade}/{$request->estado}";
 
-            // 1. Criar ou Buscar Endereço (EVITA DUPLICADOS)
             $enderecoDb = Endereco::updateOrCreate(
                 [
-                    'cliente_id' => $userId,
-                    'cep' => preg_replace('/\D/', '', $request->cep),
+                    'cliente_id' => $user->id,
+                    'cep' => $cepDestino,
                     'numero' => $request->numero,
                 ],
                 [
@@ -211,114 +250,149 @@ class CarrinhoController extends Controller
                 ]
             );
 
-            $valorProdutos = 0;
-            $itensMp = [];
-
-            // 2. Validar Estoque e Preparar Itens para MP
-            foreach ($carrinho as $id => $item) {
+            foreach ($resumo['itens'] as $id => $item) {
                 $produto = Produto::lockForUpdate()->find($id);
+
                 if (!$produto || $produto->estoque < $item['quantidade']) {
                     throw new \Exception("Estoque insuficiente para: {$item['nome']}");
                 }
-                $produto->decrement('estoque', $item['quantidade']);
-                $valorProdutos += ($item['preco'] * $item['quantidade']);
 
-                $itensMp[] = [
-                    'title' => $item['nome'],
-                    'quantity' => (int)$item['quantidade'],
-                    'unit_price' => (float)$item['preco']
-                ];
+                $produto->decrement('estoque', $item['quantidade']);
             }
 
-            $valorFrete = (float)$request->valor_frete;
+            $valorFrete = (float) $freteSelecionado['valor'];
+            $valorTotal = $resumo['total'] + $valorFrete;
 
             $dadosPedido = [
-                'cliente_id' => $userId,
+                'cliente_id' => $user->id,
                 'endereco_id' => $enderecoDb->id,
-                'valor_produtos' => $valorProdutos,
+                'valor_produtos' => $resumo['subtotal'],
+                'valor_desconto' => $resumo['desconto'],
                 'valor_frete' => $valorFrete,
-                'valor_total' => $valorProdutos + $valorFrete,
+                'valor_total' => $valorTotal,
                 'status' => 'pendente',
                 'codigo_externo' => 'MOR-' . time(),
-                'nome_entrega' => Auth::user()->name,
-                'cpf_entrega' => preg_replace('/\D/', '', Auth::user()->cpf),
-                'cep' => preg_replace('/\D/', '', $request->cep),
+                'nome_entrega' => $user->name,
+                'cpf_entrega' => preg_replace('/\D/', '', (string) $user->cpf),
+                'cep' => $cepDestino,
                 'endereco' => $enderecoTexto,
-                'servico_frete_id' => $request->servico_frete_id,
-                'metodo_envio' => $request->frete_escolhido,
+                'servico_frete_id' => (string) $freteSelecionado['id'],
+                'metodo_envio' => $freteSelecionado['nome'],
             ];
 
-            if ($request->pedido_id) {
-                $pedido = Pedido::findOrFail($request->pedido_id);
+            if ($request->filled('pedido_id')) {
+                $pedido = Pedido::where('cliente_id', $user->id)
+                    ->where('status', 'pendente')
+                    ->findOrFail($request->pedido_id);
+
                 $pedido->update($dadosPedido);
 
                 PedidoItem::where('pedido_id', $pedido->id)->delete();
                 Pagamento::where('pedido_id', $pedido->id)->where('status', 'pending')->delete();
             } else {
-                $dadosPedido['codigo_externo'] = 'MOR-' . time();
                 $pedido = Pedido::create($dadosPedido);
             }
 
-            // 4. Criar Itens do Pedido
-            foreach ($carrinho as $id => $detalhes) {
+            foreach ($resumo['itens'] as $id => $item) {
                 PedidoItem::create([
                     'pedido_id' => $pedido->id,
                     'produto_id' => $id,
-                    'quantidade' => $detalhes['quantidade'],
-                    'preco_unitario' => $detalhes['preco'],
-                    'subtotal' => $detalhes['quantidade'] * $detalhes['preco'],
+                    'quantidade' => $item['quantidade'],
+                    'preco_unitario' => $item['preco'],
+                    'subtotal' => $item['preco'] * $item['quantidade'],
                 ]);
             }
 
-            // 5. Registro de Pagamento Local
             Pagamento::create([
                 'pedido_id' => $pedido->id,
                 'metodo' => 'pix',
                 'status' => 'pending',
-                'valor_pago' => 0
+                'valor_pago' => 0,
             ]);
 
-            // Adicionar Frete ao MP
-            if ($valorFrete > 0) {
+            $itensMp = [];
+            foreach ($resumo['itens'] as $item) {
                 $itensMp[] = [
-                    'title' => 'Frete: ' . $request->frete_escolhido,
-                    'quantity' => 1,
-                    'unit_price' => $valorFrete
+                    'title' => $item['nome'],
+                    'quantity' => (int) $item['quantidade'],
+                    'unit_price' => (float) $item['preco'],
                 ];
             }
 
-            // 6. Chamada Mercado Pago (Forçando URL absoluta)
-            // Dentro do método finalizarPedido, onde você faz o Http::post
-            $mpResponse = Http::withToken(env('MERCADOPAGO_ACCESS_TOKEN'))
-                ->post('https://api.mercadopago.com/checkout/preferences', [
+            if ($resumo['desconto'] > 0) {
+                $itensMp[] = [
+                    'title' => 'Desconto aplicado',
+                    'quantity' => 1,
+                    'unit_price' => (float) ($resumo['desconto'] * -1),
+                ];
+            }
+
+            if ($valorFrete > 0) {
+                $itensMp[] = [
+                    'title' => 'Frete: ' . $freteSelecionado['nome'],
+                    'quantity' => 1,
+                    'unit_price' => $valorFrete,
+                ];
+            }
+
+            $mpConfig = config('services.mercadopago');
+
+            $mpResponse = Http::withToken($mpConfig['token'])
+                ->acceptJson()
+                ->connectTimeout($mpConfig['connect_timeout'])
+                ->timeout($mpConfig['timeout'])
+                ->post(rtrim($mpConfig['base_url'], '/') . '/checkout/preferences', [
                     'items' => $itensMp,
                     'payer' => [
-                        'name' => Auth::user()->name,
-                        'email' => Auth::user()->email, // CAMPO ESSENCIAL
+                        'name' => $user->name,
+                        'email' => $user->email,
                     ],
                     'back_urls' => [
                         'success' => url('/pedido/sucesso/' . $pedido->id),
                         'failure' => url('/checkout'),
                         'pending' => url('/pedido/sucesso/' . $pedido->id),
                     ],
-                    'notification_url' => url('/webhook/mercadopago'),
-                    'external_reference' => (string)$pedido->id,
+                    'notification_url' => url('/webhook/mercadopago?source_news=webhooks'),
+                    'external_reference' => (string) $pedido->id,
                     'statement_descriptor' => 'CASA MORA',
                     'expires' => false,
                 ]);
 
             if ($mpResponse->failed()) {
-                throw new \Exception('Erro ao comunicar com Mercado Pago: ' . $mpResponse->body());
+                Log::error('Falha ao criar preferencia no Mercado Pago.', [
+                    'pedido_id' => $pedido->id,
+                    'user_id' => $user->id,
+                    'status' => $mpResponse->status(),
+                    'response' => $mpResponse->json(),
+                ]);
+
+                throw new \RuntimeException('Nao foi possivel iniciar o pagamento no momento.');
             }
 
             DB::commit();
             session()->forget('carrinho');
 
             return redirect()->away($mpResponse->json()['init_point']);
+        } catch (ValidationException $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
 
+            throw $e;
         } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('erro', $e->getMessage());
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+
+            Log::error('Falha ao finalizar pedido.', [
+                'user_id' => Auth::id(),
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('erro', 'Nao foi possivel concluir seu pedido agora. Tente novamente.');
         }
     }
 
@@ -327,19 +401,64 @@ class CarrinhoController extends Controller
      */
     public function pedidoSucesso($id)
     {
-        $pedido = Pedido::findOrFail($id);
+        $pedido = Pedido::where('cliente_id', Auth::id())->findOrFail($id);
+
         return view('pedidos.pedido-sucesso', compact('pedido'));
     }
 
-    /**
-     * Função privada para cálculo de total
-     */
-    private function calcularTotal($carrinho)
+    private function montarResumoCarrinho(array $carrinho, bool $sincronizarSessao = false): array
     {
-        $total = 0;
-        foreach ($carrinho as $item) {
-            $total += $item['preco'] * $item['quantidade'];
+        $itens = [];
+        $subtotal = 0.0;
+
+        foreach ($carrinho as $id => $item) {
+            $produto = Produto::find($id);
+            $quantidade = (int) ($item['quantidade'] ?? 0);
+
+            if (!$produto || $quantidade <= 0) {
+                continue;
+            }
+
+            $precoAtual = (float) $produto->preco;
+
+            $itens[$produto->id] = [
+                'id' => $produto->id,
+                'nome' => $produto->nome,
+                'quantidade' => $quantidade,
+                'preco' => $precoAtual,
+                'imagem' => $this->resolverImagemProduto($produto),
+            ];
+
+            $subtotal += $precoAtual * $quantidade;
         }
-        return $total;
+
+        $desconto = $this->calcularDesconto($itens, $subtotal);
+        $total = max($subtotal - $desconto, 0);
+
+        if ($sincronizarSessao) {
+            session()->put('carrinho', $itens);
+        }
+
+        return [
+            'itens' => $itens,
+            'subtotal' => $subtotal,
+            'desconto' => $desconto,
+            'total' => $total,
+        ];
+    }
+
+    private function calcularDesconto(array $itens, float $subtotal): float
+    {
+        // Estrutura preparada para cupons, promocoes e outras regras futuras.
+        return 0.0;
+    }
+
+    private function resolverImagemProduto(Produto $produto): string
+    {
+        $caminho = $produto->imagem;
+
+        return ($caminho && str_contains($caminho, 'assets'))
+            ? asset(ltrim($caminho, '/'))
+            : ($caminho ? Storage::url($caminho) : asset('assets/vasomora.png'));
     }
 }

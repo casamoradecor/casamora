@@ -270,7 +270,7 @@
 
                     textareaConteudo.dispatchEvent(new Event('input'));
                 } else {
-                    alert("Erro ao gerar conteúdo: " + data.erro);
+                    alert(data.erro || "Nao foi possivel gerar o conteudo agora. Tente novamente.");
                 }
             } catch (error) {
                 console.error("Erro na requisição:", error);

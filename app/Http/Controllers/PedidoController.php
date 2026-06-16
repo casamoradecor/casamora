@@ -8,6 +8,7 @@ use App\Models\PedidoItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PedidoController extends Controller
 {
@@ -100,7 +101,14 @@ class PedidoController extends Controller
             });
 
         } catch (\Exception $e) {
-            return back()->withInput()->with('erro', 'Erro ao processar pedido: ' . $e->getMessage());
+            Log::error('Falha no fluxo legado de criacao de pedido.', [
+                'user_id' => Auth::id(),
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('erro', 'Nao foi possivel processar seu pedido agora. Tente novamente.');
         }
     }
 }

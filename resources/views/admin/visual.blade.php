@@ -18,7 +18,7 @@
                         @csrf
                         <label class="btn-edit-label">
                             <i class="fa-solid fa-camera"></i> trocar banner principal
-                            <input type="file" name="hero_img" onchange="this.form.submit()" style="display: none;">
+                            <input type="file" name="hero_img" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" style="display: none;">
                         </label>
                     </form>
                 </div>
@@ -46,7 +46,7 @@
                         @csrf
                         <label class="btn-edit-label">
                             <i class="fa-solid fa-image"></i> trocar destaque
-                            <input type="file" name="destaque_img" onchange="this.form.submit()" style="display: none;">
+                            <input type="file" name="destaque_img" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" style="display: none;">
                         </label>
                     </form>
                 </div>
@@ -107,7 +107,7 @@
                                     {{-- BOTÃO 1: TROCAR APENAS A FOTO (Auto-submit) --}}
                                     <label class="btn-edit-label" style="background: #fff; color: #000; padding: 8px; border-radius: 50px; font-size: 0.6rem; cursor: pointer; text-align: center; margin: 0;">
                                         <i class="fa-solid fa-camera"></i> trocar foto {{ $i }}
-                                        <input type="file" name="cat_img" onchange="this.form.submit()" style="display: none;">
+                                        <input type="file" name="cat_img" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" style="display: none;">
                                     </label>
 
                                     <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 5px 0;">
@@ -150,7 +150,7 @@
                         @csrf
                         <label class="btn-edit-label" style="font-size: 0.6rem; padding: 10px 20px;">
                             <i class="fa-solid fa-camera"></i> trocar imagem do ambiente
-                            <input type="file" name="shoppable_img" onchange="this.form.submit()" style="display: none;">
+                            <input type="file" name="shoppable_img" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()" style="display: none;">
                         </label>
                     </form>
                 </div>
