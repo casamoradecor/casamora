@@ -10,7 +10,7 @@
 @section('content')
     <main>
         <section class="hero">
-            <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
+            <img src="{{ asset('assets/hero_banner.png') }}?v={{ file_exists(public_path('assets/hero_banner.png')) ? filemtime(public_path('assets/hero_banner.png')) : '1' }}" alt="banner" class="hero-img">
             <div class="hero-overlay"></div>
 
             <div class="hero-content">
@@ -22,7 +22,7 @@
 
         <section class="destaque-produtos">
             <div class="destaque-imagem">
-                <img src="{{ asset('assets/destaque_home.png') }}" alt="Destaque">
+                <img src="{{ asset('assets/destaque_home.png') }}?v={{ file_exists(public_path('assets/destaque_home.png')) ? filemtime(public_path('assets/destaque_home.png')) : '1' }}" alt="Destaque">
             </div>
 
             <div class="destaque-carrossel">
@@ -76,7 +76,7 @@
                         @endphp
 
                         <a href="{{ $link }}" class="categoria-card">
-                            <img src="{{ asset('assets/categoria_'.$i.'.png') }}?v={{ time() }}" alt="{{ $nome }}">
+                            <img src="{{ asset('assets/categoria_'.$i.'.png') }}?v={{ file_exists(public_path('assets/categoria_'.$i.'.png')) ? filemtime(public_path('assets/categoria_'.$i.'.png')) : '1' }}" alt="{{ $nome }}">
                         </a>
                     @endfor
                 </div>
@@ -87,8 +87,8 @@
             <div class="shoppable-container" id="shoppable-area"
                  style="position: relative; line-height: 0; display: inline-block; width: 100%;">
 
-                <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente"
-                     class="shoppable-main-img" id="shoppable-img" style="width: 100%; height: auto;">
+                <img src="{{ asset('assets/shoppable_main.png') }}?v={{ file_exists(public_path('assets/shoppable_main.png')) ? filemtime(public_path('assets/shoppable_main.png')) : '1' }}" alt="Ambiente" class="shoppable-main-img" id="shoppable-img" style="width: 100%; height: auto;">
+
 
                 @foreach($shoppablePoints ?? [] as $point)
                     <div class="hotspot-dot" style="top: {{ $point->y_pos }}%; left: {{ $point->x_pos }}%;">

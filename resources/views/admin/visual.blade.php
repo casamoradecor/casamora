@@ -12,7 +12,7 @@
         {{-- SEÇÃO HERO --}}
         <section class="hero-admin-wrapper" style="margin-bottom: 40px;">
             <div class="hero edit-container" style="position: relative;">
-                <img src="{{ asset('assets/hero_banner.png') }}" alt="banner" class="hero-img">
+                <img src="{{ asset('assets/hero_banner.png') }}?v={{ time() }}" alt="banner" class="hero-img">
                 <div class="edit-overlay">
                     <form action="{{ route('admin.uploadBanner') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -40,7 +40,7 @@
         {{-- SEÇÃO DESTAQUE --}}
         <section class="destaque-produtos">
             <div class="destaque-imagem edit-container">
-                <img src="{{ asset('assets/destaque_home.png') }}" alt="Destaque">
+                <img src="{{ asset('assets/destaque_home.png') }}?v={{ time() }}" alt="Destaque">
                 <div class="edit-overlay">
                     <form action="{{ route('admin.updateDestaque') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -157,7 +157,7 @@
 
                 {{-- 2. ÁREA DE MARCAÇÃO (HOTSPOTS) --}}
                 <div class="shoppable-container-v2" id="shoppable-area" style="position: relative; line-height: 0; border: 1px solid #ddd; background: #fff; overflow: hidden; border-radius: 0 0 8px 8px;">
-                    <img src="{{ asset('assets/shoppable_main.png') }}" alt="Ambiente Decorado" class="shoppable-main-img" id="shoppable-img" style="width: 100%; height: auto; cursor: crosshair;">
+                    <img src="{{ asset('assets/shoppable_main.png') }}?v={{ time() }}" alt="Ambiente Decorado" class="shoppable-main-img" id="shoppable-img" style="width: 100%; height: auto; cursor: crosshair;">
 
                     @foreach($shoppablePoints ?? [] as $point)
                         <div class="hotspot-dot" style="top: {{ $point->y_pos }}%; left: {{ $point->x_pos }}%;">
