@@ -57,11 +57,14 @@ function buscarFreteCheckout(cep, subtotalBase) {
             data.forEach(opcao => {
                 const precoFloat = parseFloat(opcao.preco.replace('.', '').replace(',', '.'));
 
-                // NOVO: Inserimos o '${opcao.id}' dentro da chamada da função selecionarFrete
                 listaFretes.innerHTML += `
                     <label class="frete-radio-item">
-                        <input type="radio" name="frete_radio" value="${opcao.nome}"
-                            onchange="selecionarFrete(${precoFloat}, '${opcao.nome}', '${opcao.id}', ${subtotalBase})" required>
+                        <input type="radio" name="frete_radio" class="input-frete-radio"
+                            value="${opcao.nome}"
+                            data-valor="${precoFloat}"
+                            data-nome="${opcao.nome}"
+                            data-id="${opcao.id}"
+                            required>
                         <div class="frete-radio-content">
                             <div style="display: flex; flex-direction: column;">
                                 <span class="f-nome-chk">${opcao.nome}</span>
@@ -78,24 +81,25 @@ function buscarFreteCheckout(cep, subtotalBase) {
         });
 }
 
-// NOVO: Adicionamos o parâmetro 'id' que está sendo enviado pelo onchange
-function selecionarFrete(valor, nome, id, subtotalBase) {
-    document.getElementById('frete_escolhido_input').value = nome;
-    document.getElementById('valor_frete_input').value = valor;
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('input-frete-radio')) {
+        const input = e.target;
+        const valor = parseFloat(input.dataset.valor);
+        const nome = input.dataset.nome;
+        const id = input.dataset.id;
+        const subtotalBase = window.subtotalBase || 0;
 
-    // NOVO: Guarda o ID no input oculto para enviarmos ao Banco de Dados!
-    document.getElementById('servico_frete_id_input').value = id;
+        document.getElementById('frete_escolhido_input').value = nome;
+        document.getElementById('servico_frete_id_input').value = id;
 
-    document.getElementById('valor-frete-display').innerText = `R$ ${valor.toFixed(2).replace('.', ',')}`;
+        document.getElementById('valor-frete-display').innerText = `R$ ${valor.toFixed(2).replace('.', ',')}`;
 
-    const total = subtotalBase + valor;
-    document.getElementById('valor-total-final').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    document.getElementById('btn-finalizar').disabled = false;
-}
+        const total = subtotalBase + valor;
+        document.getElementById('valor-total-final').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        document.getElementById('btn-finalizar').disabled = false;
+    }
+});
 
-/**
- * Listener automático para o campo de CEP no Checkout
- */
 document.addEventListener('DOMContentLoaded', function() {
     const inputCepCheckout = document.getElementById('cep');
 

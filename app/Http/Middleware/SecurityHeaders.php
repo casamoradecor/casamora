@@ -88,11 +88,15 @@ class SecurityHeaders
 
     private function buildFormActionDirectiveValue(): string
     {
-        $sources = [(string) config('security.csp.form_action', "'self'")];
+        $sources = ["'self'"];
+        $sources[] = 'https://*.mercadopago.com.br';
+        $sources[] = 'https://*.mercadopago.com';
 
         foreach (config('security.csp.form_action_extra', []) as $source) {
-            if (is_string($source) && $source !== '') {
-                $sources[] = $source;
+            $sourceLimpo = trim((string) $source);
+
+            if ($sourceLimpo !== '' && $sourceLimpo !== 'self' && $sourceLimpo !== "'self'") {
+                $sources[] = $sourceLimpo;
             }
         }
 

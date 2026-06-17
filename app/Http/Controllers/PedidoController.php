@@ -39,35 +39,69 @@ class PedidoController extends Controller
             return redirect()->route('carrinho.index')->with('erro', 'Seu carrinho está vazio.');
         }
 
-        try {
-            return DB::transaction(function () use ($request, $user, $carrinho) {
+        $request->validate([
+            'cep' => 'required|string|max:10',
+            'rua' => 'required|string|max:255',
+            'numero' => 'required|string|max:20',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|size:2',
+            'servico_frete_id' => 'required|string',
+        ]);
 
-                // 1. Lógica de Endereço (Sincronizada com Model Endereco)
+        try {
+            $melhorEnvio = app(\App\Services\MelhorEnvioService::class);
+            $cepDestino = preg_replace('/\D/', '', $request->cep);
+
+            $freteOficial = $melhorEnvio->obterOpcaoCarrinhoPorId(
+                $cepDestino,
+                $carrinho,
+                (string) $request->servico_frete_id
+            );
+
+            if (!$freteOficial) {
+                return back()->with('erro', 'A opção de frete selecionada é inválida ou expirou.');
+            }
+
+            return DB::transaction(function () use ($request, $user, $carrinho, $freteOficial, $cepDestino) {
+
+                foreach ($carrinho as $idProduto => $item) {
+                    $produto = \App\Models\Produto::lockForUpdate()->find($idProduto);
+
+                    if (!$produto || $produto->estoque < $item['quantidade']) {
+                        throw new \Exception("Estoque insuficiente para o produto: " . ($produto->nome ?? 'Item indisponível'));
+                    }
+
+                    $produto->decrement('estoque', $item['quantidade']);
+                }
+
                 $enderecoObj = Endereco::firstOrCreate(
                     [
                         'cliente_id'  => $user->id,
-                        'cep'         => $request->cep,
+                        'cep'         => $cepDestino,
                         'numero'      => $request->numero,
                         'complemento' => $request->complemento,
                     ],
                     [
-                        'logradouro' => $request->rua, // Mapeado do input 'rua' para 'logradouro'
+                        'logradouro' => $request->rua,
                         'bairro'     => $request->bairro,
                         'cidade'     => $request->cidade,
                         'estado'     => $request->estado,
                     ]
                 );
 
-                // 2. Cálculos de Valores
+                // 4. Cálculos Seguros de Valores baseados no Banco de Dados
                 $valorProdutos = 0;
-                foreach ($carrinho as $item) {
-                    $valorProdutos += $item['preco'] * $item['quantidade'];
+                foreach ($carrinho as $idProduto => $item) {
+                    $produto = \App\Models\Produto::find($idProduto);
+                    $valorProdutos += $produto->preco * $item['quantidade'];
                 }
 
-                $valorFrete = (float) $request->valor_frete;
+                // O valor do frete agora vem da API externa auditada pelo PHP, impossível de fraudar no front-end
+                $valorFrete = (float) $freteOficial['valor'];
                 $valorTotal = $valorProdutos + $valorFrete;
 
-                // 3. Criar o Pedido (Sincronizado com Model Pedido)
+                // 5. Criar o Pedido
                 $pedido = Pedido::create([
                     'cliente_id'     => $user->id,
                     'endereco_id'    => $enderecoObj->id,
@@ -77,38 +111,40 @@ class PedidoController extends Controller
                     'valor_total'    => $valorTotal,
                     'status'         => 'pendente',
                     'nome_entrega'   => $user->name,
-                    'cpf_entrega'    => $user->cpf,
-                    'cep'            => $request->cep,
+                    'cpf_entrega'    => preg_replace('/\D/', '', (string) $user->cpf), // Higienização LGPD
+                    'cep'            => $cepDestino,
                     'endereco'       => "{$request->rua}, {$request->numero} - {$request->bairro}. {$request->cidade}/{$request->estado}",
+                    'servico_frete_id' => (string) $freteOficial['id'],
+                    'metodo_envio'   => $freteOficial['nome'],
                 ]);
 
-                // 4. Salvar Itens (Sincronizado com Model PedidoItem)
+                // 6. Salvar Itens
                 foreach ($carrinho as $idProduto => $item) {
+                    $produto = \App\Models\Produto::find($idProduto);
                     PedidoItem::create([
                         'pedido_id'      => $pedido->id,
                         'produto_id'     => $idProduto,
                         'quantidade'     => $item['quantidade'],
-                        'preco_unitario' => $item['preco'],
-                        'subtotal'       => $item['preco'] * $item['quantidade'],
+                        'preco_unitario' => $produto->preco,
+                        'subtotal'       => $produto->preco * $item['quantidade'],
                     ]);
                 }
 
-                // 5. Finalização
+                // 7. Finalização da Sessão
                 session()->forget('carrinho');
 
-                // Redireciona para o fluxo de pagamento
                 return redirect()->route('pagamento.checkout', $pedido->id);
             });
 
         } catch (\Exception $e) {
-            Log::error('Falha no fluxo legado de criacao de pedido.', [
+            Log::error('Falha no fluxo de criacao de pedido.', [
                 'user_id' => Auth::id(),
                 'message' => $e->getMessage(),
             ]);
 
             return back()
                 ->withInput()
-                ->with('erro', 'Nao foi possivel processar seu pedido agora. Tente novamente.');
+                ->with('erro', 'Não foi possível processar seu pedido agora. Verifique a disponibilidade dos itens.');
         }
     }
 }

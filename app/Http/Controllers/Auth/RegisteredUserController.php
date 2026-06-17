@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -53,9 +54,12 @@ class RegisteredUserController extends Controller
             'telefone.regex' => 'O numero de telefone e invalido. Verifique se o formato esta correto.',
         ]);
 
+        $emailNormalizado = Str::lower(trim($request->email));
+        $nomeHigienizado = strip_tags(trim($request->name));
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $nomeHigienizado,
+            'email' => $emailNormalizado,
             'password' => Hash::make($request->password),
             'cpf' => preg_replace('/\D/', '', $request->cpf),
             'telefone' => preg_replace('/\D/', '', $request->telefone),

@@ -26,59 +26,28 @@ class ProdutoController extends Controller
     {
         $produto = Produto::with('categoria')->findOrFail($id);
 
-        $idsRecomendados = Cache::remember("ai_recomendacoes_v2_produto_{$id}", 86400, function () use ($produto, $id) {
+        $produtosRelacionados = Produto::where('categoria_id', $produto->categoria_id)
+            ->where('id', '!=', $id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
 
-            $catalogo = Produto::where('id', '!=', $produto->id)
+      $totalObtido = $produtosRelacionados->count();
+        if ($totalObtido < 3) {
+            $quantidadeFaltante = 3 - $totalObtido;
+
+            $idsJaSelecionados = $produtosRelacionados->pluck('id')->push($id)->toArray();
+
+            $produtosComplementares = Produto::whereNotIn('id', $idsJaSelecionados)
                 ->inRandomOrder()
-                ->take(30)
-                ->get(['id', 'nome']);
-
-            $textoCatalogo = $catalogo->map(fn($p) => "ID:{$p->id} - {$p->nome}")->implode(", ");
-
-            $prompt = "Você é um renomado Designer de Interiores e Curador de Estilo da 'Casa MORÁ'.\n\n"
-                . "CONTEXTO: O cliente está interessado no produto '{$produto->nome}' da categoria '" . ($produto->categoria->nome) . "'.\n\n"
-                . "SUA MISSÃO: Selecione exatamente 3 produtos da lista abaixo que melhor COMPLEMENTEM este item para criar um ambiente sofisticado e completo.\n\n"
-                . "REGRAS CRUCAIS DE CURADORIA:\n"
-                . "1. DIVERSIDADE DE CATEGORIAS: Evite sugerir produtos da mesma categoria '" . ($produto->categoria->nome) . "'. Priorize itens que o cliente usaria JUNTO com o atual (ex: se ele vê uma mesa, sugira um vaso, um outro vaso com características parecidas ou um quadro).\n"
-                . "2. ESTILO E HARMONIA: Os itens escolhidos devem ter a mesma linguagem visual (material, cor e proposta de design) do produto principal.\n"
-                . "3. LISTA DE CANDIDATOS: [{$textoCatalogo}]\n\n"
-                . "SAÍDA OBRIGATÓRIA: Responda APENAS os 3 IDs numéricos separados por vírgula. Não escreva explicações, nem saudações. Exemplo: 7,15,22";
-
-            try {
-                $response = Http::timeout(8)->withToken(env('GROQ_API_KEY'))->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'llama-3.3-70b-versatile',
-                    'messages' => [['role' => 'user', 'content' => $prompt]],
-                    'temperature' => 0.1
-                ]);
-
-                if ($response->successful()) {
-                    $texto = $response->json()['choices'][0]['message']['content'] ?? '';
-                    preg_match_all('/\d+/', $texto, $matches);
-                    $ids = array_slice($matches[0], 0, 3);
-
-                    if (count($ids) === 3) return $ids;
-                }
-            } catch (\Exception $e) {
-            }
-
-            return Produto::where('categoria_id', $produto->categoria_id)
-                ->where('id', '!=', $id)
-                ->take(3)
-                ->pluck('id')
-                ->toArray();
-        });
-
-        $produtosRelacionados = collect();
-        if (!empty($idsRecomendados)) {
-            $ordemSql = implode(',', $idsRecomendados);
-            $produtosRelacionados = Produto::whereIn('id', $idsRecomendados)
-                ->orderByRaw("FIELD(id, {$ordemSql})")
+                ->take($quantidadeFaltante)
                 ->get();
+
+            $produtosRelacionados = $produtosRelacionados->concat($produtosComplementares);
         }
 
         return view('produtos.show', compact('produto', 'produtosRelacionados'));
     }
-
     public function create()
     {
         $categorias = Categoria::all();
