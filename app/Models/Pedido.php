@@ -16,6 +16,20 @@ class Pedido extends Model
         'metodo_envio',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'cpf_entrega'  => 'encrypted',
+            'nome_entrega' => 'encrypted',
+            'endereco'     => 'encrypted',
+            'cep'          => 'encrypted',
+            'valor_produtos' => 'decimal:2',
+            'valor_frete'    => 'decimal:2',
+            'valor_desconto' => 'decimal:2',
+            'valor_total'    => 'decimal:2',
+        ];
+    }
+
     public function cliente()
     {
         return $this->belongsTo(User::class, 'cliente_id');

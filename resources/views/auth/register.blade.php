@@ -12,7 +12,7 @@
     <main class="login-page">
         <div class="login-split">
             <div class="login-image">
-                <img src="{{ asset('assets/vasomora.png') }}" alt="Ambiente Casa MORÁ">
+                <img src="{{ asset('assets/embalagem_casamora.png') }}" alt="Ambiente Casa MORÁ">
             </div>
 
             <div class="login-content" style="padding: 40px 10%;">
@@ -65,6 +65,16 @@
                         </div>
                     </div>
 
+                    {{-- TERMO DE PRIVACIDADE E CONSENTIMENTO RIGOROSO LGPD --}}
+                    <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 20px;">
+                        <input type="checkbox" id="lgpd_consent" name="lgpd_consent" required style="width: auto; margin-top: 3px;">
+                        <label for="lgpd_consent" style="font-size: 0.8rem; color: #555; line-height: 1.3; font-weight: normal;">
+                            Li e estou de acordo com os <a href="/termos-de-uso" style="color: #4B3621; text-decoration: underline;">Termos de Uso</a> e
+                            <a href="/politica-de-privacidade" style="color: #4B3621; text-decoration: underline;">Política de Privacidade</a>.
+                            Compreendo que meu CPF e telefone serão tratados para fins de faturamento, segurança e entrega logística das minhas compras.
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn btn-marrom" style="margin-top: 20px;">CADASTRAR</button>
 
                     <p style="font-size: 0.85rem; text-align: center; margin-top: 15px;">
@@ -74,7 +84,9 @@
             </div>
         </div>
     </main>
+@endsection
 
+@push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cpfInput = document.getElementById('cpf');
@@ -87,19 +99,17 @@
 
             togglePasswordIcons.forEach(icon => {
                 icon.addEventListener('click', function() {
-                    // Pega o ID do input que este ícone controla (password ou password_confirmation)
                     const targetId = this.getAttribute('data-target');
                     const input = document.getElementById(targetId);
 
-                    // Alterna o tipo do input e o ícone
                     if (input.type === 'password') {
                         input.type = 'text';
                         this.classList.remove('fa-eye');
-                        this.classList.add('fa-eye-slash'); // Troca para o ícone com traço
+                        this.classList.add('fa-eye-slash');
                     } else {
                         input.type = 'password';
                         this.classList.remove('fa-eye-slash');
-                        this.classList.add('fa-eye'); // Volta para o olho normal
+                        this.classList.add('fa-eye');
                     }
                 });
             });
@@ -107,8 +117,6 @@
             // ==========================================
             // MÁSCARAS (CPF E TELEFONE)
             // ==========================================
-
-            // Função Matemática para Validar CPF
             function isCPFValido(cpf) {
                 cpf = cpf.replace(/[^\d]+/g, '');
                 if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
@@ -125,18 +133,15 @@
                 return true;
             }
 
-            // Máscara e Validação de CPF
             cpfInput.addEventListener('input', function(e) {
-                let v = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+                let v = e.target.value.replace(/\D/g, '');
                 if (v.length > 11) v = v.slice(0, 11);
 
-                // Aplica a máscara visual
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
                 e.target.value = v;
 
-                // Validação Real ao terminar de digitar
                 if (v.length === 14) {
                     if (!isCPFValido(v)) {
                         this.style.borderBottomColor = 'red';
@@ -148,7 +153,6 @@
                 }
             });
 
-            // Máscara de Telefone
             telInput.addEventListener('input', function(e) {
                 let v = e.target.value.replace(/\D/g, '');
                 v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
@@ -158,4 +162,4 @@
             });
         });
     </script>
-@endsection
+@endpush

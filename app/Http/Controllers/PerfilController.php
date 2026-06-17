@@ -22,6 +22,10 @@ class PerfilController extends Controller
     {
         $user = Auth::user();
 
+        if (str_contains($request->input('cpf'), '*')) {
+            $request->merge(['cpf' => $user->cpf]);
+        }
+
         // 1. Regras de validação básicas e CPF matemático
         $rules = [
             'name' => 'required|string|max:255',
@@ -45,20 +49,26 @@ class PerfilController extends Controller
             }],
         ];
 
-        // 2. Adiciona regras de senha apenas se o checkbox estiver marcado
-        if ($request->has('alterar_senha')) {
+        // 2. BLINDAGEM DE CONTA: Exige a senha se for alterar a senha OU se o e-mail/CPF estiver sendo modificado
+        $alterandoDadosCriticos = ($request->email !== $user->email) || (preg_replace('/\D/', '', $request->cpf) !== $user->cpf);
+
+        if ($request->has('alterar_senha') || $alterandoDadosCriticos) {
             $rules['current_password'] = ['required', 'current_password'];
+        }
+
+        if ($request->has('alterar_senha')) {
             $rules['password'] = [
-                'required', 
-                'confirmed', 
+                'required',
+                'confirmed',
                 Password::min(8)->numbers()->symbols() // 8 caracteres, números e símbolos
             ];
         }
 
-        // 3. Executa a validação com mensagens em português
+        // 3. Executa a validação com mensagens em português e tratamento de segurança
         $request->validate($rules, [
             'email.unique' => 'Este e-mail já está sendo utilizado por outra conta.',
             'email.email' => 'Insira um endereço de e-mail válido.',
+            'current_password.required' => 'Por segurança, informe sua senha atual para confirmar as alterações.',
             'current_password.current_password' => 'Sua senha atual está incorreta.',
             'password.confirmed' => 'As senhas novas não coincidem.',
             'password.min' => 'A nova senha deve ter no mínimo 8 caracteres.',
@@ -71,11 +81,12 @@ class PerfilController extends Controller
 
         // 5. Salva a nova senha se solicitado
         if ($request->has('alterar_senha')) {
-            $user->password = Hash::make($request->password);
+            $user->password = $request->password;
         }
 
         $user->save();
 
         return redirect()->back()->with('sucesso', 'Perfil atualizado com sucesso!');
     }
+
 }

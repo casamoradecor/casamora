@@ -43,11 +43,10 @@
                                        data-complemento="{{ $end->complemento }}"
                                        data-cidade="{{ $end->cidade }}"
                                        data-estado="{{ $end->estado }}">
-                                {{-- Mudado de rua para logradouro aqui também --}}
-                                <strong>{{ $end->logradouro }}, {{ $end->numero }}</strong>
-                                <span>{{ $end->bairro }}</span>
+                                <strong>{{ Str::limit($end->logradouro, 15, '***') }}, {{ $end->numero }}</strong>
+                                <span>{{ Str::limit($end->bairro, 8, '***') }}</span>
                                 <span>{{ $end->cidade }}/{{ $end->estado }}</span>
-                                <span>CEP: {{ $end->cep }}</span>
+                                <span>CEP: ***.**-{{ substr($end->cep, -3) }}</span>
                             </label>
                         @endforeach
 
@@ -63,10 +62,7 @@
             <form action="{{ route('pedido.finalizar') }}" method="POST" class="checkout-form" id="form-checkout">
                 @csrf
                 <input type="hidden" name="pedido_id" value="{{ $id ?? '' }}">
-
-                {{-- Inputs ocultos para o Frete --}}
                 <input type="hidden" name="frete_escolhido" id="frete_escolhido_input" required>
-                <input type="hidden" name="valor_frete" id="valor_frete_input" value="0">
                 <input type="hidden" name="servico_frete_id" id="servico_frete_id_input" required>
 
                 <div class="form-group">
@@ -167,51 +163,50 @@
             </div>
         </div>
     </main>
-
-    <script>
-        window.subtotalBase = {{ $totalGeral }};
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const radios = document.querySelectorAll('.radio-endereco');
-            const inputs = {
-                cep: document.getElementById('cep'),
-                rua: document.getElementById('logradouro'),
-                numero: document.getElementById('numero'),
-                bairro: document.getElementById('bairro'),
-                complemento: document.getElementById('complemento'),
-                cidade: document.getElementById('localidade'),
-                estado: document.getElementById('uf')
-            };
-
-            radios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.querySelectorAll('.card-endereco').forEach(l => l.classList.remove('active'));
-                    // Adiciona active no label pai
-                    this.parentElement.classList.add('active');
-
-                    if (this.value !== 'novo') {
-                        inputs.cep.value = this.dataset.cep;
-                        inputs.rua.value = this.dataset.rua;
-                        inputs.numero.value = this.dataset.numero;
-                        inputs.bairro.value = this.dataset.bairro;
-                        inputs.complemento.value = this.dataset.complemento;
-                        inputs.cidade.value = this.dataset.cidade;
-                        inputs.estado.value = this.dataset.estado;
-                        inputs.cep.dispatchEvent(new Event('input', { bubbles: true }));
-                    } else {
-                        inputs.cep.value = '';
-                        inputs.rua.value = '';
-                        inputs.numero.value = '';
-                        inputs.bairro.value = '';
-                        inputs.complemento.value = '';
-                        inputs.cidade.value = '';
-                        inputs.estado.value = '';
-                    }
-                });
-            });
-        });
-    </script>
     @push('js')
         <script src="{{ asset('js/checkout.js') }}"></script>
+        <script>
+            window.subtotalBase = {{ $totalGeral }};
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const radios = document.querySelectorAll('.radio-endereco');
+                const inputs = {
+                    cep: document.getElementById('cep'),
+                    rua: document.getElementById('logradouro'),
+                    numero: document.getElementById('numero'),
+                    bairro: document.getElementById('bairro'),
+                    complemento: document.getElementById('complemento'),
+                    cidade: document.getElementById('localidade'),
+                    estado: document.getElementById('uf')
+                };
+
+                radios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        document.querySelectorAll('.card-endereco').forEach(l => l.classList.remove('active'));
+                        // Adiciona active no label pai
+                        this.parentElement.classList.add('active');
+
+                        if (this.value !== 'novo') {
+                            inputs.cep.value = this.dataset.cep;
+                            inputs.rua.value = this.dataset.rua;
+                            inputs.numero.value = this.dataset.numero;
+                            inputs.bairro.value = this.dataset.bairro;
+                            inputs.complemento.value = this.dataset.complemento;
+                            inputs.cidade.value = this.dataset.cidade;
+                            inputs.estado.value = this.dataset.estado;
+                            inputs.cep.dispatchEvent(new Event('input', { bubbles: true }));
+                        } else {
+                            inputs.cep.value = '';
+                            inputs.rua.value = '';
+                            inputs.numero.value = '';
+                            inputs.bairro.value = '';
+                            inputs.complemento.value = '';
+                            inputs.cidade.value = '';
+                            inputs.estado.value = '';
+                        }
+                    });
+                });
+            });
+        </script>
     @endpush
 @endsection

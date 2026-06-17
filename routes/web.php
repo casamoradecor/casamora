@@ -28,6 +28,12 @@ Route::get('/produto/{id}', [ProdutoController::class, 'show'])->name('produto.s
 Route::get('/api/busca-produtos', [ProdutoController::class, 'apiBusca'])->name('api.produtos.busca');
 Route::get('/sobre-nos', [SobreNosController::class, 'show'])->name('sobre.nos');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/whatsapp', function () {
+    $phone = '5511996681531';
+    $text = urlencode('Olá! Gostaria de mais informações sobre a Casa Morá!');
+
+    return redirect()->away("https://api.whatsapp.com/send?phone={$phone}&text={$text}");
+})->name('whatsapp.redirect');
 /*
 |--------------------------------------------------------------------------
 | CARRINHO DE COMPRAS & WEBHOOK

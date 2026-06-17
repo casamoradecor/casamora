@@ -155,6 +155,7 @@ class CarrinhoController extends Controller
         if ($id) {
             $pedido = Pedido::with('itens.produto')
                 ->where('cliente_id', Auth::id())
+                ->where('status', 'pendente')
                 ->findOrFail($id);
 
             $novoCarrinho = [];
@@ -206,14 +207,15 @@ class CarrinhoController extends Controller
         }
 
         $request->validate([
-            'cep' => 'required',
-            'rua' => 'required',
-            'numero' => 'required',
-            'bairro' => 'required',
-            'cidade' => 'required',
-            'estado' => 'required',
-            'frete_escolhido' => 'required',
-            'servico_frete_id' => 'required',
+            'pedido_id' => 'nullable|integer|exists:pedidos,id',
+            'cep' => 'required|string|max:10',
+            'rua' => 'required|string|max:255',
+            'numero' => 'required|string|max:20',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|size:2',
+            'frete_escolhido' => 'required|string',
+            'servico_frete_id' => 'required|string',
         ]);
 
         try {
@@ -362,8 +364,8 @@ class CarrinhoController extends Controller
                 Log::error('Falha ao criar preferencia no Mercado Pago.', [
                     'pedido_id' => $pedido->id,
                     'user_id' => $user->id,
-                    'status' => $mpResponse->status(),
-                    'response' => $mpResponse->json(),
+                    'http_status' => $mpResponse->status(),
+                    'error_message' => $mpResponse->json()['message'] ?? 'Erro desconhecido na API do gateway.'
                 ]);
 
                 throw new \RuntimeException('Nao foi possivel iniciar o pagamento no momento.');

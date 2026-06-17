@@ -115,6 +115,7 @@
                 @endforeach
             </div>
         </section>
+@endsection
 
         @push('js')
             <script>

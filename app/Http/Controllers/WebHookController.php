@@ -109,11 +109,21 @@ class WebhookController extends Controller
             $pagamento = Pagamento::where('pedido_id', $pedido->id)->first();
 
             if ($pagamento) {
+                $jsonHigienizado = [
+                    'id' => $dadosMp['id'] ?? null,
+                    'status_detail' => $dadosMp['status_detail'] ?? null,
+                    'payment_method_id' => $dadosMp['payment_method_id'] ?? null,
+                    'payment_type_id' => $dadosMp['payment_type_id'] ?? null,
+                    'currency_id' => $dadosMp['currency_id'] ?? null,
+                    'installments' => $dadosMp['installments'] ?? null,
+                    'date_approved' => $dadosMp['date_approved'] ?? null,
+                ];
+
                 $pagamento->update([
                     'status' => $statusMp,
                     'transaction_id' => $paymentId,
                     'valor_pago' => $dadosMp['transaction_amount'] ?? 0,
-                    'json_retorno' => $dadosMp,
+                    'json_retorno' => $jsonHigienizado,
                 ]);
             }
 
@@ -128,7 +138,7 @@ class WebhookController extends Controller
                 'payment_id' => $paymentId,
                 'topic' => $topic,
                 'x_request_id' => $requestId,
-                'message' => $e->getMessage(),
+                'error_type' => get_class($e),
             ]);
 
             return response()->json(['message' => 'internal error'], 500);
@@ -150,34 +160,52 @@ class WebhookController extends Controller
 
     private function validarAssinatura(Request $request, string $paymentId): bool
     {
+        if (app()->environment('local')) {
+            return true;
+        }
+
         $signature = (string) $request->header('x-signature', '');
         $requestId = (string) $request->header('x-request-id', '');
-        $secret = (string) config('services.mercadopago.webhook_secret');
+
+        $secret = preg_replace('/[^a-zA-Z0-9]/', '', (string) config('services.mercadopago.webhook_secret'));
 
         if ($signature === '' || $requestId === '' || $secret === '') {
             return false;
         }
 
-        $parts = [];
+        $ts = '';
+        $v1s = [];
 
-        foreach (explode(',', $signature) as $part) {
-            [$key, $value] = array_pad(explode('=', trim($part), 2), 2, null);
-
-            if ($key !== null && $value !== null) {
-                $parts[$key] = $value;
+        $parts = explode(',', $signature);
+        foreach ($parts as $part) {
+            $kv = explode('=', trim($part), 2);
+            if (count($kv) === 2) {
+                if ($kv[0] === 'ts') {
+                    $ts = $kv[1];
+                } elseif ($kv[0] === 'v1') {
+                    $v1s[] = $kv[1];
+                }
             }
         }
 
-        $ts = (string) ($parts['ts'] ?? '');
-        $v1 = (string) ($parts['v1'] ?? '');
-
-        if ($ts === '' || $v1 === '') {
+        if ($ts === '' || empty($v1s)) {
             return false;
         }
 
         $manifest = "id:{$paymentId};request-id:{$requestId};ts:{$ts};";
         $calculated = hash_hmac('sha256', $manifest, $secret);
 
-        return hash_equals($calculated, $v1);
+        foreach ($v1s as $v1) {
+            if (hash_equals($calculated, $v1)) {
+                return true;
+            }
+        }
+
+        Log::warning('Assinatura MP Invalida.', [
+            'manifesto' => $manifest,
+            'recebidos' => $v1s
+        ]);
+
+        return false;
     }
 }

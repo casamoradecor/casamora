@@ -71,11 +71,19 @@
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="forgot-link">ESQUECEU A SENHA?</a>
                     @endif
+
+                    <div style="margin-top: 25px; text-align: center;">
+                        <p style="font-size: 0.75rem; color: #777;">
+                            Ao prosseguir com o acesso, você concorda com a nossa
+                            <a href="/politica-de-privacidade" style="color: #4B3621; text-decoration: underline;">Política de Privacidade</a>.
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>
     </main>
-
+@endsection
+@push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ==========================================
@@ -85,22 +93,20 @@
 
             togglePasswordIcons.forEach(icon => {
                 icon.addEventListener('click', function() {
-                    // Pega o ID do input que este ícone controla
                     const targetId = this.getAttribute('data-target');
                     const input = document.getElementById(targetId);
 
-                    // Alterna o tipo do input e o ícone
                     if (input.type === 'password') {
                         input.type = 'text';
                         this.classList.remove('fa-eye');
-                        this.classList.add('fa-eye-slash'); // Troca para o ícone com traço
+                        this.classList.add('fa-eye-slash');
                     } else {
                         input.type = 'password';
                         this.classList.remove('fa-eye-slash');
-                        this.classList.add('fa-eye'); // Volta para o olho normal
+                        this.classList.add('fa-eye');
                     }
                 });
             });
         });
     </script>
-@endsection
+@endpush

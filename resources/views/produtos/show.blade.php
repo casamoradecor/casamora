@@ -61,10 +61,7 @@
                     <div class="coluna-botoes">
                         <button type="button" class="btn btn-branco" id="btn-add-carrinho"
                                 onclick="adicionarComQtd(false)"
-                                data-id="{{ $produto->id }}"
-                                data-nome="{{ $produto->nome }}"
-                                data-preco="{{ $produto->preco }}"
-                                data-imagem="{{ $urlFinal }}">
+                                data-id="{{ $produto->id }}">
                             adicionar ao carrinho
                         </button>
 
@@ -131,6 +128,7 @@
             </div>
         @endif
     </div>
+@endsection
     @push('js')
         <script src="{{ asset('js/produto-detalhe.js') }}"></script>
         <script>
@@ -146,6 +144,6 @@
                         e.target.value = valor;
                     });
                 }
-            });</script>
+            });
+        </script>
     @endpush
-@endsection
